@@ -7,7 +7,7 @@
       <div class="space-y-6 text-white xl:space-y-10">
         <div class="space-y-4">
           <!-- Địa chỉ -->
-          <div class="text-body">362 Đường Fuxing, Quận Nam, Thành phố Đài Trung, Đài Loan</div>
+          <div class="text-body">Quận 1 Hồ Chí Minh Việt Nam</div>
 
           <!-- Bản đồ google -->
           <div
@@ -69,8 +69,7 @@ const travels = [
 const mapRefs = ref<HTMLElement | null>(null)
 
 // 座標
-const location = { lat: 24.133459091186523, lng: 120.68169403076172 }
-
+const location = { lat: 10.764645231021714, lng: 106.68311493253726 }
 // ApiKey
 const loader = new Loader({
   apiKey: 'AIzaSyDDes3MJu5RkOYFeTvZWNbvMZwH6eetYHs',

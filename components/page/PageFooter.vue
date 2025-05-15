@@ -35,22 +35,17 @@
         class="flex flex-col gap-4 text-body-2 xl:flex-row xl:items-center xl:justify-between xl:text-body"
       >
         <!-- Địa chỉ -->
-        <address class="not-italic">
-          402001 Đài Loan, TP. Đài Trung, Quận Nam, Đường Fuxing, Số 362, Đoạn 3
-        </address>
+        <address class="not-italic">Quận 1, Thành phố Hồ Chí Minh, Việt Nam</address>
 
         <!-- Bản quyền và liên kết liên quan -->
         <div class="flex flex-wrap items-center gap-4 xl:flex-row-reverse">
           <!-- Bản quyền -->
-          <p>Bản quyền © 2024 bởi Hao</p>
 
-          <div class="space-x-1">
-            <!-- Liên kết: Thiết kế guideline -->
+          <!-- <div class="space-x-1">
             <NuxtLink class="hot-link-wrapper" target="_blank" to="/_guideline">
               <Icon class="shrink-0" name="bi:palette2" />
             </NuxtLink>
 
-            <!-- Liên kết: API -->
             <NuxtLink
               class="hot-link-wrapper"
               target="_blank"
@@ -59,7 +54,6 @@
               <Icon class="shrink-0" name="mdi:api" />
             </NuxtLink>
 
-            <!-- Liên kết: Github -->
             <NuxtLink
               class="hot-link-wrapper"
               target="_blank"
@@ -67,7 +61,7 @@
             >
               <Icon class="shrink-0" name="bi:github" />
             </NuxtLink>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -83,7 +77,7 @@ const contactInfo = ref([
   },
   {
     category: 'Email',
-    details: 'cutecat8110@gmail.com'
+    details: 'fpoly@gmail.com'
   },
   {
     category: 'Fax',
@@ -91,7 +85,7 @@ const contactInfo = ref([
   },
   {
     category: 'Website',
-    details: 'www.github.com/cutecat8110'
+    details: 'ssasas.fpl'
   }
 ])
 </script>

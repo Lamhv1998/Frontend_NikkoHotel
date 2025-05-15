@@ -50,8 +50,8 @@
               class="ml-12 flex h-2/3 items-center rounded-[2.5rem] border-r border-t bg-gradient-to-t from-white/30 backdrop-blur-[1.25rem] xl:h-auto xl:w-1/2 xl:rounded-[5rem]"
             >
               <div class="-ml-10 pr-10 text-white xl:-ml-12 xl:pr-12">
-                <div class="select-none text-h1 xl:text-display">Cao Hùng</div>
-                <div class="mt-2 select-none text-h1 xl:text-display">
+                <div class="select-none text-h1 xl:text-display">Nikko</div>
+                <div class="s:text-display mt-2 select-none text-h1">
                   Lựa chọn lưu trú sang trọng
                 </div>
                 <div class="mt-6 select-none text-title xl:text-h3">

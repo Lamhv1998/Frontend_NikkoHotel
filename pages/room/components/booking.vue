@@ -57,7 +57,6 @@
 import Datepicker from './datepicker.vue'
 import type { RoomResponse } from '@/types'
 
-/* 全局屬性 */
 const orderStore = useOrderStore()
 
 /* props */
@@ -68,7 +67,6 @@ const props = defineProps({
   }
 })
 
-/* 儲存客戶預訂房間 */
 const saveRoomId = () => {
   orderStore.order.roomId = props.room._id
 }
