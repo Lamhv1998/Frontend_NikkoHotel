@@ -21,7 +21,7 @@
         }"
       >
         <!-- Ảnh phòng -->
-        <SwiperSlide v-for="(slide, index) in props.room.imageUrlList" :key="index">
+        <SwiperSlide v-for="(slide, index) in room.imageUrlList" :key="index">
           <NuxtImg class="h-full w-full object-cover" :src="slide" />
         </SwiperSlide>
 
@@ -49,15 +49,15 @@
     <div class="space-y-6 p-4 xl:col-span-5 xl:space-y-10 xl:p-10">
       <!-- Tên phòng và mô tả -->
       <div class="space-y-2">
-        <h3 class="text-h4 xl:text-h2">{{ props.room.name }}</h3>
-        <p class="text-body-2 text-system-gray-80 xl:text-body">{{ props.room.description }}</p>
+        <h3 class="text-h4 xl:text-h2">{{ room.name }}</h3>
+        <p class="text-body-2 text-system-gray-80 xl:text-body">{{ room.description }}</p>
       </div>
 
       <!-- Thông tin cơ bản phòng -->
       <CRoomInfo
-        :area-info="props.room.areaInfo"
-        :bed-info="props.room.bedInfo"
-        :max-people="props.room.maxPeople"
+        :area-info="room.areaInfo"
+        :bed-info="room.bedInfo"
+        :max-people="room.maxPeople"
         border
       />
 
@@ -67,11 +67,11 @@
       <div class="flex items-center justify-between py-4">
         <!-- Giá phòng -->
         <p class="text-title text-system-primary-100 xl:text-h5">
-          {{ useFormatCurrency(props.room.price) }}
+          {{ useFormatCurrency(room.price) }}
         </p>
 
         <!-- Liên kết: Chi tiết phòng -->
-        <NuxtLink :to="`/room/${props.room._id}`">
+        <NuxtLink :to="`/room/${room._id}`">
           <div
             class="flex h-6 w-6 cursor-pointer items-center justify-center text-[1.25rem] text-system-primary-100 transition-colors hover:text-system-primary-120"
           >
@@ -84,15 +84,29 @@
 </template>
 
 <script lang="ts" setup>
-import type { RoomResponse } from '@/types'
+// import type { RoomResponse } from '@/types'
 
 /* props */
-const props = defineProps({
-  room: {
-    type: Object as PropType<RoomResponse>,
-    required: true
-  }
-})
+// const props = defineProps({
+//   room: {
+//     type: Object as PropType<RoomResponse>,
+//     required: true
+//   }
+// })
+const room = {
+  name: 'Phòng Deluxesss',
+  description: 'Phòng Deluxe với đầy đủ tiện nghi',
+  imageUrlList: [
+    'https://picsum.photos/600/400?random=1',
+    'https://picsum.photos/600/400?random=2',
+    'https://picsum.photos/600/400?random=3'
+  ],
+  areaInfo: '30 m²',
+  bedInfo: '1 giường đôi',
+  maxPeople: 2,
+  price: 1000000,
+  _id: 'room-id-123'
+}
 </script>
 
 <style lang="scss" scoped>

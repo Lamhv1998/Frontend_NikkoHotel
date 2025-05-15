@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { MenuResponse } from '@/types'
+// import type { MenuResponse } from '@/types'
 import UITitle from './UI/UITitle.vue'
 
 /* 輪播 */
@@ -67,14 +67,37 @@ const view = computed(() => {
 })
 
 /* api */
-const { getDelicaciesApi } = useApi()
+// const { getDelicaciesApi } = useApi()
 
 // api: 取得所有房型
-const { data: menu }: { data: Ref<MenuResponse[] | null> } = await getDelicaciesApi({
-  transform(res: any): MenuResponse[] {
-    return res.result
+// const { data: menu }: { data: Ref<MenuResponse[] | null> } = await getDelicaciesApi({
+//   transform(res: any): MenuResponse[] {
+//     return res.result
+//   }
+// })
+const menu = ref([
+  {
+    title: 'Buffet sáng',
+    image: 'https://picsum.photos/600/400?random=1',
+    diningTime: '07:00 - 10:00',
+    description:
+      'Buffet sáng tại khách sạn Enjoy Luxury là một trải nghiệm tuyệt vời với nhiều món ăn đa dạng và phong phú.'
+  },
+  {
+    title: 'Tiệc trà chiều',
+    image: 'https://picsum.photos/600/400?random=2',
+    diningTime: '15:00 - 17:00',
+    description:
+      'Tiệc trà chiều tại khách sạn Enjoy Luxury là một trải nghiệm thư giãn và sang trọng.'
+  },
+  {
+    title: 'Tiệc tối',
+    image: 'https://picsum.photos/600/400?random=3',
+    diningTime: '18:00 - 21:00',
+    description:
+      'Tiệc tối tại khách sạn Enjoy Luxury là một trải nghiệm ẩm thực tuyệt vời với nhiều món ăn ngon.'
   }
-})
+])
 </script>
 
 <style lang="scss" scoped>

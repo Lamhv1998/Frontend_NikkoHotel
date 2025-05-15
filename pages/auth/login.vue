@@ -108,14 +108,14 @@ const { pending, refresh: loginRefresh } = await loginApi({
   },
   onResponseError({ response }) {
     switch (response._data?.message) {
-      case '此使用者不存在':
+      case 'Người dùng này không tồn tại':
         formRefs.value?.setFieldError('email', 'Email không tồn tại')
         break
-      case '密碼錯誤':
-      case '密碼需至少 8 碼以上':
-      case '密碼不能只有英文':
-      case '密碼不能只有數字':
-      case '密碼需至少 8 碼以上，並英 số kết hợp':
+      case 'Mật khẩu sai':
+      case 'Mật khẩu phải có ít nhất 8 ký tự':
+      case 'Mật khẩu không được chỉ có chữ cái':
+      case 'Mật khẩu không được chỉ có số':
+      case 'Mật khẩu phải có ít nhất 8 ký tự, gồm cả chữ và số':
         formRefs.value?.setFieldError('password', 'Mật khẩu không đúng')
         break
       default:

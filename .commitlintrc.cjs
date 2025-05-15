@@ -6,52 +6,53 @@ module.exports = {
   },
   prompt: {
     messages: {
-      type: '選擇你要提交的類型 :',
-      scope: '選擇一個提交範圍（可選）:',
-      customScope: '請輸入自定義的提交範圍 :',
-      subject: '填寫簡短精煉的變更描述 :\n',
-      body: '填寫更加詳細的變更描述（可選）。使用 "|" 換行 :\n',
-      breaking: '列舉非兼容性重大的變更（可選）。使用 "|" 換行 :\n',
-      footerPrefixesSelect: '選擇關聯issue前綴（可選）:',
-      customFooterPrefix: '輸入自定義issue前綴 :',
-      footer: '列舉關聯issue (可選) 例如: #31, #I3244 :\n',
-      confirmCommit: '是否提交或修改commit ?'
+      type: 'Chọn loại commit bạn muốn thực hiện:',
+      scope: 'Chọn phạm vi commit (có thể bỏ qua):',
+      customScope: 'Vui lòng nhập phạm vi commit tùy chỉnh:',
+      subject: 'Nhập mô tả ngắn gọn cho thay đổi:\n',
+      body: 'Nhập mô tả chi tiết hơn (có thể bỏ qua). Dùng "|" để xuống dòng:\n',
+      breaking:
+        'Liệt kê các thay đổi phá vỡ tương thích (có thể bỏ qua). Dùng "|" để xuống dòng:\n',
+      footerPrefixesSelect: 'Chọn tiền tố liên kết issue (có thể bỏ qua):',
+      customFooterPrefix: 'Nhập tiền tố issue tùy chỉnh:',
+      footer: 'Liệt kê các issue liên quan (có thể bỏ qua), ví dụ: #31, #I3244:\n',
+      confirmCommit: 'Bạn có muốn gửi commit này không?'
     },
     types: [
-      { value: 'feat', name: 'feat:     新增功能 | A new feature' },
-      { value: 'fix', name: 'fix:      修覆缺陷 | A bug fix' },
+      { value: 'feat', name: 'feat:     Thêm tính năng mới | A new feature' },
+      { value: 'fix', name: 'fix:      Sửa lỗi | A bug fix' },
       {
         value: 'docs',
-        name: 'docs:     文檔更新 | Documentation only changes'
+        name: 'docs:     Cập nhật tài liệu | Documentation only changes'
       },
       {
         value: 'style',
-        name: 'style:    代碼格式 | Changes that do not affect the meaning of the code'
+        name: 'style:    Thay đổi định dạng code | Changes that do not affect the meaning of the code'
       },
       {
         value: 'refactor',
-        name: 'refactor: 代碼重構 | A code change that neither fixes a bug nor adds a feature'
+        name: 'refactor: Cải tiến code | A code change that neither fixes a bug nor adds a feature'
       },
       {
         value: 'perf',
-        name: 'perf:     性能提升 | A code change that improves performance'
+        name: 'perf:     Cải thiện hiệu năng | A code change that improves performance'
       },
       {
         value: 'test',
-        name: 'test:     測試相關 | Adding missing tests or correcting existing tests'
+        name: 'test:     Liên quan đến kiểm thử | Adding missing tests or correcting existing tests'
       },
       {
         value: 'build',
-        name: 'build:    構建相關 | Changes that affect the build system or external dependencies'
+        name: 'build:    Liên quan đến build | Changes that affect the build system or external dependencies'
       },
       {
         value: 'ci',
-        name: 'ci:       持續集成 | Changes to our CI configuration files and scripts'
+        name: 'ci:       Liên quan đến CI | Changes to our CI configuration files and scripts'
       },
-      { value: 'revert', name: 'revert:   回退代碼 | Revert to a commit' },
+      { value: 'revert', name: 'revert:   Hoàn tác code | Revert to a commit' },
       {
         value: 'chore',
-        name: 'chore:    其他修改 | Other changes that do not modify src or test files'
+        name: 'chore:    Thay đổi khác | Other changes that do not modify src or test files'
       }
     ],
     useEmoji: false

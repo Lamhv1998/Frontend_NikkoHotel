@@ -59,25 +59,41 @@
 </template>
 
 <script lang="ts" setup>
-import type { RoomResponse } from '@/types'
+// import type { RoomResponse } from '@/types'
 import Hero from './components/hero.vue'
 import Terms from './components/terms.vue'
 import Booking from './components/booking.vue'
 import MBooking from './components/m-booking.vue'
 
-/* 全局屬性 */
-const route = useRoute()
+// const route = useRoute()
 
 /* api */
-const { getRoomApi } = useApi()
+// const { getRoomApi } = useApi()
 
-// api: 取得房型
-const { data: room }: { data: Ref<RoomResponse | null> } = await getRoomApi(
-  route.params.id as string,
-  {
-    transform(res: any): RoomResponse {
-      return res.result
-    }
-  }
-)
+// // api: 取得房型
+// const { data: room }: { data: Ref<RoomResponse | null> } = await getRoomApi(
+//   route.params.id as string,
+//   {
+//     transform(res: any): RoomResponse {
+//       return res.result
+//     }
+//   }
+// )
+// Dữ liệu mẫu
+const room = {
+  _id: '1',
+  name: 'Phòng Deluxe',
+  description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+  areaInfo: '30 m²',
+  bedInfo: '1 giường đôi',
+  maxPeople: 2,
+  layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+  facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+  amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }],
+  imageUrlList: [
+    'https://picsum.photos/400/300?random=1',
+    'https://picsum.photos/400/300?random=2',
+    'https://picsum.photos/400/300?random=3'
+  ]
+}
 </script>

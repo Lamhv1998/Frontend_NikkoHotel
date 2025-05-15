@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { RoomResponse } from '@/types'
+// import type { RoomResponse } from '@/types'
 import Card from './components/card.vue'
 
 /* layout */
@@ -36,12 +36,58 @@ definePageMeta({
 })
 
 /* api */
-const { getRoomsApi } = useApi()
+// const { getRoomsApi } = useApi()
 
-// api: Lấy tất cả các phòng
-const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
-  transform(res: any): RoomResponse[] {
-    return res.result
+// // api: Lấy tất cả các phòng
+// const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
+//   transform(res: any): RoomResponse[] {
+//     return res.result
+//   }
+// })
+const rooms = ref([
+  {
+    _id: '1',
+    name: 'Phòng Deluxe',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    areaInfo: '30 m²',
+    bedInfo: '1 giường đôi',
+    maxPeople: 2,
+    layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+    facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+    amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }]
+  },
+  {
+    _id: '2',
+    name: 'Phòng Deluxe',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    areaInfo: '50 m²',
+    bedInfo: '1 giường đôi',
+    maxPeople: 2,
+    layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+    facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+    amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }]
+  },
+  {
+    _id: '2',
+    name: 'Phòng Deluxe',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    areaInfo: '50 m²',
+    bedInfo: '1 giường đôi',
+    maxPeople: 2,
+    layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+    facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+    amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }]
+  },
+  {
+    _id: '3',
+    name: 'Phòng Deluxe',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    areaInfo: '50m²',
+    bedInfo: '1 giường đôi',
+    maxPeople: 2,
+    layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+    facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+    amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }]
   }
-})
+])
 </script>

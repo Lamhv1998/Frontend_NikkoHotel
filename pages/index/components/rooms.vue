@@ -77,20 +77,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { RoomResponse } from '@/types'
+// import type { RoomResponse } from '@/types'
 import type { Swiper } from 'swiper'
 
-/* 輪播 */
-// 設定 Refs
 const swiperRefs = ref<Swiper | null>(null)
 const setSwiperRefs = (swiper: Swiper) => {
   swiperRefs.value = swiper
 }
 
-// 當前預覽房型
 const currentRoom = ref(0)
 
-// 變更預覽房型
 const changeRoom = (direction: string) => {
   if (rooms.value) {
     if (direction === 'prev') {
@@ -103,14 +99,39 @@ const changeRoom = (direction: string) => {
 }
 
 /* api */
-const { getRoomsApi } = useApi()
+// const { getRoomsApi } = useApi()
 
 // api: 取得所有房型
-const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
-  transform(res: any): RoomResponse[] {
-    return res.result
+// const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
+//   transform(res: any): RoomResponse[] {
+//     return res.result
+//   }
+// })
+// Dữ liệu mẫu
+const rooms = ref([
+  {
+    _id: '1',
+    name: 'Phòng Deluxe',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    price: 2000000,
+    imageUrlList: [
+      'https://picsum.photos/400/300?random=1',
+      'https://picsum.photos/400/300?random=2',
+      'https://picsum.photos/400/300?random=3'
+    ]
+  },
+  {
+    _id: '2',
+    name: 'Phòng Superior',
+    description: 'Phòng Superior với không gian rộng rãi.',
+    price: 2500000,
+    imageUrlList: [
+      'https://picsum.photos/400/300?random=4',
+      'https://picsum.photos/400/300?random=5',
+      'https://picsum.photos/400/300?random=6'
+    ]
   }
-})
+])
 </script>
 
 <style lang="scss" scoped>

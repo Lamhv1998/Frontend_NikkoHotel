@@ -2,7 +2,7 @@
   <div id="auth-layout">
     <NuxtImg
       class="fixed inset-y-0 left-0 z-0 hidden h-full w-1/2 object-cover xl:block"
-      src="imgur/RHBxezl.jpg"
+      src="/img/5EHlsYm.png"
       width="100vw"
     />
     <PageHeader />
