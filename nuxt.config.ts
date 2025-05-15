@@ -59,7 +59,7 @@ export default defineNuxtConfig({
           name: 'keywords',
           content: 'Nikko Hotel, đặt phòng khách sạn, khách sạn sang trọng, loại phòng'
         }, // Từ khóa
-        { name: 'author', content: 'Hao' }, // Tác giả
+        { name: 'author', content: 'Lâm' }, // Tác giả
         { name: 'robots', content: 'index, follow' }, // Chỉ mục tìm kiếm
         { property: 'og:title', content: 'Nikko Hotel' }, // Tiêu đề Open Graph
         {
@@ -68,7 +68,7 @@ export default defineNuxtConfig({
             'Đây là website đặt phòng khách sạn sang trọng Nikko Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
         }, // Mô tả Open Graph
         { property: 'og:image', content: 'URL ảnh đại diện website của bạn' }, // Ảnh Open Graph
-        { property: 'og:url', content: 'https://enjoy-luxury-hotel.onrender.com/' }, // Đường dẫn Open Graph
+        { property: 'og:url', content: '' }, // Đường dẫn Open Graph
         { property: 'og:type', content: 'website' } // Loại Open Graph
       ]
     },
