@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'Noto Seri';
+  font-weight: 500;
+  src: url('@/assets/fonts/NotoSerifTC-Medium.otf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Seri';
+  font-weight: 700;
+  src: url('@/assets/fonts/NotoSerifTC-Bold.otf') format('truetype');
+}

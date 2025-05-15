@@ -1,0 +1,15 @@
+@import '@/assets/css/fonts';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    font-family: 'Noto Seri', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+}
