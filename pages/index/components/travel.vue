@@ -61,7 +61,7 @@ const travels = [
     icon: 'IconLuxuryCar',
     name: 'Dịch vụ xe đưa đón',
     description:
-      'Enjoy Hotel cung cấp dịch vụ xe đưa đón riêng, phí sẽ thay đổi tùy theo điểm đến. Vui lòng gọi số (07)123-4567 để được tư vấn chi tiết.'
+      'Nikko Hotel cung cấp dịch vụ xe đưa đón riêng, phí sẽ thay đổi tùy theo điểm đến. Vui lòng gọi số (07)123-4567 để được tư vấn chi tiết.'
   }
 ]
 

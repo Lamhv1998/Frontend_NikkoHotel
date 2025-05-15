@@ -37,7 +37,7 @@
                 'flex  flex-col items-center justify-normal text-system-primary-100 xl:items-start xl:justify-center'
               ]"
             >
-              <h1 class="select-none text-h4 xl:text-h2">Enjoy Hotel</h1>
+              <h1 class="select-none text-h4 xl:text-h2">Nikko Hotel</h1>
               <div class="mt-2 select-none text-title xl:text-h5">Enjoyment Luxury Hotel</div>
 
               <div

@@ -53,7 +53,7 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            'Đây là website đặt phòng khách sạn sang trọng Enjoy Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
+            'Đây là website đặt phòng khách sạn sang trọng Nikko Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
         }, // Mô tả website
         {
           name: 'keywords',
@@ -61,7 +61,7 @@ export default defineNuxtConfig({
         }, // Từ khóa
         { name: 'author', content: 'Hao' }, // Tác giả
         { name: 'robots', content: 'index, follow' }, // Chỉ mục tìm kiếm
-        { property: 'og:title', content: 'Enjoy Hotel' }, // Tiêu đề Open Graph
+        { property: 'og:title', content: 'Nikko Hotel' }, // Tiêu đề Open Graph
         {
           property: 'og:description',
           content:
