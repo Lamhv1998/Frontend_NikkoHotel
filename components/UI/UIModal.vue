@@ -22,8 +22,6 @@
               <h2 class="text-h6 xl:text-h5">
                 <slot name="header"> </slot>
               </h2>
-
-              <!-- 彈窗關閉按鈕 -->
               <button
                 class="flex h-6 w-6 items-center justify-center text-icon-24 transition-colors hover:text-system-primary-100"
                 type="button"
@@ -111,14 +109,14 @@ const footerStyle = computed(() => {
   }[props.position]
 })
 
-/* 控制彈窗顯示 */
+/* Điều khiển hiển thị modal */
 const modalShow = defineModel<Boolean>({
   default: false
 })
 const toggleModal = () => {
   modalShow.value = !modalShow.value
 }
-// 點擊遮罩關閉談窗
+// Nhấn vào nền mờ để đóng modal
 const modalRefs = ref(null)
 const { isOutside } = useMouseInElement(modalRefs)
 const close = () => {
@@ -126,7 +124,7 @@ const close = () => {
     !props.focus ? toggleModal() : focusModal()
   }
 }
-// 設定滾輪控制器
+// Thiết lập khóa cuộn trang khi mở modal
 let windowLock: { value: boolean } | undefined
 onMounted(() => {
   windowLock = useScrollLock(document.body)
@@ -138,7 +136,7 @@ onMounted(() => {
   })
 })
 
-/* 聚焦 */
+/* Hiệu ứng focus (làm nổi bật modal) */
 const focusModal = () => {
   $gsap.to(modalRefs.value, {
     duration: 0.175,

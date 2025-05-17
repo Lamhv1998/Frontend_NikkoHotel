@@ -13,21 +13,20 @@
 </template>
 
 <script lang="ts" setup>
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const route = useRoute()
 
-/* 至頂 */
+/* Cuộn lên đầu trang */
 const { height } = useWindowSize()
 const { y } = useWindowScroll({ behavior: 'smooth' })
 const scrollTop = () => {
   y.value = 0
 }
 
-// 至頂: 按鈕顯示
+// Hiển thị nút cuộn lên đầu trang
 const scrollTopIsShow = computed(() => y.value > height.value / 4)
 
-/* 手機板高度調整 */
-
+/* Điều chỉnh chiều cao cho giao diện mobile */
 const isWithBase = computed(() => {
   return route.name === 'room-id'
 })

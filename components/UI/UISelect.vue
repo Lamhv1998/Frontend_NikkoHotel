@@ -43,7 +43,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '請選擇'
+    default: 'Vui lòng chọn'
   },
   placeholderValue: {
     type: [String, Number],
