@@ -19,7 +19,7 @@ const initialOrder: OrderPayload = {
 export const useOrderStore = defineStore(
   'order',
   () => {
-    /* 全局屬性 */
+    /* Thuộc tính toàn cục */
     const { $dayjs } = useNuxtApp()
 
     const order = ref<OrderPayload>({
@@ -30,7 +30,7 @@ export const useOrderStore = defineStore(
       order.value = { ...initialOrder }
     }
 
-    // 是否已選擇日期
+    // Đã chọn ngày nhận/trả phòng hay chưa
     const isConfirmedDate = computed(() => {
       const { checkInDate, checkOutDate } = order.value
       return checkInDate !== '' && checkOutDate !== ''

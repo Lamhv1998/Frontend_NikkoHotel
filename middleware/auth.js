@@ -7,7 +7,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
   /* api */
   const { checkLoginApi } = useApi()
   // Danh sách các route không cần đăng nhập
-  const publicRoutes = ['/auth/login', '/auth/register', '/confirmation']
+  const publicRoutes = [
+    '/auth/login',
+    '/auth/register',
+    '/confirmation',
+    '/room',
+    '/reserve',
+    '/admin'
+  ]
 
   // Nếu là route công khai thì cho qua
   if (publicRoutes.some((route) => to.path === route || to.path.startsWith(route + '/'))) {

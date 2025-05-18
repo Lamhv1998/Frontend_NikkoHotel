@@ -49,7 +49,7 @@
             <NuxtLink
               class="hot-link-wrapper"
               target="_blank"
-              to="https://enjoy-luxury-hotel-back.onrender.com/swagger/"
+              to="https:// Nikko-luxury-hotel-back.onrender.com/swagger/"
             >
               <Icon class="shrink-0" name="mdi:api" />
             </NuxtLink>
@@ -57,7 +57,7 @@
             <NuxtLink
               class="hot-link-wrapper"
               target="_blank"
-              to="https://github.com/cutecat8110/enjoy-luxury-hotel"
+              to="https://github.com/cutecat8110/ Nikko-luxury-hotel"
             >
               <Icon class="shrink-0" name="bi:github" />
             </NuxtLink>

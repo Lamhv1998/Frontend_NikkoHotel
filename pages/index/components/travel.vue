@@ -49,7 +49,7 @@ const travels = [
     icon: 'ic:baseline-directions-car',
     name: 'Tự lái xe',
     description:
-      'Nếu bạn chọn tự lái xe, có thể đi theo Quốc lộ 1, ra khỏi giao lộ Cao Hùng, đi về hướng trung tâm thành phố và làm theo biển chỉ dẫn để đến "Khách sạn Enjoy". Khách sạn có bãi đậu xe thuận tiện cho bạn.'
+      'Nếu bạn chọn tự lái xe, có thể đi theo Quốc lộ 1, ra khỏi giao lộ Hồ Chí Minh, đi về hướng trung tâm thành phố và làm theo biển chỉ dẫn để đến "Khách sạn  Nikko". Khách sạn có bãi đậu xe thuận tiện cho bạn.'
   },
   {
     icon: 'ic:baseline-train',

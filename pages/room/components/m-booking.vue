@@ -8,7 +8,7 @@
         <template v-if="!orderStore.isConfirmedDate">
           <!-- Giá mỗi đêm -->
           <p class="truncate text-body-2 text-system-gray-80">
-            {{ `${useFormatCurrency(props.room.price)} / đêm` }}
+            {{ `${useFormatCurrency(room.price)} / đêm` }}
           </p>
 
           <!-- Nút: Xem ngày có thể đặt -->
@@ -21,7 +21,7 @@
             <!-- Giá, số đêm, số người -->
             <p class="truncate text-body-2 text-system-gray-80">
               {{
-                `${useFormatCurrency(props.room.price)} / ${orderStore.totalNights} đêm / ${orderStore.order.peopleNum} người`
+                `${useFormatCurrency(room.price)} / ${orderStore.totalNights} đêm / ${orderStore.order.peopleNum} người`
               }}
             </p>
             <p
@@ -36,9 +36,8 @@
           <NuxtLink
             :to="{
               name: 'reserve-id',
-              params: { id: props.room._id }
+              params: { id: room._id }
             }"
-            @click="saveRoomId"
           >
             <UIButton text="Đặt phòng ngay" />
           </NuxtLink>
@@ -123,7 +122,7 @@
                 </div>
 
                 <!-- Chọn số người -->
-                <UIGuestCount v-model="orderStore.order.peopleNum" :max="props.room.maxPeople" />
+                <UIGuestCount v-model="orderStore.order.peopleNum" :max="room.maxPeople" />
               </div>
             </div>
 
@@ -152,20 +151,36 @@
 </template>
 
 <script lang="ts" setup>
-import type { RoomResponse } from '@/types'
+// import type { RoomResponse } from '@/types'
 
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const orderStore = useOrderStore()
 
 /* props */
-const props = defineProps({
-  room: {
-    type: Object as PropType<RoomResponse>,
-    required: true
-  }
-})
-
-/* 確認 #default-layout 已渲染 */
+// const props = defineProps({
+//   room: {
+//     type: Object as PropType<RoomResponse>,
+//     required: true
+//   }
+// })
+const room = {
+  _id: '1',
+  name: 'Phòng Deluxe',
+  description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+  price: 1000000,
+  areaInfo: '30 m²',
+  bedInfo: '1 giường đôi',
+  maxPeople: 2,
+  layoutInfo: [{ name: 'Giường đôi' }, { name: 'Bàn làm việc' }, { name: 'Tủ lạnh' }],
+  facilityInfo: [{ name: 'Điều hòa' }, { name: 'Tivi' }, { name: 'Wifi miễn phí' }],
+  amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }],
+  imageUrlList: [
+    'https://picsum.photos/400/300?random=1',
+    'https://picsum.photos/400/300?random=2',
+    'https://picsum.photos/400/300?random=3'
+  ]
+}
+/* Xác nhận #default-layout đã render */
 const isDefaultLayoutLoaded = ref(false)
 onMounted(() => {
   watchEffect(() => {
@@ -176,7 +191,7 @@ onMounted(() => {
   })
 })
 
-/* 控制彈窗顯示 */
+/* Điều khiển hiển thị modal */
 const isModalShow = ref(false)
 const toggleModal = (event: string) => {
   toggleProgress(0)
@@ -186,13 +201,13 @@ const toggleModal = (event: string) => {
     isModalShow.value = false
   }
 }
-// 進度狀態
+// Trạng thái tiến trình
 const progress = ref(0)
 const toggleProgress = (val: number) => {
   progress.value = val
 }
 
-/* 日期選擇器 */
+/* Bộ chọn ngày */
 const checkInOutDate = computed({
   get() {
     return { start: orderStore.order.checkInDate, end: orderStore.order.checkOutDate }
@@ -204,14 +219,14 @@ const checkInOutDate = computed({
     }
   }
 })
-// 重置日期
+// Đặt lại ngày
 const reset = () => {
   orderStore.order.checkInDate = ''
   orderStore.order.checkOutDate = ''
 }
 
-/* 儲存客戶預訂房間 */
-const saveRoomId = () => {
-  orderStore.order.roomId = props.room._id
-}
+// /* Lưu phòng khách đặt */
+// const saveRoomId = () => {
+//   orderStore.order.roomId = props.room._id
+// }
 </script>

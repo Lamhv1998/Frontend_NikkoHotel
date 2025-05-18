@@ -19,10 +19,10 @@
           <!-- Mô tả -->
           <div class="space-y-4 text-body-2 xl:space-y-10 xl:text-body">
             <p>
-              Khách sạn Enjoy Luxury, nằm ở trung tâm thành phố Cao Hùng xinh đẹp, là viên ngọc sáng
-              và niềm tự hào của thành phố này.<br />
+              Khách sạn Nikko Luxury, nằm ở trung tâm thành phố Hồ Chí Minh xinh đẹp, là viên ngọc
+              sáng và niềm tự hào của thành phố này.<br />
               Sứ mệnh của chúng tôi không chỉ mang đến trải nghiệm lưu trú sang trọng mà còn gửi gắm
-              vẻ đẹp và sức sống của Cao Hùng đến từng vị khách.
+              vẻ đẹp và sức sống của Hồ Chí Minh đến từng vị khách.
             </p>
             <p>
               Khách sạn của chúng tôi sở hữu thiết kế hiện đại, tinh tế, từng chi tiết đều toát lên
@@ -31,14 +31,14 @@
               được sự ấm áp như ở nhà.
             </p>
             <p>
-              Tại đây, bạn có thể ngắm nhìn thành phố Cao Hùng sôi động qua khung cửa sổ, hoặc
+              Tại đây, bạn có thể ngắm nhìn thành phố Hồ Chí Minh sôi động qua khung cửa sổ, hoặc
               thưởng thức những món ăn tinh tế tại nhà hàng của chúng tôi, trải nghiệm bữa tiệc vị
               giác tuyệt vời.
             </p>
             <p>
-              Enjoy Luxury không chỉ là nơi lưu trú lý tưởng tại Cao Hùng mà còn là sân khấu tuyệt
-              vời để bạn cảm nhận trọn vẹn sức hút của thành phố này. Chúng tôi mong được chào đón
-              bạn và cùng nhau tạo nên những kỷ niệm đáng nhớ tại Cao Hùng.
+              Nikko Luxury không chỉ là nơi lưu trú lý tưởng tại Hồ Chí Minh mà còn là sân khấu
+              tuyệt vời để bạn cảm nhận trọn vẹn sức hút của thành phố này. Chúng tôi mong được chào
+              đón bạn và cùng nhau tạo nên những kỷ niệm đáng nhớ tại Hồ Chí Minh.
             </p>
           </div>
         </div>

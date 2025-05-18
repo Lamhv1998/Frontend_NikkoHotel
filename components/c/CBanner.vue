@@ -38,7 +38,7 @@
               ]"
             >
               <h1 class="select-none text-h4 xl:text-h2">Nikko Hotel</h1>
-              <div class="mt-2 select-none text-title xl:text-h5">Enjoyment Luxury Hotel</div>
+              <div class="mt-2 select-none text-title xl:text-h5">Nikkoment Luxury Hotel</div>
 
               <div
                 class="mt-5 w-[0.125rem] flex-1 rounded-full bg-gradient-to-b from-system-primary-100 to-white xl:mt-10 xl:h-[0.125rem] xl:w-full xl:flex-initial xl:bg-gradient-to-r"

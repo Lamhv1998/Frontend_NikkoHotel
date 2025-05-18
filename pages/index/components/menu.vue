@@ -81,21 +81,21 @@ const menu = ref([
     image: 'https://picsum.photos/600/400?random=1',
     diningTime: '07:00 - 10:00',
     description:
-      'Buffet sáng tại khách sạn Enjoy Luxury là một trải nghiệm tuyệt vời với nhiều món ăn đa dạng và phong phú.'
+      'Buffet sáng tại khách sạn  Nikko Luxury là một trải nghiệm tuyệt vời với nhiều món ăn đa dạng và phong phú.'
   },
   {
     title: 'Tiệc trà chiều',
     image: 'https://picsum.photos/600/400?random=2',
     diningTime: '15:00 - 17:00',
     description:
-      'Tiệc trà chiều tại khách sạn Enjoy Luxury là một trải nghiệm thư giãn và sang trọng.'
+      'Tiệc trà chiều tại khách sạn  Nikko Luxury là một trải nghiệm thư giãn và sang trọng.'
   },
   {
     title: 'Tiệc tối',
     image: 'https://picsum.photos/600/400?random=3',
     diningTime: '18:00 - 21:00',
     description:
-      'Tiệc tối tại khách sạn Enjoy Luxury là một trải nghiệm ẩm thực tuyệt vời với nhiều món ăn ngon.'
+      'Tiệc tối tại khách sạn  Nikko Luxury là một trải nghiệm ẩm thực tuyệt vời với nhiều món ăn ngon.'
   }
 ])
 </script>

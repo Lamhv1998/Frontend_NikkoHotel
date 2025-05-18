@@ -98,18 +98,18 @@ definePageMeta({
   middleware: 'auth'
 })
 
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const { $dayjs, $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
-/* 即將來的訂單 */
+/* Đơn đặt phòng sắp tới */
 const recentOrder = computed(() => {
   const list = orderList.value
 
-  // 檢查 list 是否為空或 null
+  // Kiểm tra list có rỗng hoặc null không
   if (list === null || (Array.isArray(list) && list.length === 0)) return null
 
-  // 尋找最接近今天且尚未過期的訂單
+  // Tìm đơn đặt phòng gần nhất và chưa hết hạn
   const closestOrder = list.find((order: OrderResponse) => {
     return (
       $dayjs(order.checkInDate).isAfter($dayjs()) ||
@@ -117,11 +117,11 @@ const recentOrder = computed(() => {
     )
   })
 
-  // 如果都過期，回傳 null，否則回傳 closestOrder
+  // Nếu tất cả đều hết hạn, trả về null, ngược lại trả về closestOrder
   return closestOrder || null
 })
 
-/* 歷史訂單 */
+/* Lịch sử đặt phòng */
 const more = ref(false)
 const historyOrder = computed(() => {
   const list = orderList.value
@@ -133,7 +133,7 @@ const historyOrder = computed(() => {
 /* api */
 const { getOrdersApi, deleteOrderApi } = useApi()
 
-// api: 取得所有訂單
+// api: Lấy tất cả đơn đặt phòng
 const { data: orderList, refresh: getOrders } = await getOrdersApi({
   server: false,
   transform(res: any): OrderResponse[] {
@@ -145,16 +145,16 @@ const { data: orderList, refresh: getOrders } = await getOrdersApi({
   }
 })
 
-// api: 取消訂單
+// api: Hủy đơn đặt phòng
 const deleteOrder = () => {
   const id = recentOrder.value ? recentOrder.value._id : ''
   deleteOrderApi(id, {
     onResponse({ response }) {
       if (response.status === 200) {
         $Swal?.fire({
-          title: '行程取消成功',
+          title: 'Hủy chuyến đi thành công',
           icon: 'success',
-          confirmButtonText: '確認',
+          confirmButtonText: 'Xác nhận',
           confirmButtonColor: styleStore.confirmButtonColor,
           willClose: () => {
             getOrders()

@@ -105,7 +105,7 @@ const room = {
   bedInfo: '1 giường đôi',
   maxPeople: 2,
   price: 1000000,
-  _id: 'room-id-123'
+  _id: '1'
 }
 </script>
 

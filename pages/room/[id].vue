@@ -59,7 +59,6 @@
 </template>
 
 <script lang="ts" setup>
-// import type { RoomResponse } from '@/types'
 import Hero from './components/hero.vue'
 import Terms from './components/terms.vue'
 import Booking from './components/booking.vue'
@@ -69,8 +68,6 @@ import MBooking from './components/m-booking.vue'
 
 /* api */
 // const { getRoomApi } = useApi()
-
-// // api: 取得房型
 // const { data: room }: { data: Ref<RoomResponse | null> } = await getRoomApi(
 //   route.params.id as string,
 //   {

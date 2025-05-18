@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <PageDefault />
-    <div class="container">
-      <NuxtLink to="/">Quay về trang người dùng</NuxtLink>
-    </div>
+  <div class="py-6">
+    <dashbroad />
   </div>
 </template>
 
 <script lang="ts" setup>
+import dashbroad from './component/dashbroad.vue'
 definePageMeta({
-  layout: 'none'
+  layout: 'adminlayout'
 })
 </script>
