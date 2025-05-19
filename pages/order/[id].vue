@@ -102,7 +102,7 @@
                 />
 
                 <!-- Địa chỉ -->
-                <CAddress v-model="room.userInfo.address" blackhead disabled />
+                <!-- <CAddress v-model="room.userInfo.address" blackhead disabled /> -->
               </div>
             </section>
           </ClientOnly>

@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'flex flex-col bg-system-primary-100 text-white transition-all duration-300',
+        'flex flex-col bg-system-primary-100 text-white transition-all duration-300 ',
         isOpen ? 'w-64' : 'w-16'
       ]"
     >
@@ -26,7 +26,7 @@
       <!-- Menu Sections -->
       <div class="flex-1 overflow-y-auto">
         <div class="flex items-center justify-between px-4">
-          <button class="p-2" @click="toggleMenu">
+          <button class="fixed left-0 top-10 p-5" @click="toggleMenu">
             <Icon class="h-5 w-5 dark:text-gray-800" :name="isOpen ? 'mdi:close' : 'mdi:menu'" />
           </button>
         </div>

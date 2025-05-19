@@ -129,13 +129,13 @@
                 />
 
                 <!-- Địa chỉ -->
-                <CAddress
+                <!-- <CAddress
                   v-model="orderStore.order.userInfo.address"
                   :detail-error="errors.detail"
                   :zipcode-error="errors.zipcode"
                   blackhead
                   :disabled="apiPending"
-                />
+                /> -->
               </div>
             </section>
           </ClientOnly>
@@ -245,20 +245,21 @@ const schema = {
     if (!/^09\d{8}$/.test(val)) return 'Vui lòng nhập số điện thoại hợp lệ gồm 10 số'
     return {}
   },
-  email: 'required|email',
-  zipcode: (val: number) => {
-    if (val === 0) return 'Tỉnh/Thành phố là bắt buộc'
-    return {}
-  },
-  detail: 'required'
+  email: 'required|email'
+  // ,
+  // zipcode: (val: number) => {
+  //   if (val === 0) return 'Tỉnh/Thành phố là bắt buộc'
+  //   return {}
+  // },
+  // detail: 'required'
 }
 
 // Đơn đặt phòng: Xử lý khi submit không hợp lệ
-const invalidSubmit = (event: any) => {
-  const errorElement = document.getElementById(Object.keys(event.errors)[0])
-  errorElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  errorElement?.focus()
-}
+// const invalidSubmit = (event: any) => {
+//   const errorElement = document.getElementById(Object.keys(event.errors)[0])
+//   errorElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+//   errorElement?.focus()
+// }
 
 /* api */
 // const { getRoomApi, getUserApi, addOrderApi } = useApi()
