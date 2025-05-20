@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout>
+  <NuxtLayout :key="$route.fullPath">
     <NuxtPage />
   </NuxtLayout>
   <UIScrollTop />
