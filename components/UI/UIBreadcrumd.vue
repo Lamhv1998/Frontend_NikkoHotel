@@ -7,17 +7,17 @@
       <li class="align-items-center flex">
         <NuxtLink
           :class="{ 'font-semibold': isCurrent('/admin') }"
-          class="tex t-system-primary-100 hover:underline"
+          class="hover:underline"
           to="/admin"
         >
-          Dashboard
+          Admin
         </NuxtLink>
         <span v-if="breadcrumbs.length" class="mx-2">/</span>
       </li>
       <li v-for="(crumb, index) in breadcrumbs" :key="crumb.link" class="flex items-center">
         <NuxtLink
           :class="{ 'font-semibold': index === breadcrumbs.length - 1 }"
-          class="text-system-primary-100 hover:underline"
+          class="hover:underline"
           :to="crumb.link"
         >
           {{ crumb.name }}
@@ -37,15 +37,16 @@ const breadcrumbs = computed(() => {
   // Tìm mục menu tương ứng với route hiện tại
   for (const menu of menuslidebar.value) {
     for (const item of menu.items) {
-      if (item.link === currentPath) {
+      if (currentPath.startsWith(item.link)) {
         crumbs.push({ name: menu.title, link: '/admin' }) // Nhóm menu
         crumbs.push({ name: item.name, link: item.link }) // Mục menu
-        break
+        return crumbs
       }
     }
   }
   return crumbs
 })
+
 const isCurrent = (path) => {
   return route.path === path
 }

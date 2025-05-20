@@ -5,7 +5,7 @@ export function useMenuSidebar() {
     {
       title: 'User Management',
       items: [
-        { name: 'Installation', link: '/admin/installation', icon: 'mdi:home' },
+        { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
         { name: 'Plugins', link: '/admin/plugins', icon: 'mdi:puzzle' },
         { name: 'Migrations', link: '/admin/migrations', icon: 'mdi:database-import' }
       ]
