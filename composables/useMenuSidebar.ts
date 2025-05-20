@@ -6,32 +6,24 @@ export function useMenuSidebar() {
       title: 'User Management',
       items: [
         { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
-        { name: 'Plugins', link: '/admin/plugins', icon: 'mdi:puzzle' },
-        { name: 'Migrations', link: '/admin/migrations', icon: 'mdi:database-import' }
+        { name: 'Create-User', link: '/admin/user/create', icon: 'mdi:account' }
       ]
     },
     {
       title: 'Room Management',
-      items: [
-        { name: 'Header', link: '/admin/header', icon: 'mdi:page-layout-header' },
-        { name: 'Drawer', link: '/admin/drawer', icon: 'mdi:menu-open' },
-        { name: 'Page Title', link: '/admin/page-title', icon: 'mdi:format-title' }
-      ]
+      items: [{ name: 'Room', link: '/admin/header', icon: 'mdi:home-group' }]
     },
     {
       title: 'Booking Management',
-      items: [
-        { name: 'Homepage', link: '/admin/homepage', icon: 'mdi:home' },
-        { name: 'Users', link: '/admin/users', icon: 'mdi:account-group' },
-        { name: 'Tools', link: '/admin/tools', icon: 'mdi:tools' }
-      ]
+      items: [{ name: 'Booking', link: '/admin/homepage', icon: 'mdi:home' }]
     },
     {
       title: 'Promotion Management',
-      items: [
-        { name: 'Tutorials', link: '/admin/tutorials', icon: 'mdi:school' },
-        { name: 'Changelog', link: '/admin/changelog', icon: 'mdi:clipboard-text' }
-      ]
+      items: [{ name: 'Tutorials', link: '/admin/tutorials', icon: 'mdi:sale' }]
+    },
+    {
+      title: 'Service Management',
+      items: [{ name: 'Service', link: '/admin/tutorials', icon: 'mdi:room-service' }]
     }
   ])
 
