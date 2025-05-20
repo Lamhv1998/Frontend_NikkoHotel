@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex" @click="toggleMenu">
     <!-- Sidebar -->
     <aside
       :class="[
@@ -7,30 +7,14 @@
         isOpen ? 'w-64' : 'w-16'
       ]"
     >
-      <!-- User Info Section (Top) -->
-      <div v-if="isOpen" class="flex items-center space-x-4 p-4">
-        <img
-          class="h-12 w-12 rounded-lg dark:bg-gray-500"
-          src="https://source.unsplash.com/100x100/?portrait"
-          alt="User avatar"
-        />
-        <div>
-          <h2 class="text-lg font-semibold">Leroy Jenkins</h2>
-          <span class="flex items-center space-x-1">
-            <NuxtLink class="text-xs hover:underline dark:text-gray-600" to="/admin/profile">
-              View profile
-            </NuxtLink>
-          </span>
-        </div>
-      </div>
       <!-- Menu Sections -->
-      <div class="flex-1 overflow-y-auto">
-        <div class="flex items-center justify-between px-4">
-          <button class="fixed left-0 top-10 p-5" @click="toggleMenu">
-            <Icon class="h-5 w-5 dark:text-gray-800" :name="isOpen ? 'mdi:close' : 'mdi:menu'" />
+      <div class="fixed flex-1 overflow-y-auto">
+        <div class="flex items-center justify-end px-4">
+          <button class="p-2">
+            <Icon class="h-7 w-7 dark:text-gray-800" :name="isOpen ? 'mdi:close' : 'mdi:menu'" />
           </button>
         </div>
-        <div v-if="isOpen" class="px-2">
+        <div v-if="isOpen" class="px-2 py-2">
           <ul class="space-y-1 pb-4 pt-2 text-sm">
             <li v-for="menu in menuslidebar" :key="menu.title" class="rounded-sm">
               <div class="p-2 text-sm font-semibold uppercase tracking-widest dark:text-gray-600">
@@ -52,6 +36,22 @@
         </div>
       </div>
     </aside>
+    <!-- User Info Section (Top) -->
+    <div v-if="isOpen" class="fixed m-1 flex items-center space-x-4 p-1">
+      <img
+        class="h-12 w-12 rounded-lg dark:bg-gray-500"
+        src="https://picsum.photos/400/300?random=1"
+        alt="User avatar"
+      />
+      <div>
+        <h2 class="text-lg font-semibold">Leroy Jenkins</h2>
+        <span class="flex items-center space-x-1">
+          <NuxtLink class="text-xs hover:underline dark:text-gray-600" to="/admin/profile">
+            View profile
+          </NuxtLink>
+        </span>
+      </div>
+    </div>
     <!-- Nội dung chính (slot hoặc router-view) -->
     <div class="flex-1">
       <slot />

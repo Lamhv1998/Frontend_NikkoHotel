@@ -2,32 +2,55 @@
   <div class="py-6">
     <!-- Tiêu đề -->
     <h1 class="mb-6 text-3xl font-bold text-system-gray-80">Dashboard</h1>
-
-    <!-- Thẻ thống kê -->
-    <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div class="rounded-lg bg-system-gray-10 p-6 shadow-md">
-        <h3 class="text-lg font-semibold text-system-gray-80">Tổng người dùng</h3>
+    <div class="mb-5 flex justify-around rounded-lg bg-system-gray-10 p-6 shadow-md">
+      <div>
+        <h3 class="text-lg font-semibold text-system-gray-80">Checkin</h3>
         <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.totalUsers }}</p>
         <p class="mt-1 text-sm text-system-gray-60">+{{ stats.userGrowth }}% so với tháng trước</p>
       </div>
-      <div class="=-4 rounded-lg bg-system-gray-10 p-6 shadow-md">
-        <h3 class="text-lg font-semibold text-system-gray-80">Tổng bài viết</h3>
-        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.totalPosts }}</p>
-        <p class="mt-1 text-sm text-system-gray-60">+{{ stats.postGrowth }}% so với tháng trước</p>
+      <div>
+        <h3 class="text-lg font-semibold text-system-gray-80">Checkout</h3>
+        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.totalUsers }}</p>
+        <p class="mt-1 text-sm text-system-gray-60">+{{ stats.userGrowth }}% so với tháng trước</p>
       </div>
-      <div class="rounded-lg bg-system-gray-10 p-6 shadow-md">
-        <h3 class="text-lg font-semibold text-system-gray-80">Doanh thu</h3>
-        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.revenue }} VNĐ</p>
-        <p class="mt-1 text-sm text-system-gray-60">
-          +{{ stats.revenueGrowth }}% so với tháng trước
-        </p>
+      <div>
+        <h3 class="text-lg font-semibold text-system-gray-80">Tổng phòng</h3>
+        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.totalUsers }}</p>
+        <p class="mt-1 text-sm text-system-gray-60">+{{ stats.userGrowth }}% so với tháng trước</p>
       </div>
-      <div class="rounded-lg bg-system-gray-10 p-6 shadow-md">
-        <h3 class="text-lg font-semibold text-system-gray-80">Doanh thu</h3>
-        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.revenue }} VNĐ</p>
-        <p class="mt-1 text-sm text-system-gray-60">
-          +{{ stats.revenueGrowth }}% so với tháng trước
-        </p>
+      <div>
+        <h3 class="text-lg font-semibold text-system-gray-80">Còn trống</h3>
+        <p class="mt-2 text-2xl font-bold text-system-primary-100">{{ stats.totalUsers }}</p>
+        <p class="mt-1 text-sm text-system-gray-60">+{{ stats.userGrowth }}% so với tháng trước</p>
+      </div>
+    </div>
+    <!-- Thẻ thống kê -->
+    <div class="mb-6 grid grid-cols-2 gap-6 md:grid-cols-2">
+      <div class="bg-system-gray-10 p-6 shadow-md">
+        <h3 class="text-2xl font-semibold text-system-gray-80">
+          Trạng thái phòng : {{ stats.totalRooms }} phòng
+        </h3>
+        <div class="grid grid-cols-2 gap-4 p-1 md:grid-cols-2">
+          <p class="mt-2 text-sm font-bold">Phòng có người: {{ stats.occupied }}</p>
+          <p class="mt-2 text-sm font-bold">Phòng có sẵn: {{ stats.vacant }}</p>
+          <p class="mt-2 text-sm">Số người: {{ stats.totalUsers }}</p>
+          <p class="mt-2 text-sm">Đang dọn dẹp: {{ stats.occupied }}</p>
+          <p class="mt-2 text-sm">Đang dọn dẹp: {{ stats.occupied }}</p>
+          <p class="mt-2 text-sm">Bảo trì: {{ stats.occupied }}</p>
+        </div>
+      </div>
+      <div class="col-span-1 rounded-lg bg-system-gray-10 p-6 shadow-md">
+        <h3 class="text-2xl font-semibold text-system-gray-80">Doanh thu</h3>
+        <div class="grid grid-cols-2">
+          <h2 class="text-lg font-semibold text-system-info-100">Doanh thu tháng</h2>
+          <p class="mt-2 text-lg font-bold text-system-primary-80">{{ stats.weekly_revenue }}</p>
+          <h2 class="text-lg font-semibold text-system-info-100">Doanh thu tháng</h2>
+          <p class="mt-2 text-lg font-bold text-system-primary-80">{{ stats.monthly_revenue }}</p>
+          <h2 class="text-lg font-semibold text-system-info-100">Doanh thu tháng</h2>
+          <p class="mt-2 text-lg font-bold text-system-primary-80">{{ stats.quarterly_revenue }}</p>
+          <h2 class="text-lg font-semibold text-system-info-100">Doanh thu tháng</h2>
+          <p class="mt-2 text-lg font-bold text-system-primary-80">{{ stats.yearly_revenue }}</p>
+        </div>
       </div>
     </div>
 
@@ -87,12 +110,19 @@ import { ref } from 'vue'
 
 // Dữ liệu giả cho thẻ thống kê
 const stats = ref({
+  weekly_revenue: 1000000,
+  monthly_revenue: 5000000,
+  quarterly_revenue: 15000000,
+  yearly_revenue: 60000000,
   totalUsers: 1500,
+  totalRooms: 1500,
   userGrowth: 12.5,
   totalPosts: 3200,
   postGrowth: 8.3,
   revenue: 45000000,
-  revenueGrowth: 15.7
+  revenueGrowth: 15.7,
+  occupied: 300,
+  vacant: 200
 })
 
 // Dữ liệu giả cho bảng giao dịch

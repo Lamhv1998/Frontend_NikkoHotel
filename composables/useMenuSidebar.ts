@@ -3,37 +3,31 @@ import { ref } from 'vue'
 export function useMenuSidebar() {
   const menuslidebar = ref([
     {
-      title: 'Getting Started',
+      title: 'User Management',
       items: [
         { name: 'Installation', link: '/admin/installation', icon: 'mdi:home' },
         { name: 'Plugins', link: '/admin/plugins', icon: 'mdi:puzzle' },
-        { name: 'Migrations', link: '/admin/migrations', icon: 'mdi:database-import' },
-        { name: 'Appearance', link: '/admin/appearance', icon: 'mdi:palette' },
-        { name: 'Mamba UI', link: '/admin/mamba-ui', icon: 'mdi:brush' }
+        { name: 'Migrations', link: '/admin/migrations', icon: 'mdi:database-import' }
       ]
     },
     {
-      title: 'Dashboard',
+      title: 'Room Management',
       items: [
         { name: 'Header', link: '/admin/header', icon: 'mdi:page-layout-header' },
         { name: 'Drawer', link: '/admin/drawer', icon: 'mdi:menu-open' },
-        { name: 'Page Title', link: '/admin/page-title', icon: 'mdi:format-title' },
-        { name: 'Menus', link: '/admin/menus', icon: 'mdi:menu' },
-        { name: 'Sidebar', link: '/admin/sidebar', icon: 'mdi:view-dashboard' },
-        { name: 'Footer', link: '/admin/footer', icon: 'mdi:page-layout-footer' }
+        { name: 'Page Title', link: '/admin/page-title', icon: 'mdi:format-title' }
       ]
     },
     {
-      title: 'Pages',
+      title: 'Booking Management',
       items: [
         { name: 'Homepage', link: '/admin/homepage', icon: 'mdi:home' },
         { name: 'Users', link: '/admin/users', icon: 'mdi:account-group' },
-        { name: 'Tools', link: '/admin/tools', icon: 'mdi:tools' },
-        { name: 'Settings', link: '/admin/settings', icon: 'mdi:cog' }
+        { name: 'Tools', link: '/admin/tools', icon: 'mdi:tools' }
       ]
     },
     {
-      title: 'Misc',
+      title: 'Promotion Management',
       items: [
         { name: 'Tutorials', link: '/admin/tutorials', icon: 'mdi:school' },
         { name: 'Changelog', link: '/admin/changelog', icon: 'mdi:clipboard-text' }
