@@ -4,10 +4,7 @@ export function useMenuSidebar() {
   const menuslidebar = ref([
     {
       title: 'User Management',
-      items: [
-        { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
-        { name: 'Create-User', link: '/admin/user/create', icon: 'mdi:account' }
-      ]
+      items: [{ name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' }]
     },
     {
       title: 'Room Management',
