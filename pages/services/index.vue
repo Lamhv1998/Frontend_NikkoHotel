@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white bg-cover bg-center bg-no-repeat p-8 font-serif">
+  <div class="min-h-screen bg-white bg-cover bg-center bg-no-repeat p-8 font-serif" style="background-color: antiquewhite;">
     <div class="max-w-5xl mx-auto mb-8">
       <UITitle text1="Đặt dịch vụ khách sạn"/>
     </div>
