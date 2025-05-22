@@ -14,7 +14,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     '/room',
     '/reserve',
     '/admin',
-    '/blog'
+    '/blog',
+    '/user/orders',
+    '/user/',
+    '/*',
+    '/**'
   ]
 
   // Nếu là route công khai thì cho qua
