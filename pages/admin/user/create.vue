@@ -1,11 +1,11 @@
 <template>
   <section class="p-6">
-    <UIStaffForm @submit="handleCreate" />
+    <userform @submit="handleCreate" />
   </section>
 </template>
 
 <script setup>
-import UIStaffForm from './component/UIStaffForm.vue'
+import userform from './component/UIUserForm.vue'
 definePageMeta({
   layout: 'adminlayout'
 })

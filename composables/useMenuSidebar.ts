@@ -4,11 +4,14 @@ export function useMenuSidebar() {
   const menuslidebar = ref([
     {
       title: 'User Management',
-      items: [{ name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' }]
+      items: [
+        { name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' },
+        { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' }
+      ]
     },
     {
       title: 'Room Management',
-      items: [{ name: 'Room', link: '/admin/header', icon: 'mdi:home-group' }]
+      items: [{ name: 'Room', link: '/admin/room', icon: 'mdi:home-group' }]
     },
     {
       title: 'Booking Management',

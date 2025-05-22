@@ -1,11 +1,11 @@
 <template>
   <section class="p-6">
-    <UIStaffForm @submit="handleCreate" />
+    <UIRoomForm @submit="handleCreate" />
   </section>
 </template>
 
 <script setup>
-import UIStaffForm from './component/UIStaffForm.vue'
+import UIRoomForm from './component/UIRoomForm.vue'
 definePageMeta({
   layout: 'adminlayout'
 })

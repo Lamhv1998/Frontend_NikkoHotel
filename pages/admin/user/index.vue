@@ -1,6 +1,6 @@
 <template>
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <CTitle class="m-5 p-3" title="Danh sách phòng"></CTitle>
+    <CTitle class="m-5 p-3" title="Danh sách Users"></CTitle>
     <div
       class="flex flex-col flex-wrap items-center justify-around space-y-4 bg-white px-5 py-4 dark:bg-gray-900 md:flex-row md:space-y-0"
     >
@@ -39,10 +39,10 @@
           </ul>
         </template>
       </UIDropdown>
-      <NuxtLink to="/admin/staff/create">
+      <NuxtLink to="/admin/user/create">
         <UIButton
           class="flex h-9 items-center justify-end rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-          text="Thêm nhân viên"
+          text="Thêm user"
         >
         </UIButton>
       </NuxtLink>
@@ -77,15 +77,19 @@
       <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th class="p-4" scope="col">
-            <UICheckboxSelect
-              id="checkbox-table-search-${user.id}"
-              v-model="selectAll"
-              label="Select all"
-              @change="toggleSelectAll"
-            />
+            <div class="flex items-center">
+              <UICheckboxSelect
+                id="`checkbox-table-search-${user.id}`"
+                v-model="selectAll"
+                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                type="checkbox"
+                @change="toggleSelectAll"
+              />
+              <label class="sr-only" for="checkbox-all-search">Select all</label>
+            </div>
           </th>
           <th class="px-6 py-3" scope="col">Name</th>
-          <th class="px-6 py-3" scope="col">Position</th>
+          <th class="px-6 py-3" scope="col">Role</th>
           <th class="px-6 py-3" scope="col">Status</th>
           <th class="px-6 py-3" scope="col">Action</th>
           <th>
@@ -170,7 +174,7 @@ const users = ref([
     id: 1,
     name: 'Giang',
     email: 'neil.sims@flowbite.com',
-    position: 'React Developer',
+    position: 'VIP1',
     status: 'Active',
     avatar: 'https://picsum.photos/400/300?random=1',
     selected: false
@@ -179,7 +183,7 @@ const users = ref([
     id: 2,
     name: 'Lâm',
     email: 'bonnie@flowbite.com',
-    position: 'Designer',
+    position: 'VIP2',
     status: 'Deleted',
     avatar: 'https://picsum.photos/400/300?random=2',
     selected: false
@@ -188,7 +192,7 @@ const users = ref([
     id: 3,
     name: 'Tài',
     email: 'jese@flowbite.com',
-    position: 'Vue JS Developer',
+    position: 'VIP3',
     status: 'Active',
     avatar: 'https://picsum.photos/400/300?random=3',
     selected: false
@@ -197,7 +201,7 @@ const users = ref([
     id: 4,
     name: 'Hùng',
     email: 'thomas@flowbite.com',
-    position: 'UI/UX Engineer',
+    position: 'VIP3',
     status: 'Online',
     avatar: 'https://picsum.photos/400/300?random=4',
     selected: false
@@ -206,7 +210,7 @@ const users = ref([
     id: 5,
     name: 'Linh',
     email: 'leslie@flowbite.com',
-    position: 'SEO Specialist',
+    position: 'VIP4',
     status: 'Offline',
     avatar: 'https://picsum.photos/400/300?random=5',
     selected: false
@@ -215,7 +219,7 @@ const users = ref([
     id: 6,
     name: 'Thạch',
     email: 'leslie@flowbite.com',
-    position: 'SEO Specialist',
+    position: 'VIP6 ',
     status: 'Offline',
     avatar: 'https://picsum.photos/400/300?random=5',
     selected: false
