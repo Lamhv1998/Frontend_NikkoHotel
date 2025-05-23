@@ -35,7 +35,7 @@ const props = defineProps({
 const cssColor = computed<string>(() => {
   return {
     primary:
-      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg bg-system-primary-100 px-8 py-4 text-sub-title xl:text-title text-white transition-colors hover:bg-system-primary-120 disabled:bg-system-gray-40 disabled:text-system-gray-60',
+      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg bg-system-primary-100 px-8 py-4 text-sub-title xl:text-title text-white transition-colors hover:bg-system-primary-60 disabled:bg-system-gray-40 disabled:text-system-gray-60',
     secondary:
       'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg border border-system-primary-100 bg-white px-8 py-4 text-sub-title xl:text-title text-system-primary-100 transition-colors hover:border-system-primary-120 hover:bg-system-primary-10 hover:text-system-primary-120 disabled:border-system-gray-60 disabled:text-system-gray-60 disabled:bg-white',
     ghost:

@@ -7,7 +7,7 @@
       <div
         v-if="open"
         ref="dropdownRefs"
-        class="absolute -bottom-4 right-0 w-[16.25rem] translate-y-full overflow-hidden rounded-[1.25rem] bg-white py-3 shadow-md"
+        class="absolute -bottom-4 left-0 w-[16.25rem] translate-y-full overflow-hidden rounded-[1.25rem] bg-white py-3 shadow-md"
       >
         <slot name="item" />
       </div>
