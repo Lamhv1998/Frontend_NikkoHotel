@@ -13,7 +13,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     '/confirmation',
     '/room',
     '/reserve',
-    '/admin'
+    '/admin',
+    '/blog'
   ]
 
   // Nếu là route công khai thì cho qua
