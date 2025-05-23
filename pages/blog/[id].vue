@@ -3,8 +3,8 @@ import { blogList } from '@/stores/blogs'
 import { useRoute } from 'vue-router'
 // pages/blog/index.vue hoặc pages/blog/[id].vue
 import BlogCard from './components/BlogCard.vue'
-import BlogFilters from './components/BlogFilters.vue'
-import Pagination from './components/Pagination.vue'
+// import BlogFilters from './components/BlogFilters.vue'
+// import Pagination from './components/Pagination.vue'
 
 
 const route = useRoute()
