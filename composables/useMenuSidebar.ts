@@ -6,7 +6,8 @@ export function useMenuSidebar() {
       title: 'User Management',
       items: [
         { name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' },
-        { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' }
+        { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
+        { name: 'Permission', link: '/admin/permissions', icon: 'mdi:account-group' }
       ]
     },
     {
