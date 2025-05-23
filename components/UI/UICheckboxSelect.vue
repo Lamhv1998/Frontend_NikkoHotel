@@ -7,7 +7,7 @@
       :checked="modelValue"
       @change="onChange"
     />
-    <label class="sr-only" for="id">{{ label }}</label>
+    <label class="mx-2" for="id">{{ label }}</label>
   </div>
 </template>
 

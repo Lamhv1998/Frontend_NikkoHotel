@@ -42,6 +42,7 @@
       <UIButton
         class="flex h-9 items-center justify-end rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
         text="Thêm phân quyền"
+        @click="isModalVisible2 = true"
       >
       </UIButton>
       <div class="relative">
@@ -129,15 +130,18 @@
           <td class="px-6 py-4">
             <div class="flex items-center">
               <div
-                :class="permission.status === 'Online' ? 'bg-green-500' : 'bg-red-500'"
+                :class="permission.status === 'Hoạt động' ? 'bg-green-500' : 'bg-red-500'"
                 class="me-2 h-2.5 w-2.5 rounded-full"
               ></div>
               {{ permission.status }}
             </div>
           </td>
           <td class="px-6 py-4">
-            <NuxtLink class="font-medium text-blue-600 hover:underline dark:text-blue-500">
-              Edit user
+            <NuxtLink
+              class="cursor-pointer font-medium text-blue-600 hover:underline dark:text-blue-500"
+              @click="isModalVisible = true"
+            >
+              Chỉnh sửa quyền
             </NuxtLink>
           </td>
           <td>
@@ -158,15 +162,97 @@
       />
     </div>
   </div>
+  <UIModal v-model="isModalVisible" position="center" size="md">
+    <template #header>
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Chỉnh sửa quyền</h3>
+    </template>
+
+    <div class="mb-6 bg-gray-100 px-0 py-5">
+      <div class="space-y-15 px-4 py-5 sm:px-6">
+        <!-- Lễ tân - Thu Ngân -->
+        <div>
+          <span class="text-lg font-bold">Lễ tân - Thu Ngân</span>
+          <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div
+              v-for="item in permissionscheck.filter((p) => p.role === 'lễ tân')"
+              :key="item.id"
+              class="my-2 rounded-xl bg-white p-2 shadow-xl"
+            >
+              <UICheckboxSelect
+                :id="'checkbox-table-search-' + item.id"
+                v-model="item.selected"
+                :label="item.permissionData"
+                @change="toggleSelectAll"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Dịch vụ - Kho -->
+        <div>
+          <span class="text-lg font-bold">Dịch vụ - Kho</span>
+          <div
+            v-for="item in permissionscheck.filter((p) => p.role === 'dịch vụ' || p.role === 'kho')"
+            :key="item.id"
+            class="my-2 rounded-xl bg-white p-2 shadow-xl"
+          >
+            <UICheckboxSelect
+              :id="'checkbox-table-search-' + item.id"
+              v-model="item.selected"
+              :label="item.permissionData"
+              @change="toggleSelectAll"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <button
+        class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        type="button"
+        @click="isModalVisible = false"
+      >
+        Đóng
+      </button>
+      <button
+        class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        type="button"
+        @click="isModalVisible = false"
+      >
+        Lưu
+      </button>
+    </template>
+  </UIModal>
+  <UIModal v-model="isModalVisible2" class="h-2" position="center">
+    <template #header>
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Thêm quyền</h3>
+    </template>
+    <div class="mb-6 bg-gray-100 px-0 py-5">
+      <div class="max-h-96"><Permissform /></div>
+    </div>
+  </UIModal>
 </template>
 
 <script setup>
 import CTitle from '~/components/c/CTitle.vue'
+import UIModal from '~/components/UI/UIModal.vue'
+import Permissform from './component/permissform.vue'
 
 definePageMeta({
   layout: 'adminlayout'
 })
-
+// Sammple data
+const permissionscheck = ref([
+  { id: 1, permissionData: 'Xem báo cáo hàng tháng', selected: false, role: 'lễ tân' },
+  { id: 2, permissionData: 'Tạo hoá đơn', selected: false, role: 'lễ tân' },
+  { id: 3, permissionData: 'Xem báo cáo hàng tháng', selected: false, role: 'lễ tân' },
+  { id: 4, permissionData: 'Tạo hoá đơn', selected: false, role: 'lễ tân' },
+  { id: 5, permissionData: 'Nhập kho', selected: false, role: 'kho' },
+  { id: 6, permissionData: 'Quản lý dịch vụ', selected: false, role: 'dịch vụ' },
+  { id: 7, permissionData: 'Nhập kho', selected: false, role: 'kho' },
+  { id: 8, permissionData: 'Quản lý dịch vụ', selected: false, role: 'dịch vụ' }
+])
 // Sample data
 const permissions = ref([
   {
@@ -174,7 +260,7 @@ const permissions = ref([
     permissionName: 'ADMIN',
     note: 'neil.sims@flowbite.com',
     create_at: '2024-01-01',
-    status: 'Active',
+    status: 'Hoạt động',
     selected: false
   },
   {
@@ -182,7 +268,7 @@ const permissions = ref([
     permissionName: 'Lễ Tân',
     note: 'neil.sims@flowbite.com',
     create_at: '2024-01-01',
-    status: 'Active',
+    status: 'Ngừng hoạt động',
     selected: false
   },
   {
@@ -190,7 +276,7 @@ const permissions = ref([
     permissionName: 'Kho',
     note: 'neil.sims@flowbite.com',
     create_at: '2024-01-01',
-    status: 'Active',
+    status: 'Ngừng hoạt động',
     selected: false
   },
   {
@@ -198,11 +284,13 @@ const permissions = ref([
     permissionName: 'Vệ Sinh',
     note: 'neil.sims@flowbite.com',
     create_at: '2024-01-01',
-    status: 'Active',
+    status: 'Hoạt động',
     selected: false
   }
 ])
-
+// Biến điều khiển trạng thái modal
+const isModalVisible = ref(false)
+const isModalVisible2 = ref(false)
 // Lọc theo trạng thái
 const softStatus = ref('all')
 const softPermissions = computed(() => {

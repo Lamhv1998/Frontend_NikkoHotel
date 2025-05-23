@@ -41,6 +41,19 @@
               placeholder="Email"
             />
           </div>
+          <div class="col-span-full sm:col-span-3">
+            <label class="text-sm font-medium text-gray-600" for="role">Quyền:</label>
+            <select
+              id="role"
+              v-model="form.role"
+              class="mt-1 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="" disabled>-- Chọn quyền --</option>
+              <option value="admin">Admin</option>
+              <option value="user">Người dùng</option>
+              <option value="staff">Nhân viên</option>
+            </select>
+          </div>
           <div class="col-span-full">
             <label class="text-sm font-medium text-gray-600" for="address">Address</label>
             <input
