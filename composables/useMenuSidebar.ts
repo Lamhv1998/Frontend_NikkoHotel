@@ -7,7 +7,9 @@ export function useMenuSidebar() {
       items: [
         { name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' },
         { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
-        { name: 'Permission', link: '/admin/permissions', icon: 'mdi:account-group' }
+        { name: 'Permission', link: '/admin/permissions', icon: 'mdi:account-group' },
+        { name: 'Shift', link: '/admin/staff/shifthistory', icon: 'mdi:account-group' },
+        { name: 'Handover', link: '/admin/staff/handover', icon: 'mdi:account-group' }
       ]
     },
     {

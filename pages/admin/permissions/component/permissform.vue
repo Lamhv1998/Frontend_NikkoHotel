@@ -4,7 +4,6 @@
       class="mx-auto max-w-5xl space-y-10 rounded-xl bg-white p-8 shadow-xl"
       @submit.prevent="onSubmit"
     >
-      <!-- THÔNG TIN PHÒNG -->
       <fieldset class="grid grid-cols-1 gap-6">
         <div class="col-span-full lg:col-span-1">
           <p class="text-xl font-semibold text-gray-700">Thông tin quyền</p>
@@ -14,20 +13,20 @@
             <label class="text-sm font-medium text-gray-600" for="firstname">Tên quyền</label>
             <input
               id="firstname"
-              v-model="form.roomNum"
+              v-model="form.permissName"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               type="text"
-              placeholder="Nhập số phòng"
+              placeholder="Nhập tên quyền"
             />
           </div>
           <div class="col-span-full sm:col-span-3">
             <label class="text-sm font-medium text-gray-600" for="lastname">Miêu tả</label>
             <input
               id="lastname"
-              v-model="form.floor"
+              v-model="form.description"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               type="text"
-              placeholder="Nhập tầng"
+              placeholder="Nhập miêu tả"
             />
           </div>
         </div>
@@ -51,7 +50,7 @@ const props = defineProps({
     type: Object,
     default: () => ({
       permissName: '',
-      note: ''
+      description: ''
     })
   },
   isEdit: {
@@ -65,6 +64,7 @@ const emit = defineEmits(['submit'])
 const form = reactive({ ...props.permissData })
 
 const onSubmit = () => {
+  alert('Form submitted with data: ' + JSON.stringify(form))
   emit('submit', { ...form })
 }
 </script>

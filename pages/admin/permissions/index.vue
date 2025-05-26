@@ -17,23 +17,23 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
                 @click.prevent="softStatus = 'all'"
-                >All</a
+                >Tất cả</a
               >
             </li>
             <li>
               <a
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
-                @click.prevent="softStatus = 'Active'"
-                >Active</a
+                @click.prevent="softStatus = 'Hoạt động'"
+                >Hoạt động</a
               >
             </li>
             <li>
               <a
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
-                @click.prevent="softStatus = 'Deleted'"
-                >Deleted</a
+                @click.prevent="softStatus = 'Ngừng hoạt động'"
+                >Ngừng hoạt động</a
               >
             </li>
           </ul>
@@ -179,7 +179,7 @@
               class="my-2 rounded-xl bg-white p-2 shadow-xl"
             >
               <UICheckboxSelect
-                :id="'checkbox-table-search-' + item.id"
+                id="'checkbox-table-search-' + permission.id"
                 v-model="item.selected"
                 :label="item.permissionData"
                 @change="toggleSelectAll"
@@ -197,7 +197,7 @@
             class="my-2 rounded-xl bg-white p-2 shadow-xl"
           >
             <UICheckboxSelect
-              :id="'checkbox-table-search-' + item.id"
+              id="'checkbox-table-search-' + permission.id"
               v-model="item.selected"
               :label="item.permissionData"
               @change="toggleSelectAll"

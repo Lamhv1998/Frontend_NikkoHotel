@@ -1,3 +1,4 @@
+<!-- pages/admin/user/index.vue -->
 <template>
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <CTitle class="m-5 p-3" title="Danh sách Users"></CTitle>
@@ -17,7 +18,7 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
                 @click.prevent="softStatus = 'all'"
-                >All</a
+                >Tất cả</a
               >
             </li>
             <li>
@@ -25,7 +26,7 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
                 @click.prevent="softStatus = 'Active'"
-                >Active</a
+                >Kích hoạt</a
               >
             </li>
             <li>
@@ -33,7 +34,7 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 href="#"
                 @click.prevent="softStatus = 'Deleted'"
-                >Deleted</a
+                >Đã xóa</a
               >
             </li>
           </ul>
@@ -46,6 +47,11 @@
         >
         </UIButton>
       </NuxtLink>
+      <UIButton
+        class="flex h-9 items-center justify-end rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+        text="Danh sách loại thành viên"
+        @click="isModalVisible = true"
+      ></UIButton>
       <div class="relative">
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <svg
@@ -69,7 +75,7 @@
           v-model="searchQuery"
           class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           type="text"
-          placeholder="Search for users"
+          placeholder="Tìm kiếm người dùng"
         />
       </div>
     </div>
@@ -79,19 +85,19 @@
           <th class="p-4" scope="col">
             <div class="flex items-center">
               <UICheckboxSelect
-                id="`checkbox-table-search-${user.id}`"
+                id="checkbox-table-search-all"
                 v-model="selectAll"
                 class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                 type="checkbox"
                 @change="toggleSelectAll"
               />
-              <label class="sr-only" for="checkbox-all-search">Select all</label>
+              <label class="sr-only" for="checkbox-all-search">Chọn tất cả</label>
             </div>
           </th>
-          <th class="px-6 py-3" scope="col">Name</th>
-          <th class="px-6 py-3" scope="col">Role</th>
-          <th class="px-6 py-3" scope="col">Status</th>
-          <th class="px-6 py-3" scope="col">Action</th>
+          <th class="px-6 py-3" scope="col">Tên</th>
+          <th class="px-6 py-3" scope="col">Loại thành viên</th>
+          <th class="px-6 py-3" scope="col">Trạng thái</th>
+          <th class="px-6 py-3" scope="col">Hành động</th>
           <th>
             <button class="rounded bg-red-500 px-6 py-3 text-white" @click="deleteSelectedUsers">
               Xóa các user đã chọn
@@ -101,13 +107,13 @@
       </thead>
       <tbody>
         <tr
-          v-for="user in filteredUsers"
+          v-for="user in paginatedUsers"
           :key="user.id"
           class="border-b border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
         >
           <td class="w-4 p-4">
             <UICheckboxSelect
-              id="`checkbox-table-search-${user.id}`"
+              :id="'checkbox-table-search-' + user.id"
               v-model="user.selected"
               class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
               type="checkbox"
@@ -138,7 +144,7 @@
               class="font-medium text-blue-600 hover:underline dark:text-blue-500"
               :to="{ name: 'admin-staff-id', params: { id: user.id } }"
             >
-              Edit user
+              Sửa user
             </NuxtLink>
           </td>
           <td>
@@ -153,23 +159,55 @@
       <UIPagination
         v-model:page="page"
         v-model:pageSize="pageSize"
-        :page-count="20"
+        :page-count="Math.ceil(filteredUsers.length / pageSize)"
         :page-sizes="[10, 20, 30]"
         show-size-picker
       />
     </div>
+    <MembershipModal
+      v-model:show="isModalVisible"
+      :types="[selectedMemberType]"
+      @close="isModalVisible = false"
+      @update:type="updateMemberType"
+    />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { ref, computed } from 'vue'
 import CTitle from '~/components/c/CTitle.vue'
+import MembershipModal from '~/pages/admin/user/component/MembershipModal.vue'
 
 definePageMeta({
   layout: 'adminlayout'
 })
 
-// Sample data
-const users = ref([
+interface User {
+  id: number
+  name: string
+  email: string
+  position: string
+  status: string
+  avatar: string
+  selected: boolean
+}
+
+interface MemberType {
+  id?: string
+  memberTypeName: string
+  minimumRevenue: number
+  discountOrPromotion: string
+  description: string
+  note: string
+  actions: string
+}
+
+const isModalVisible = ref(false)
+const page = ref(1)
+const pageSize = ref(10)
+
+// Dữ liệu mẫu cho users
+const users = ref<User[]>([
   {
     id: 1,
     name: 'Giang',
@@ -219,12 +257,22 @@ const users = ref([
     id: 6,
     name: 'Thạch',
     email: 'leslie@flowbite.com',
-    position: 'VIP6 ',
+    position: 'VIP6',
     status: 'Offline',
     avatar: 'https://picsum.photos/400/300?random=5',
     selected: false
   }
 ])
+
+// Dữ liệu mẫu cho loại thành viên
+const selectedMemberType = ref<MemberType>({
+  memberTypeName: 'VIP',
+  minimumRevenue: 1000000,
+  discountOrPromotion: '10%',
+  description: 'Thành viên cao cấp',
+  note: 'Ưu đãi từ 2024',
+  actions: ''
+})
 
 // Lọc theo trạng thái
 const softStatus = ref('all')
@@ -233,7 +281,7 @@ const softUsers = computed(() => {
   return users.value.filter((user) => user.status === softStatus.value)
 })
 
-// Lọc theo tìm kiếm trên kết quả đã lọc trạng thái
+// Lọc theo tìm kiếm
 const searchQuery = ref('')
 const filteredUsers = computed(() => {
   if (!searchQuery.value) return softUsers.value
@@ -246,25 +294,38 @@ const filteredUsers = computed(() => {
   )
 })
 
-// Checkbox functionality
+// Phân trang
+const paginatedUsers = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return filteredUsers.value.slice(start, end)
+})
+
+// Chọn tất cả checkbox
 const selectAll = ref(false)
 const toggleSelectAll = () => {
   users.value.forEach((user) => {
     user.selected = selectAll.value
   })
 }
-// Xóa từng user theo id
-const deleteUser = (id) => {
+
+// Xóa từng user
+const deleteUser = (id: number) => {
   users.value = users.value.filter((user) => user.id !== id)
 }
 
-// Xóa tất cả user đã chọn
+// Xóa các user đã chọn
 const deleteSelectedUsers = () => {
   users.value = users.value.filter((user) => !user.selected)
   selectAll.value = false
 }
+
+// Cập nhật loại thành viên
+const updateMemberType = (newType: MemberType) => {
+  selectedMemberType.value = { ...newType }
+}
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+/* Thêm các kiểu tùy chỉnh tại đây */
 </style>
