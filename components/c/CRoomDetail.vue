@@ -4,7 +4,7 @@
       <li v-for="(detail, index) in details" :key="index">
         <Icon name="ic:baseline-check" />
         <!-- Tên -->
-        {{ detail.title }}
+        {{ detail.name }}
       </li>
     </ul>
   </div>

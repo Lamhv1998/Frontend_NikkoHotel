@@ -51,14 +51,10 @@
                       class="space-y-3"
                     >
                       <p class="text-body">
-                        {{
-                          `Nhận phòng: ${$dayjs(orderStore.order.checkInDate).format('D/M dddd')}`
-                        }}
+                        {{ `Nhận phòng: ${$dayjs(orderStore.order.checkInDate).format('dddd, DD/MM/YYYY')}` }}
                       </p>
                       <p class="text-body">
-                        {{
-                          `Trả phòng: ${$dayjs(orderStore.order.checkOutDate).format('D/M dddd')}`
-                        }}
+                        {{ `Trả phòng: ${$dayjs(orderStore.order.checkOutDate).format('dddd, DD/MM/YYYY')}` }}
                       </p>
                     </div>
                   </div>
@@ -242,7 +238,7 @@ const schema = {
   name: 'required|min:2',
   phone: (val: string) => {
     if (!val) return 'Số điện thoại là bắt buộc'
-    if (!/^09\d{8}$/.test(val)) return 'Vui lòng nhập số điện thoại hợp lệ gồm 10 số'
+    if (!/^\d{10}$/.test(val)) return 'Vui lòng nhập số điện thoại hợp lệ gồm 10 số'
     return {}
   },
   email: 'required|email'
