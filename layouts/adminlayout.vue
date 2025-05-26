@@ -1,4 +1,3 @@
-```vue
 <template>
   <div id="admin-layout" class="flex min-h-screen bg-system-gray-10">
     <!-- Sidebar -->
@@ -15,11 +14,7 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-import UISlideBar from '~/components/UI/UISlideBar.vue'
-import UIBreadcrumd from '~/components/UI/UIBreadcrumd.vue'
-import PageAdminFooter from '~/components/page/PageAdminFooter.vue'
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss" scoped>
 #admin-layout {

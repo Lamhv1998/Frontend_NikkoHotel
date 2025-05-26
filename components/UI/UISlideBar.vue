@@ -3,17 +3,12 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'flex flex-col bg-system-primary-100 text-white transition-all duration-300 ',
+        'flex flex-col bg-system-background text-white transition-all duration-300 ',
         isOpen ? 'w-64' : 'w-16'
       ]"
     >
       <!-- Menu Sections -->
-      <div class="fixed flex-1 overflow-y-auto">
-        <div class="flex items-center justify-end px-4">
-          <button class="p-2">
-            <Icon class="h-7 w-7 dark:text-gray-800" :name="isOpen ? 'mdi:close' : 'mdi:menu'" />
-          </button>
-        </div>
+      <div class="fixed flex-1 overflow-y-auto py-12">
         <div v-if="isOpen" class="px-2 py-2">
           <ul class="space-y-1 pb-4 pt-2 text-sm">
             <li v-for="menu in menuslidebar" :key="menu.title" class="rounded-sm">
@@ -34,6 +29,14 @@
             </li>
           </ul>
         </div>
+        <div class="flex items-center justify-end">
+          <button class="rounded-md p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-200">
+            <Icon
+              class="h-10 w-9 dark:text-gray-800"
+              :name="isOpen ? 'mdi:arrow-collapse-left' : 'mdi:menu'"
+            />
+          </button>
+        </div>
       </div>
     </aside>
     <!-- User Info Section (Top) -->
@@ -44,9 +47,12 @@
         alt="User avatar"
       />
       <div>
-        <h2 class="text-lg font-semibold">Leroy Jenkins</h2>
+        <h2 class="text-lg font-semibold text-system-white">Leroy Jenkins</h2>
         <span class="flex items-center space-x-1">
-          <NuxtLink class="text-xs hover:underline dark:text-gray-600" to="/admin/profile">
+          <NuxtLink
+            class="text-xs text-system-white hover:underline dark:text-gray-600"
+            to="/admin/profile"
+          >
             View profile
           </NuxtLink>
         </span>

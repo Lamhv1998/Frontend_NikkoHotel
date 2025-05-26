@@ -5,13 +5,16 @@ export function useMenuSidebar() {
     {
       title: 'User Management',
       items: [
+        { name: 'Staff', link: '/admin/staff', icon: 'mdi:account-group' },
         { name: 'Users', link: '/admin/user', icon: 'mdi:account-group' },
-        { name: 'Create-User', link: '/admin/user/create', icon: 'mdi:account' }
+        { name: 'Permission', link: '/admin/permissions', icon: 'mdi:account-group' },
+        { name: 'Shift', link: '/admin/staff/shifthistory', icon: 'mdi:account-group' },
+        { name: 'Handover', link: '/admin/staff/handover', icon: 'mdi:account-group' }
       ]
     },
     {
       title: 'Room Management',
-      items: [{ name: 'Room', link: '/admin/header', icon: 'mdi:home-group' }]
+      items: [{ name: 'Room', link: '/admin/room', icon: 'mdi:home-group' }]
     },
     {
       title: 'Booking Management',

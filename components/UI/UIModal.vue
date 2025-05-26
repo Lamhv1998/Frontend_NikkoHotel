@@ -2,7 +2,7 @@
   <Teleport to="body">
     <transition name="modal">
       <div
-        v-if="modalShow"
+        v-if="isModalVisible"
         class="fixed inset-0 z-[60] overflow-y-auto bg-black/40 backdrop-blur-[1.25rem]"
         @click="close"
       >
@@ -110,11 +110,9 @@ const footerStyle = computed(() => {
 })
 
 /* Điều khiển hiển thị modal */
-const modalShow = defineModel<Boolean>({
-  default: false
-})
+const isModalVisible = defineModel<Boolean>()
 const toggleModal = () => {
-  modalShow.value = !modalShow.value
+  isModalVisible.value = !isModalVisible.value
 }
 // Nhấn vào nền mờ để đóng modal
 const modalRefs = ref(null)
@@ -131,7 +129,7 @@ onMounted(() => {
 
   watchEffect(() => {
     if (windowLock) {
-      windowLock.value = !!modalShow.value
+      windowLock.value = !!isModalVisible.value
     }
   })
 })
