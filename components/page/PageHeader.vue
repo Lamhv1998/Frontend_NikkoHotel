@@ -4,7 +4,7 @@
     ref="pageHeaderRefs"
     :class="[bgBlack && ' bg-system-background', 'transition-colors duration-300']"
   >
-    <div class="container flex items-center justify-between py-4 xl:max-w-full xl:px-20 xl:py-6">
+    <div class="flex items-center justify-between xl:max-w-full xl:px-20">
       <!-- Liên kết: Trang chủ -->
       <NuxtLink to="/">
         <PageLogo
