@@ -5,6 +5,8 @@
 
     <!-- Thông tin cơ bản -->
     <changeInfo v-if="user" class="xl:col-span-7" :user="user" @get-user-refresh="getUserRefresh" />
+
+    <MemberStatus v-if="user" class="xl:col-span-12" :user="user" />
   </div>
 </template>
 
@@ -12,6 +14,7 @@
 import ChangePwd from './components/changePwd.vue'
 import changeInfo from './components/changeInfo.vue'
 import type { UserResponse } from '@/types'
+import MemberStatus from './components/MemberStatus.vue'
 
 /* PageMeta */
 definePageMeta({

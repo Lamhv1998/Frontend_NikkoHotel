@@ -17,8 +17,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     '/blog',
     '/user/orders',
     '/user/',
-    '/*',
-    '/**'
+    '/user/MemberStatus'
   ]
 
   // Nếu là route công khai thì cho qua
