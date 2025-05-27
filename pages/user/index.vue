@@ -14,7 +14,7 @@
 import ChangePwd from './components/changePwd.vue'
 import changeInfo from './components/changeInfo.vue'
 import type { UserResponse } from '@/types'
-import MemberStatus from './components/MemberStatus.vue'
+import MemberStatus from './memberships.vue'
 
 /* PageMeta */
 definePageMeta({

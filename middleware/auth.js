@@ -1,13 +1,13 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  /* Thuộc tính toàn cục */
+  console.log('[auth middleware] Route:', to.path)
+
   const authStore = useAuthStore()
   const styleStore = useStyleStore()
   const commonStore = useCommonStore()
-
-  /* api */
   const { checkLoginApi } = useApi()
-  // Danh sách các route không cần đăng nhập
+
   const publicRoutes = [
+    '/', // 👈 Thêm trang chủ
     '/auth/login',
     '/auth/register',
     '/confirmation',
@@ -16,32 +16,36 @@ export default defineNuxtRouteMiddleware(async (to) => {
     '/admin',
     '/blog',
     '/user/orders',
+    '/user',
     '/user/',
-    '/user/MemberStatus'
+    '/user/MemberStatus',
+    '/User',
+    '/user/*',
+    '/User/*'
   ]
 
-  // Nếu là route công khai thì cho qua
-  if (publicRoutes.some((route) => to.path === route || to.path.startsWith(route + '/'))) {
+  if (publicRoutes.some(route => to.path === route || to.path.startsWith(route + '/'))) {
+    console.log('[auth middleware] Public route:', to.path)
     return
   }
-  // Không có token
+
   if (import.meta.client) {
     if (!authStore.token) {
+      console.warn('[auth middleware] Không có token, chuyển hướng login:', to.path)
       commonStore.sweetalertList.push({
         title: 'Vui lòng đăng nhập',
         icon: 'warning',
         confirmButtonText: 'Xác nhận',
         confirmButtonColor: styleStore.confirmButtonColor
       })
-
       commonStore.routerGuide = to.fullPath
       return navigateTo('/auth/login')
     }
 
-    // Kiểm tra đăng nhập thành công
     try {
       await checkLoginApi()
     } catch (error) {
+      console.error('[auth middleware] Phiên hết hạn:', error)
       commonStore.sweetalertList.push({
         title: 'Phiên đăng nhập đã hết hạn',
         text: 'Vui lòng đăng nhập lại',
