@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 import type { RoomResponse } from '@/types'
 
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const orderStore = useOrderStore()
 
 /* props */
@@ -36,7 +36,7 @@ const props = defineProps({
   }
 })
 
-/* 彈窗開關 */
+/* Hiển thị modal */
 const isModalShow = ref(false)
 const toggleModal = (event: string) => {
   if (event === 'show') {

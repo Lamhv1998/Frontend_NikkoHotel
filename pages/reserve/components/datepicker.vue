@@ -67,10 +67,10 @@
 <script lang="ts" setup>
 import type { DatePicker } from 'v-calendar'
 
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const orderStore = useOrderStore()
 
-/* 彈窗 */
+/* Hiển thị modal */
 const isModalShow = ref(false)
 const toggleModal = (event: string) => {
   if (event === 'show') {
@@ -80,10 +80,10 @@ const toggleModal = (event: string) => {
   }
 }
 
-/* 日期區間選擇器 */
+/* Bộ chọn khoảng ngày */
 const datePicker = ref<typeof DatePicker | null>(null)
 
-// 日期區間
+// Khoảng ngày nhận/trả phòng
 const checkInOutDate = computed({
   get() {
     return { start: orderStore.order.checkInDate, end: orderStore.order.checkOutDate }
@@ -96,7 +96,7 @@ const checkInOutDate = computed({
   }
 })
 
-// 移動至指定日期
+// Di chuyển đến ngày chỉ định
 const datePickerMove = (val: string) => {
   val && datePicker.value?.move(val)
 }

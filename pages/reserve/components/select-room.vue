@@ -32,7 +32,7 @@ import type { RoomResponse } from '@/types'
 /* props */
 const props = defineProps({ roomId: { type: String, required: true } })
 
-/* 彈窗開關 */
+/* Hiển thị modal */
 const isModalShow = ref(false)
 const toggleModal = (event: string) => {
   if (event === 'show') {
@@ -43,9 +43,9 @@ const toggleModal = (event: string) => {
   }
 }
 
-/* 房型 */
+/* Loại phòng */
 const room = ref(props.roomId)
-// 房型: 送出
+// Loại phòng: Gửi đi
 const submit = () => {
   if (room.value !== props.roomId) {
     navigateTo(`/reserve/${room.value}`)
@@ -55,7 +55,7 @@ const submit = () => {
 /* api */
 const { getRoomsApi } = useApi()
 
-// api: 取得所有房型
+// api: Lấy tất cả loại phòng
 const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
   transform(res: any): RoomResponse[] {
     return res.result

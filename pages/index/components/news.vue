@@ -17,8 +17,8 @@
       <!-- Tiêu đề lớn -->
       <div class="w-[8.75rem] space-y-6 xl:space-y-10">
         <h2 class="space-y-1 text-nowrap text-h3 text-system-primary-100 xl:text-h1">
+          <div>Mới nhất</div>
           <div>Tin tức</div>
-          <div>Mới</div>
         </h2>
         <div class="h-[0.125rem] rounded-full bg-gradient-to-r from-system-primary-100 to-white" />
       </div>
@@ -96,42 +96,29 @@
 </template>
 
 <script lang="ts" setup>
-// import type { NewResponse } from '@/types'
+// Dữ liệu mẫu
+const news = [
+  {
+    title: 'Khai trương nhà hàng mới',
+    description: 'Nhà hàng Nhật Bản mới tại tầng 2 đã chính thức mở cửa phục vụ quý khách.',
+    image: 'https://picsum.photos/400/300?random=1'
+  },
+  {
+    title: 'Ưu đãi mùa hè',
+    description: 'Giảm giá 20% cho tất cả các phòng trong tháng 6.',
+    image: 'https://picsum.photos/400/300?random=2'
+  },
+  {
+    title: 'Sự kiện âm nhạc cuối tuần',
+    description: 'Thưởng thức đêm nhạc Acoustic vào mỗi tối thứ 7 tại sảnh chính.',
+    image: 'https://picsum.photos/400/300?random=3'
+  }
+]
 
-/* 彈窗 */
 const newOpen = ref(false)
 const currentNew = ref(0)
 const openNew = (index: number) => {
   currentNew.value = index
   newOpen.value = true
 }
-
-// /* api */
-// const { getNewsApi } = useApi()
-
-// // api: 取得最新消息
-// const { data: news }: { data: Ref<NewResponse[] | null> } = await getNewsApi({
-//   transform(res: any): NewResponse[] {
-//     return res.result
-//   }
-// })
-
-// Dữ liệu mẫu
-const news = [
-  {
-    title: 'Khai trương nhà hàng mới',
-    description: 'Nhà hàng Nhật Bản mới tại tầng 2 đã chính thức mở cửa phục vụ quý khách.',
-    image: 'https://picsum.photos/600/400?random=1'
-  },
-  {
-    title: 'Ưu đãi mùa hè',
-    description: 'Giảm giá 20% cho tất cả các phòng trong tháng 6.',
-    image: 'https://picsum.photos/600/400?random=2'
-  },
-  {
-    title: 'Sự kiện âm nhạc cuối tuần',
-    description: 'Thưởng thức đêm nhạc Acoustic vào mỗi tối thứ 7 tại sảnh chính.',
-    image: 'https://picsum.photos/600/400?random=3'
-  }
-]
 </script>
