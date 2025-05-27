@@ -1,4 +1,5 @@
 <template>
+  <CTitle class="m-5 p-3" title="Trang chỉnh sửa"></CTitle>
   <section class="p-6">
     <userform :isEdit="true" :userData="user" @submit="handleUpdate" />
   </section>

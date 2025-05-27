@@ -11,9 +11,9 @@
         </div>
         <div class="col-span-full grid grid-cols-6 gap-4 lg:col-span-3">
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="firstname">Số phòng</label>
+            <label class="text-sm font-medium text-gray-600" for="roomNum">Số phòng</label>
             <input
-              id="firstname"
+              id="roomNum"
               v-model="form.roomNum"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               type="text"
@@ -21,9 +21,9 @@
             />
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="lastname">Tầng</label>
+            <label class="text-sm font-medium text-gray-600" for="floor">Tầng</label>
             <input
-              id="lastname"
+              id="floor"
               v-model="form.floor"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               type="text"
@@ -31,24 +31,29 @@
             />
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="email">Loại phòng</label>
-            <input
-              id="email"
-              v-model="form.email"
-              class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              type="text"
-              placeholder="Loại phòng"
-            />
+            <label class="text-sm font-medium text-gray-600" for="roomType">Loại phòng</label>
+            <select
+              id="roomType"
+              v-model="form.roomType"
+              class="mt-1 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="" disabled>--Chọn loại phòng--</option>
+              <option value="standard">Standard</option>
+              <option value="deluxe">Deluxe</option>
+              <option value="suite">Suite</option>
+            </select>
           </div>
           <div class="col-span-full">
-            <label class="text-sm font-medium text-gray-600" for="address">Trạng thái</label>
-            <input
-              id="address"
-              v-model="form.address"
-              class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              type="text"
-              placeholder="Trạng thái phòng"
-            />
+            <label class="text-sm font-medium text-gray-600" for="status">Trạng thái</label>
+            <select
+              id="status"
+              v-model="form.status"
+              class="mt-1 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="" disabled>--Chọn trạng thái--</option>
+              <option value="active">Hoạt động</option>
+              <option value="inactive">Ngừng hoạt động</option>
+            </select>
           </div>
         </div>
       </fieldset>
@@ -61,30 +66,32 @@
         </div>
         <div class="col-span-full grid grid-cols-6 gap-4 lg:col-span-3">
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="username">Sức chứa</label>
+            <label class="text-sm font-medium text-gray-600" for="maxPeople">Sức chứa</label>
             <input
-              id="username"
-              v-model="form.username"
+              id="maxPeople"
+              v-model="form.maxPeople"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              type="text"
+              type="number"
               placeholder="Sức chứa"
+              min="1"
             />
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="website">Số giường</label>
+            <label class="text-sm font-medium text-gray-600" for="bedCount">Số giường</label>
             <input
-              id="website"
-              v-model="form.website"
+              id="bedCount"
+              v-model="form.bedCount"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              type="text"
+              type="number"
               placeholder="Số giường"
+              min="1"
             />
           </div>
           <div class="col-span-full">
-            <label class="text-sm font-medium text-gray-600" for="bio">Mô tả</label>
+            <label class="text-sm font-medium text-gray-600" for="description">Mô tả</label>
             <textarea
-              id="bio"
-              v-model="form.bio"
+              id="description"
+              v-model="form.description"
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Thêm mô tả chi tiết..."
               rows="3"
@@ -101,9 +108,10 @@
             </div>
             <div class="mt-4">
               <input
-                id="user_avatar"
+                id="room_photo"
                 class="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none"
                 type="file"
+                @change="onFileChange"
               />
               <p class="mt-1 text-sm text-gray-500">Tải lên ảnh của phòng</p>
             </div>
@@ -125,19 +133,19 @@
 </template>
 
 <script setup>
+import { reactive } from 'vue'
+
 const props = defineProps({
   roomData: {
     type: Object,
     default: () => ({
       roomNum: '',
       floor: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: '',
-      username: '',
-      website: '',
-      bio: '',
+      roomType: '',
+      status: '',
+      maxPeople: 1,
+      bedCount: 1,
+      description: '',
       photo: ''
     })
   },
@@ -149,9 +157,20 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
-const form = reactive({ ...props.userData })
+const form = reactive({ ...props.roomData })
 
 const onSubmit = () => {
   emit('submit', { ...form })
+}
+
+const onFileChange = (e) => {
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      form.photo = event.target.result
+    }
+    reader.readAsDataURL(file)
+  }
 }
 </script>

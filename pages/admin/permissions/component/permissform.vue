@@ -1,4 +1,5 @@
 <template>
+  <CTitle class="m-5 p-3" title="Trang đăng kí"></CTitle>
   <div class="min-h-screen bg-gray-100 px-4 py-10">
     <form
       class="mx-auto max-w-5xl space-y-10 rounded-xl bg-white p-8 shadow-xl"

@@ -67,7 +67,7 @@
 
 <script lang="ts" setup>
 const { menuslidebar } = useMenuSidebar()
-const isOpen = ref(false)
+const isOpen = ref(true)
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
