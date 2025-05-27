@@ -1,75 +1,82 @@
 <template>
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <CTitle class="m-5 p-3" title="Cài đặt các nhóm phân quyền"></CTitle>
-    <div
-      class="flex flex-col flex-wrap items-center justify-around space-y-4 bg-white px-5 py-4 dark:bg-gray-900 md:flex-row md:space-y-0"
-    >
-      <UIDropdown>
+    <div class="flex flex-col justify-between bg-white px-5 py-4 md:flex-row md:space-y-0">
+      <!-- Phần bên trái: Thanh tìm kiếm và Dropdown -->
+      <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+        <!-- Thanh tìm kiếm -->
+        <div class="relative mb-4 md:mb-0">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg
+              class="h-4 w-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              fill="none"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            id="table-search-permission"
+            v-model="searchQuery"
+            class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            type="text"
+            placeholder="Search for permission"
+          />
+        </div>
+        <!-- Dropdown -->
+        <UIDropdown>
+          <UIButton
+            class="inline-flex h-9 items-center rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+            text="Lọc"
+          >
+          </UIButton>
+          <template #item>
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+              <li>
+                <a
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  href="#"
+                  @click.prevent="softStatus = 'all'"
+                  >Tất cả</a
+                >
+              </li>
+              <li>
+                <a
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  href="#"
+                  @click.prevent="softStatus = 'Hoạt động'"
+                  >Hoạt động</a
+                >
+              </li>
+              <li>
+                <a
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  href="#"
+                  @click.prevent="softStatus = 'Ngừng hoạt động'"
+                  >Ngừng hoạt động</a
+                >
+              </li>
+            </ul>
+          </template>
+        </UIDropdown>
+      </div>
+
+      <!-- Phần bên phải: Nút Thêm phân quyền -->
+      <div class="flex items-center md:mt-0">
         <UIButton
-          class="inline-flex h-9 items-center rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-          text="Lọc"
+          class="flex h-9 items-center justify-end rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+          text="Thêm phân quyền"
+          @click="isModalVisible2 = true"
         >
         </UIButton>
-        <template #item>
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-            <li>
-              <a
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                href="#"
-                @click.prevent="softStatus = 'all'"
-                >Tất cả</a
-              >
-            </li>
-            <li>
-              <a
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                href="#"
-                @click.prevent="softStatus = 'Hoạt động'"
-                >Hoạt động</a
-              >
-            </li>
-            <li>
-              <a
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                href="#"
-                @click.prevent="softStatus = 'Ngừng hoạt động'"
-                >Ngừng hoạt động</a
-              >
-            </li>
-          </ul>
-        </template>
-      </UIDropdown>
-      <UIButton
-        class="flex h-9 items-center justify-end rounded-lg border border-gray-300 bg-black px-3 py-1.5 text-sm text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-        text="Thêm phân quyền"
-        @click="isModalVisible2 = true"
-      >
-      </UIButton>
-      <div class="relative">
-        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <svg
-            class="h-4 w-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            fill="none"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-            />
-          </svg>
-        </div>
-        <input
-          id="table-search-permission"
-          v-model="searchQuery"
-          class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          type="text"
-          placeholder="Search for permission"
-        />
       </div>
     </div>
     <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -78,7 +85,7 @@
           <th class="p-4" scope="col">
             <div class="flex items-center">
               <UICheckboxSelect
-                id="`checkbox-table-search-${permission.id}`"
+                id="checkbox-all-search"
                 v-model="selectAll"
                 class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
                 type="checkbox"
@@ -107,7 +114,7 @@
         >
           <td class="w-4 p-4">
             <UICheckboxSelect
-              id="`checkbox-table-search-${permission.id}`"
+              :id="`checkbox-table-search-${permission.id}`"
               v-model="permission.selected"
               class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
               type="checkbox"
@@ -137,15 +144,16 @@
             </div>
           </td>
           <td class="px-6 py-4">
-            <NuxtLink
+            <button
               class="cursor-pointer font-medium text-blue-600 hover:underline dark:text-blue-500"
+              type="button"
               @click="isModalVisible = true"
             >
               Chỉnh sửa quyền
-            </NuxtLink>
+            </button>
           </td>
           <td>
-            <button @click="deletePermiss(permission.id)">Xóa</button>
+            <button type="button" @click="deletePermiss(permission.id)">Xóa</button>
           </td>
         </tr>
       </tbody>
@@ -179,10 +187,9 @@
               class="my-2 rounded-xl bg-white p-2 shadow-xl"
             >
               <UICheckboxSelect
-                id="'checkbox-table-search-' + permission.id"
+                :id="'checkbox-table-search-' + item.id"
                 v-model="item.selected"
                 :label="item.permissionData"
-                @change="toggleSelectAll"
               />
             </div>
           </div>
@@ -197,7 +204,7 @@
             class="my-2 rounded-xl bg-white p-2 shadow-xl"
           >
             <UICheckboxSelect
-              id="'checkbox-table-search-' + permission.id"
+              :id="'checkbox-table-search-' + item.id"
               v-model="item.selected"
               :label="item.permissionData"
               @change="toggleSelectAll"
@@ -235,6 +242,7 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import CTitle from '~/components/c/CTitle.vue'
 import UIModal from '~/components/UI/UIModal.vue'
 import Permissform from './component/permissform.vue'
@@ -242,23 +250,19 @@ import Permissform from './component/permissform.vue'
 definePageMeta({
   layout: 'adminlayout'
 })
-// Sammple data
+
+// Sample data
 const permissionscheck = ref([
   { id: 1, permissionData: 'Xem báo cáo hàng tháng', selected: false, role: 'lễ tân' },
   { id: 2, permissionData: 'Tạo hoá đơn', selected: false, role: 'lễ tân' },
-  { id: 3, permissionData: 'Xem báo cáo hàng tháng', selected: false, role: 'lễ tân' },
-  { id: 4, permissionData: 'Tạo hoá đơn', selected: false, role: 'lễ tân' },
-  { id: 5, permissionData: 'Nhập kho', selected: false, role: 'kho' },
-  { id: 6, permissionData: 'Quản lý dịch vụ', selected: false, role: 'dịch vụ' },
-  { id: 7, permissionData: 'Nhập kho', selected: false, role: 'kho' },
-  { id: 8, permissionData: 'Quản lý dịch vụ', selected: false, role: 'dịch vụ' }
+  { id: 3, permissionData: 'Nhập kho', selected: false, role: 'kho' },
+  { id: 4, permissionData: 'Quản lý dịch vụ', selected: false, role: 'dịch vụ' }
 ])
-// Sample data
 const permissions = ref([
   {
     id: 1,
     permissionName: 'ADMIN',
-    note: 'neil.sims@flowbite.com',
+    note: 'Quản trị hệ thống',
     create_at: '2024-01-01',
     status: 'Hoạt động',
     selected: false
@@ -266,7 +270,7 @@ const permissions = ref([
   {
     id: 2,
     permissionName: 'Lễ Tân',
-    note: 'neil.sims@flowbite.com',
+    note: 'Quyền lễ tân',
     create_at: '2024-01-01',
     status: 'Ngừng hoạt động',
     selected: false
@@ -274,7 +278,7 @@ const permissions = ref([
   {
     id: 3,
     permissionName: 'Kho',
-    note: 'neil.sims@flowbite.com',
+    note: 'Quyền kho',
     create_at: '2024-01-01',
     status: 'Ngừng hoạt động',
     selected: false
@@ -282,24 +286,26 @@ const permissions = ref([
   {
     id: 4,
     permissionName: 'Vệ Sinh',
-    note: 'neil.sims@flowbite.com',
+    note: 'Quyền vệ sinh',
     create_at: '2024-01-01',
     status: 'Hoạt động',
     selected: false
   }
 ])
-// Biến điều khiển trạng thái modal
+
 const isModalVisible = ref(false)
 const isModalVisible2 = ref(false)
-// Lọc theo trạng thái
 const softStatus = ref('all')
+const searchQuery = ref('')
+const selectAll = ref(false)
+const page = ref(1)
+const pageSize = ref(10)
+
 const softPermissions = computed(() => {
   if (softStatus.value === 'all') return permissions.value
-  return permissions.value.filter((permissions) => permissions.status === softStatus.value)
+  return permissions.value.filter((p) => p.status === softStatus.value)
 })
 
-// Lọc theo tìm kiếm trên kết quả đã lọc trạng thái
-const searchQuery = ref('')
 const filteredPermiss = computed(() => {
   if (!searchQuery.value) return softPermissions.value
   const q = searchQuery.value.toLowerCase()
@@ -311,21 +317,18 @@ const filteredPermiss = computed(() => {
   )
 })
 
-// Checkbox functionality
-const selectAll = ref(false)
 const toggleSelectAll = () => {
-  permissions.value.forEach((permissions) => {
-    permissions.selected = selectAll.value
+  filteredPermiss.value.forEach((permission) => {
+    permission.selected = selectAll.value
   })
 }
-// Xóa từng permission theo id
+
 const deletePermiss = (id) => {
-  permissions.value = permissions.value.filter((permissions) => permissions.id !== id)
+  permissions.value = permissions.value.filter((permission) => permission.id !== id)
 }
 
-// Xóa tất cả permission đã chọn
 const deleteSelectedPermisss = () => {
-  permissions.value = permissions.value.filter((permissions) => !permissions.selected)
+  permissions.value = permissions.value.filter((permission) => !permission.selected)
   selectAll.value = false
 }
 </script>

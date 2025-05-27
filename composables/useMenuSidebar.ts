@@ -18,7 +18,7 @@ export function useMenuSidebar() {
     },
     {
       title: 'Booking Management',
-      items: [{ name: 'Booking', link: '/admin/homepage', icon: 'mdi:home' }]
+      items: [{ name: 'Booking', link: '/admin/booking', icon: 'mdi:home' }]
     },
     {
       title: 'Promotion Management',

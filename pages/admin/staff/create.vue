@@ -1,4 +1,5 @@
 <template>
+  <CTitle class="m-5 p-3" title="Trang đăng kí"></CTitle>
   <section class="p-6">
     <UIStaffForm @submit="handleCreate" />
   </section>
