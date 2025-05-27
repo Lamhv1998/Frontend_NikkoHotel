@@ -29,6 +29,14 @@
         <NuxtLink v-slot="{ isActive }" to="/user/orders">
           <UISectionTab :active="isActive" text="Đơn đặt phòng của tôi" />
         </NuxtLink>
+
+        <NuxtLink v-slot="{ isActive }" to="/user/memberships">
+          <UISectionTab :active="isActive" text="Hạng thành viên" />
+        </NuxtLink>
+
+        <NuxtLink v-slot="{ isActive }" to="/user/voucher">
+          <UISectionTab :active="isActive" text="Voucher của tôi" />
+        </NuxtLink>
       </nav>
 
       <slot />
