@@ -1,6 +1,6 @@
 <template>
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <CTitle class="m-5 p-3" title="Danh sách giao ca" />
+    <CTitle class="m-5 p-3" title="Danh sách giao tiền" />
 
     <!-- Tìm kiếm -->
     <div

@@ -22,11 +22,15 @@ export function useMenuSidebar() {
     },
     {
       title: 'Promotion Management',
-      items: [{ name: 'Tutorials', link: '/admin/tutorials', icon: 'mdi:sale' }]
+      items: [{ name: 'Promotion', link: '/admin/promotion', icon: 'mdi:sale' }]
     },
     {
       title: 'Service Management',
-      items: [{ name: 'Service', link: '/admin/tutorials', icon: 'mdi:room-service' }]
+      items: [{ name: 'Service', link: '/admin/services', icon: 'mdi:room-service' }]
+    },
+    {
+      title: 'Warehouse Management',
+      items: [{ name: 'Warehouse', link: '/admin/warehouse', icon: 'mdi:room-service' }]
     }
   ])
 

@@ -1,7 +1,7 @@
 <template>
   <CTitle class="m-5 p-3" title="Trang chỉnh sửa"></CTitle>
   <section class="p-6">
-    <userform :isEdit="true" :userData="user" @submit="handleUpdate" />
+    <userform :is-edit="true" :user-data="user" @submit="handleUpdate" />
   </section>
 </template>
 

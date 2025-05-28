@@ -1,7 +1,7 @@
 <template>
   <CTitle class="m-5 p-3" title="Trang chỉnh sửa"></CTitle>
   <section class="p-6">
-    <BookingForm :bookingData="booking" :isEdit="true" @submit="handleUpdate" />
+    <BookingForm :booking-data="booking" :is-edit="true" @submit="handleUpdate" />
   </section>
 </template>
 

@@ -101,17 +101,20 @@
         </div>
         <div class="col-span-full grid grid-cols-6 gap-4 lg:col-span-3">
           <div class="col-span-full sm:col-span-3">
-            <label class="font-medium text-gray-600" for="username">Username</label>
-            <input
-              id="username"
-              v-model="form.username"
-              class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              type="text"
-              placeholder="Username"
-            />
+            <label class="font-medium text-gray-600" for="username">Ca làm</label>
+            <select
+              id="role"
+              v-model="form.role"
+              class="mt-1 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="" disabled>-- Chọn ca làm --</option>
+              <option value="sang">Sáng</option>
+              <option value="trưa">Trưa</option>
+              <option value="chieu">Chiều</option>
+            </select>
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="website">Website</label>
+            <label class="text-sm font-medium text-gray-600" for="website">FB</label>
             <input
               id="website"
               v-model="form.website"

@@ -6,28 +6,28 @@
     <div v-if="rooms" class="section-container bg-system-primary-10">
       <div class="container space-y-10 xl:space-y-20">
         <!-- Khối tìm kiếm -->
-        <div class="search-filter-container flex flex-col xl:flex-row gap-4 items-center relative">
+        <div class="search-filter-container relative flex flex-col items-center gap-4 xl:flex-row">
           <!-- Thanh tìm kiếm -->
-          <div class="w-full xl:w-1/3 relative">
+          <div class="relative w-full xl:w-1/3">
             <input
               v-model="searchQuery"
-              @input="updateSuggestions"
-              @focus="showSuggestions = true"
-              @blur="hideSuggestions"
+              class="w-full rounded-md border p-2 focus:outline-none focus:ring-2 focus:ring-system-primary-100"
               type="text"
               placeholder="Tìm kiếm theo tên phòng hoặc mô tả..."
-              class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-system-primary-100"
+              @blur="hideSuggestions"
+              @focus="showSuggestions = true"
+              @input="updateSuggestions"
             />
             <!-- Danh sách gợi ý -->
             <ul
               v-if="showSuggestions && suggestions.length"
-              class="absolute z-10 w-full bg-white border rounded-md shadow mt-1 max-h-60 overflow-auto"
+              class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white shadow"
             >
               <li
                 v-for="(suggestion, index) in suggestions"
                 :key="index"
+                class="cursor-pointer px-4 py-2 hover:bg-gray-100"
                 @mousedown.prevent="selectSuggestion(suggestion)"
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               >
                 {{ suggestion }}
               </li>
@@ -35,13 +35,13 @@
           </div>
 
           <!-- Bộ lọc diện tích & số người -->
-          <div class="w-full xl:w-1/3 flex gap-4">
-            <select v-model="areaFilter" class="w-full p-2 border rounded-md">
+          <div class="flex w-full gap-4 xl:w-1/3">
+            <select v-model="areaFilter" class="w-full rounded-md border p-2">
               <option value="">Tất cả diện tích</option>
               <option value="30">30 m²</option>
               <option value="50">50 m²</option>
             </select>
-            <select v-model="peopleFilter" class="w-full p-2 border rounded-md">
+            <select v-model="peopleFilter" class="w-full rounded-md border p-2">
               <option value="">Tất cả số người</option>
               <option value="2">2 người</option>
               <option value="4">4 người</option>
@@ -50,8 +50,8 @@
 
           <!-- Nút tìm kiếm -->
           <button
+            class="rounded-md bg-system-primary-100 px-4 py-2 text-white transition hover:bg-system-primary-80"
             @click="filterRooms"
-            class="px-4 py-2 bg-system-primary-100 text-white rounded-md hover:bg-system-primary-80 transition"
           >
             Tìm kiếm
           </button>
@@ -60,7 +60,9 @@
         <!-- Tiêu đề -->
         <div class="space-x-2 xl:space-y-4">
           <p class="text-sub-title text-system-gray-80 xl:text-h6">Chọn loại phòng</p>
-          <p class="text-h3 text-system-primary-100 xl:text-h1">Nhiều loại phòng, thoải mái lựa chọn</p>
+          <p class="text-h3 text-system-primary-100 xl:text-h1">
+            Nhiều loại phòng, thoải mái lựa chọn
+          </p>
         </div>
 
         <!-- Danh sách phòng -->
@@ -73,7 +75,6 @@
     </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
@@ -123,8 +124,9 @@ const updateSuggestions = () => {
     suggestions.value = []
     return
   }
-  const matches = rooms.value.flatMap(room => [room.name, room.description])
-    .filter(text => text.toLowerCase().includes(keyword))
+  const matches = rooms.value
+    .flatMap((room) => [room.name, room.description])
+    .filter((text) => text.toLowerCase().includes(keyword))
   suggestions.value = [...new Set(matches)].slice(0, 6) // loại trùng, lấy 6 gợi ý
 }
 
@@ -136,14 +138,15 @@ const selectSuggestion = (text: string) => {
 
 // Ẩn gợi ý (delay 100ms để tránh mất khi click)
 const hideSuggestions = () => {
-  setTimeout(() => showSuggestions.value = false, 100)
+  setTimeout(() => (showSuggestions.value = false), 100)
 }
 
 // Danh sách phòng lọc
 const filteredRooms = computed(() => {
-  return rooms.value.filter(room => {
-    const matchSearch = room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      || room.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return rooms.value.filter((room) => {
+    const matchSearch =
+      room.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      room.description.toLowerCase().includes(searchQuery.value.toLowerCase())
     const matchArea = areaFilter.value ? room.areaInfo.includes(areaFilter.value) : true
     const matchPeople = peopleFilter.value ? room.maxPeople === Number(peopleFilter.value) : true
     return matchSearch && matchArea && matchPeople
@@ -155,7 +158,6 @@ const filterRooms = () => {
   console.log('Tìm kiếm:', searchQuery.value)
 }
 </script>
-
 
 <style scoped>
 .search-filter-container {
