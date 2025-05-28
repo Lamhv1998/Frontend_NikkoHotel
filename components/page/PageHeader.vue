@@ -38,6 +38,10 @@
           <UIButton text="Dịch vụ" variant="ghost" />
         </NuxtLink>
 
+        <NuxtLink to="/coupons">
+          <UIButton text="Mã giảm giá" variant="ghost" />
+        </NuxtLink>
+
         <ClientOnly>
           <Transition name="dropdown" mode="out-in">
             <UIDropdown v-if="authStore.userName && authStore.token" v-model="userDropdown">
