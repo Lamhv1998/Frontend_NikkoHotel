@@ -114,7 +114,6 @@
 import type { SignupPayload } from '@/types'
 
 /* Thuộc tính toàn cục */
-definePageMeta({})
 const authStore = useAuthStore()
 const styleStore = useStyleStore()
 const commonStore = useCommonStore()

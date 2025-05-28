@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { blogList } from '@/stores/blogs'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 // pages/blog/index.vue hoặc pages/blog/[id].vue
-import BlogCard from './components/BlogCard.vue'
+import * as BlogCard from './components/BlogCard.vue'
 // import BlogFilters from './components/BlogFilters.vue'
 // import Pagination from './components/Pagination.vue'
 
 
 const route = useRoute()
-const id = route.params.id
-const blog = blogList.find(b => b.id === id)
+const blog = computed(() => blogList.find(b => b.id === route.params.id))
 
-if (!blog) {
-  throw createError({ statusCode: 404, message: 'Không tìm thấy bài viết' })
+if (!blog.value) {
+  throw createError({ status: 404, message: 'Không tìm thấy bài viết' })
 }
 
 // Gợi ý 2 bài cùng loại
-const related = blogList
-  .filter(b => b.category === blog.category && b.id !== blog.id)
-  .slice(0, 2)
+const related = computed(() =>
+  blogList
+    .filter(b => blog.value && b.category === blog.value.category && b.id !== blog.value.id)
+    .slice(0, 2)
+)
 </script>
 
 <template>

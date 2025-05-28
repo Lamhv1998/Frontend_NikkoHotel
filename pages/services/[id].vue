@@ -2,7 +2,7 @@
     <div class="min-h-screen w-full" style="background-color: antiquewhite;">
         <div class="max-w-screen-xl mx-auto p-6 font-serif">
             <!-- Quay lại -->
-            <button @click="$router.back()" class="mb-6 text-yellow-500 hover:underline text-sm">
+            <button @click="navigateTo('/services')" class="mb-6 text-yellow-500 hover:underline text-sm">
             ← Quay lại danh sách dịch vụ
             </button>
 
@@ -81,7 +81,7 @@
                 v-for="item in relatedServices"
                 :key="item.id"
                 class="bg-white rounded-lg shadow hover:shadow-lg p-4 cursor-pointer transition-all"
-                @click="$router.push(`/services/${item.id}`)"
+                @click="navigateTo(`/services/${item.id}`)"
                 >
                 <img :src="item.image" alt="" class="w-full h-32 object-cover rounded" />
                 <h3 class="mt-2 font-semibold text-gray-800">{{ item.name }}</h3>
@@ -101,6 +101,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { navigateTo } from '#app'
 import UITitle from '~/pages/blog/components/UI/UITitle.vue'
 
 
@@ -151,7 +152,10 @@ const services = [
 const route = useRoute()
 const id = Number(route.params.id)
 
-const service = services.find(s => s.id === id) || null
+const service = computed(() => {
+  const id = Number(route.params.id)
+  return services.value.find(s => s.id === id) || null
+})
 
 const quantity = ref(1)
 const increment = () => quantity.value++
@@ -164,7 +168,7 @@ const scheduledTime = ref('')
 
 const relatedServices = computed(() => {
   if (!service) return []
-  return services
+  return services.value
     .filter(s => s.category === service.category && s.id !== service.id)
     .slice(0, 3)
 })
