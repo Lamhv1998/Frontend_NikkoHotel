@@ -1,3 +1,4 @@
+<!-- PageAdminFooter -->
 <template>
   <div class="flex flex-col items-center justify-center">
     <h3 class="text-2xl font-bold">Trang quản trị</h3>
