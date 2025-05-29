@@ -31,7 +31,10 @@ export function useMenuSidebar() {
     {
       title: 'Warehouse Management',
       items: [{ name: 'Warehouse', link: '/admin/warehouse', icon: 'mdi:room-service' }]
-    }
+    },
+    
+    
+
   ])
 
   return { menuslidebar }
