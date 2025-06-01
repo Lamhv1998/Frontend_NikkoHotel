@@ -1,17 +1,12 @@
 <template>
-  <nav
-    class="w-full bg-white p-4 dark:bg-gray-100 dark:text-gray-300"
-    aria-label="breadcrumb"
-  >
+  <nav class="w-full bg-white p-4 dark:bg-gray-100 dark:text-gray-300" aria-label="breadcrumb">
     <div class="flex items-center justify-between">
       <BreadcrumbList :breadcrumbs="breadcrumbs" />
-      <PageLogo />
     </div>
   </nav>
 </template>
 
 <script setup>
-import PageLogo from '~/components/page/PageLogo.vue'
 import BreadcrumbList from './BreadcrumbList.vue'
 
 const route = useRoute()

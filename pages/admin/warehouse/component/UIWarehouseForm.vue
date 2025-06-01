@@ -86,7 +86,9 @@
             />
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="quantity_in_stock">Số lượng tồn kho</label>
+            <label class="text-sm font-medium text-gray-600" for="quantity_in_stock"
+              >Số lượng tồn kho</label
+            >
             <input
               id="quantity_in_stock"
               v-model="form.quantity_in_stock"
@@ -104,12 +106,14 @@
               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               type="number"
               placeholder="Nhập giá mỗi đơn vị"
-              step="0.01"
               min="0"
+              step="0.01"
             />
           </div>
           <div class="col-span-full sm:col-span-3">
-            <label class="text-sm font-medium text-gray-600" for="minimum_stock">Số lượng tối thiểu</label>
+            <label class="text-sm font-medium text-gray-600" for="minimum_stock"
+              >Số lượng tối thiểu</label
+            >
             <input
               id="minimum_stock"
               v-model="form.minimum_stock"
