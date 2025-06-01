@@ -3,7 +3,9 @@
     <CTitle class="m-5 p-3" title="Danh sách kho"></CTitle>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-        <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+        <thead
+          class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+        >
           <tr>
             <th class="px-6 py-3" scope="col">Mã mặt hàng</th>
             <th class="px-6 py-3" scope="col">Tên mặt hàng</th>

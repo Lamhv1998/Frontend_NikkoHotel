@@ -25,8 +25,8 @@
             v-for="menu in menuslidebar"
             :key="menu.title"
             :menu="menu"
-            :openDropdown="openDropdown"
-            :toggleDropdown="toggleDropdown"
+            :open-dropdown="openDropdown"
+            :toggle-dropdown="toggleDropdown"
           />
         </nav>
       </div>
@@ -36,16 +36,15 @@
 
 <script lang="ts" setup>
 import { useMenuSidebar } from '../../composables/useMenuSidebar'
+import UserInfo from './UserInfo.vue'
+import DropdownMenu from './DropdownMenu.vue'
 
 const { menuslidebar } = useMenuSidebar()
-const openDropdown = ref(null)
+const openDropdown = ref<string | undefined>(undefined)
 
 const toggleDropdown = (title) => {
   openDropdown.value = openDropdown.value === title ? null : title
 }
-
-import UserInfo from './UserInfo.vue'
-import DropdownMenu from './DropdownMenu.vue'
 </script>
 
 <style lang="scss" scoped></style>

@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-import PageLogo from '~/components/page/PageLogo.vue'
 import BreadcrumbList from './BreadcrumbList.vue'
 
 const route = useRoute()
