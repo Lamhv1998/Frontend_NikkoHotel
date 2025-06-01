@@ -1,25 +1,26 @@
 <template>
-  <header class="relative text-white shadow-md z-20 h-80 flex items-center">
+  <header class="relative z-20 flex h-44 items-center text-white shadow-md">
     <!-- Hình nền -->
     <div
       class="absolute inset-0 bg-cover bg-center"
-      style="background-image: url('https://picsum.photos/1200/300?random=1');"
+      style="background-image: url('https://picsum.photos/1200/300?random=1')"
     ></div>
+
     <!-- Lớp phủ để cải thiện khả năng đọc văn bản -->
     <div class="absolute inset-0 bg-black opacity-40"></div>
-    
-    <div class="relative flex w-full h-full p-4 items-center">
+
+    <div class="relative flex h-full w-full items-center p-4">
       <!-- Phần thông tin người dùng (Cố định bên trái) -->
-      <div class="flex items-center w-1/4">
+      <div class="flex w-1/4 items-center">
         <UserInfo />
       </div>
-
+      <PageLogo />
       <!-- Đường kẻ trắng ngăn cách -->
-      <div class="w-px h-12 bg-white mx-4"></div>
+      <div class="mx-4 h-12 w-px bg-white"></div>
 
       <!-- Điều hướng và hành động (Bên phải) -->
-      <div class="flex flex-wrap justify-start items-center w-3/4">
-        <nav class="flex space-x-4 flex-wrap">
+      <div class="flex w-3/4 flex-wrap items-center justify-start">
+        <nav class="flex flex-wrap space-x-4">
           <DropdownMenu
             v-for="menu in menuslidebar"
             :key="menu.title"
@@ -47,6 +48,4 @@ import UserInfo from './UserInfo.vue'
 import DropdownMenu from './DropdownMenu.vue'
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
