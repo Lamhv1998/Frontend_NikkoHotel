@@ -19,10 +19,12 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.6",
+    "@payos/payos-checkout": "^1.0.8",
     "@popperjs/core": "^2.11.8",
     "@vee-validate/i18n": "^4.12.8",
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/rules": "^4.12.8",
+    "axios": "^1.9.0",
     "dayjs": "^1.11.11",
     "gsap": "^3.12.5",
     "nuxt-swiper": "^1.2.2",
