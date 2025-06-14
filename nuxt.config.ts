@@ -46,7 +46,13 @@ export default defineNuxtConfig({
         lang: 'vi' // Thiết lập ngôn ngữ
       },
       link: [{ rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }], // Biểu tượng website
-
+      script: [
+        {
+          src: 'https://cdn.payos.vn/payos-checkout/v1/stable/payos-initialize.js',
+          async: true,
+          defer: true
+        } // Thêm script PayOS
+      ],
       meta: [
         { charset: 'utf-8' }, // Mã hóa ký tự
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }, // Thiết kế responsive
@@ -88,7 +94,10 @@ export default defineNuxtConfig({
 
   i18n: {
     langDir: 'locales',
-    locales: [{ code: 'vi', file: 'vi.json', iso: 'vi-VN', name: 'Tiếng Việt' }],
+    locales: [
+      { code: 'vi', file: 'vi.json', iso: 'vi-VN', name: 'Tiếng Việt' },
+      { code: 'en', file: 'en.json', iso: 'en-US', name: 'English' }
+    ],
     lazy: true,
     defaultLocale: 'vi',
     strategy: 'no_prefix',
