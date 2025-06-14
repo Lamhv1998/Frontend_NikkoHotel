@@ -10,16 +10,21 @@
       <h2 class="text-h6 xl:text-h5">Thông tin cơ bản</h2>
 
       <div class="space-y-6">
+        <!-- Loading state -->
+        <div v-if="loading" class="text-center py-8">
+          <p>Đang tải dữ liệu...</p>
+        </div>
+
         <!-- Thông tin cơ bản -->
-        <template v-if="!isFormShow">
+        <template v-else-if="!isFormShow && customerData">
           <!-- Họ tên -->
-          <CUserData title="Họ tên" :text="props.user.name" />
+          <CUserData title="Họ tên" :text="customerData.name.fullName" />
 
           <!-- Số điện thoại -->
-          <CUserData title="Số điện thoại" :text="props.user.phone" />
+          <CUserData title="Số điện thoại" :text="formData.phone" />
 
           <!-- Ngày sinh -->
-          <CUserData title="Ngày sinh" :text="$dayjs(props.user.birthday).format('DD/MM/YYYY')" />
+          <CUserData title="Ngày sinh" :text="$dayjs(customerData.dateOfBirth).format('DD/MM/YYYY')" />
 
           <!-- Địa chỉ -->
           <CUserData title="Địa chỉ" :text="address" />
@@ -29,7 +34,7 @@
         </template>
 
         <!-- Biểu mẫu: Chỉnh sửa thông tin -->
-        <template v-else>
+        <template v-else-if="!loading">
           <!-- Họ tên -->
           <UIInput
             v-model="formData.name"
@@ -96,38 +101,44 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
-
-/* props */
-const props = defineProps({
-  user: {
-    type: Object as PropType<UserResponse>,
-    required: true
-  }
-})
-
-/* emit */
-const emit = defineEmits(['getUserRefresh'])
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 
 /* Toàn cục */
 const { $Swal, $dayjs } = useNuxtApp()
-const authStore = useAuthStore()
 const styleStore = useStyleStore()
 
-/* Địa chỉ */
+/* State */
+const loading = ref(true)
+const customerData = ref(null)
 const address = ref('')
 
 /* Biểu mẫu */
 const formData = reactive({
-  name: props.user.name,
-  phone: props.user.phone,
-  birthday: props.user.birthday,
+  name: '',
+  phone: '',
+  birthday: '',
   address: {
-    zipcode: props.user.address.zipcode,
-    detail: props.user.address.detail
+    zipcode: 0,
+    detail: ''
   }
 })
 const formRefs = ref<HTMLFormElement | null>(null)
+
+// Helper function để extract zipcode từ địa chỉ
+const extractZipcodeFromAddress = (address: string): number => {
+  if (!address) return 0
+  
+  if (address.includes('TP. Hồ Chí Minh') || address.includes('Hồ Chí Minh')) {
+    return 70000 // Zipcode của TP.HCM
+  }
+  if (address.includes('Hà Nội')) {
+    return 10000 // Zipcode của Hà Nội
+  }
+  if (address.includes('Đà Nẵng')) {
+    return 50000 // Zipcode của Đà Nẵng
+  }
+  return 0
+}
 
 // Quy tắc biểu mẫu
 const schema = {
@@ -157,14 +168,53 @@ const toggleForm = (event: string) => {
   }
 }
 
-const cancelEdit = (data = props.user) => {
-  formData.name = data.name
-  formData.phone = data.phone
-  formData.birthday = data.birthday
-  formData.address.zipcode = data.address.zipcode
-  formData.address.detail = data.address.detail
+const cancelEdit = () => {
+  if (!customerData.value) return
+  
+  // Reset form về dữ liệu gốc
+  formData.name = customerData.value.name.fullName
+  formData.phone = formData.phone // Giữ nguyên phone vì BE chưa có
+  formData.birthday = customerData.value.dateOfBirth
+  formData.address.zipcode = extractZipcodeFromAddress(customerData.value.address.value) || 70000
+  formData.address.detail = customerData.value.address.value
   toggleForm('close')
 }
+
+// Load dữ liệu từ BE khi component mount
+onMounted(async () => {
+  try {
+    loading.value = true
+    const res = await $fetch('http://localhost:8089/api/customers/find')
+    
+    console.log('BE Response:', res) // Debug log
+    
+    customerData.value = res
+    
+    // Fill dữ liệu vào form
+    formData.name = res.name.fullName
+    formData.phone = res.phone || '0912345678' // Fallback nếu BE chưa có phone
+    formData.birthday = res.dateOfBirth
+    formData.address.zipcode = extractZipcodeFromAddress(res.address.value) || 70000
+    formData.address.detail = res.address.value
+    
+    // Set địa chỉ hiển thị
+    address.value = res.address.value
+    
+    console.log('Customer data loaded:', customerData.value)
+    console.log('Form data filled:', formData)
+    
+  } catch (err) {
+    console.error('Không thể lấy dữ liệu customer:', err)
+    $Swal?.fire({
+      title: 'Lỗi',
+      text: 'Không thể tải dữ liệu khách hàng',
+      icon: 'error',
+      confirmButtonText: 'Đóng'
+    })
+  } finally {
+    loading.value = false
+  }
+})
 
 /* api */
 const { updateUserApi, getDistrictApi } = useApi()
@@ -172,7 +222,7 @@ const { updateUserApi, getDistrictApi } = useApi()
 // api: Chỉnh sửa thông tin
 const { pending, refresh } = await updateUserApi({
   body: computed(() => ({
-    userId: props.user._id,
+    userId: customerData.value?.id.value,
     ...formData
   })),
   watch: false,
@@ -185,9 +235,15 @@ const { pending, refresh } = await updateUserApi({
         confirmButtonText: 'Xác nhận',
         confirmButtonColor: styleStore.confirmButtonColor,
         willClose: () => {
-          emit('getUserRefresh')
-          authStore.userName = response._data.result.name
-          cancelEdit(response._data.result)
+          // Cập nhật lại customerData với dữ liệu mới
+          const result = response._data.result
+          customerData.value = {
+            ...customerData.value,
+            name: { fullName: result.name },
+            dateOfBirth: result.birthday,
+            address: { value: result.address.detail }
+          }
+          cancelEdit()
         }
       })
     }
@@ -197,17 +253,17 @@ pending.value = false
 
 // api: Lấy địa chỉ khu vực
 watch(
-  () => props.user.address,
+  () => formData.address.zipcode,
   () => {
     // zipcode 0 không xử lý
-    if (props.user.address.zipcode === 0) return
+    if (formData.address.zipcode === 0) return
 
     getDistrictApi({
-      query: { zip_code: props.user.address.zipcode },
+      query: { zip_code: formData.address.zipcode },
       onResponse({ response }) {
         if (response.status === 200) {
           const { city, district } = response._data.data[0]
-          address.value = `${city}${district}${props.user.address.detail}`
+          address.value = `${city}${district}${formData.address.detail}`
         }
       }
     })
