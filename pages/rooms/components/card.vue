@@ -4,45 +4,53 @@
   >
     <!-- Xem trước phòng -->
     <div class="aspect-video xl:col-span-7 xl:aspect-auto">
-      <Swiper
-        class="room-swiper h-full"
-        :autoplay="{
-          delay: 5000,
-          disableOnInteraction: false
-        }"
-        :loop="true"
-        :modules="[SwiperPagination, SwiperAutoplay, SwiperNavigation]"
-        :navigation="{
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        }"
-        :pagination="{
-          clickable: true
-        }"
-      >
-        <!-- Ảnh phòng -->
-        <SwiperSlide v-for="(slide, index) in room.imageUrlList" :key="index">
-          <NuxtImg class="h-full w-full object-cover" :src="slide" />
-        </SwiperSlide>
+      <ClientOnly>
+        <Swiper
+          v-if="isMounted"
+          class="room-swiper h-full"
+          :autoplay="{
+            delay: 5000,
+            disableOnInteraction: false
+          }"
+          :loop="true"
+          :modules="modules"
+          :navigation="{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          }"
+          :pagination="{
+            clickable: true
+          }"
+        >
+          <!-- Ảnh phòng -->
+          <SwiperSlide v-for="(slide, index) in room.imageUrlList" :key="index">
+            <NuxtImg class="h-full w-full object-cover" :src="slide" />
+          </SwiperSlide>
 
-        <!-- Nút chọn phòng -->
-        <div
-          class="swiper-button-prev !left-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
-        >
-          <Icon
-            class="!h-auto !w-auto !object-none text-[2.5rem]"
-            name="ic:baseline-keyboard-arrow-left"
-          />
-        </div>
-        <div
-          class="swiper-button-next !right-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
-        >
-          <Icon
-            class="!h-auto !w-auto !object-none text-[2.5rem]"
-            name="ic:baseline-keyboard-arrow-right"
-          />
-        </div>
-      </Swiper>
+          <!-- Nút chọn phòng -->
+          <div
+            class="swiper-button-prev !left-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
+          >
+            <Icon
+              class="!h-auto !w-auto !object-none text-[2.5rem]"
+              name="ic:baseline-keyboard-arrow-left"
+            />
+          </div>
+          <div
+            class="swiper-button-next !right-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
+          >
+            <Icon
+              class="!h-auto !w-auto !object-none text-[2.5rem]"
+              name="ic:baseline-keyboard-arrow-right"
+            />
+          </div>
+        </Swiper>
+        <template #fallback>
+          <div class="h-full w-full bg-gray-200 animate-pulse flex items-center justify-center">
+            <span class="text-gray-500">Loading...</span>
+          </div>
+        </template>
+      </ClientOnly>
     </div>
 
     <!-- Thông tin phòng -->
@@ -84,6 +92,9 @@
 </template>
 
 <script lang="ts" setup>
+// Import Swiper modules properly
+import { Autoplay, Navigation, Pagination } from 'swiper/modules'
+
 // import type { RoomResponse } from '@/types'
 
 /* props */
@@ -93,6 +104,13 @@
 //     required: true
 //   }
 // })
+
+// Mount state
+const isMounted = ref(false)
+
+// Define modules
+const modules = [Pagination, Autoplay, Navigation]
+
 const room = {
   name: 'Phòng Deluxesss',
   description: 'Phòng Deluxe với đầy đủ tiện nghi',
@@ -107,6 +125,17 @@ const room = {
   price: 1000000,
   _id: '1'
 }
+
+// Lifecycle hooks
+onMounted(() => {
+  nextTick(() => {
+    isMounted.value = true
+  })
+})
+
+onBeforeUnmount(() => {
+  isMounted.value = false
+})
 </script>
 
 <style lang="scss" scoped>

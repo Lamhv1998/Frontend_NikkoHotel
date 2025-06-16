@@ -1,18 +1,20 @@
 <template>
   <section>
-    <Swiper
-      class="banner-swiper"
-      :autoplay="{
-        delay: 7000,
-        disableOnInteraction: false
-      }"
-      :effect="'fade'"
-      :loop="true"
-      :modules="[SwiperPagination, SwiperEffectFade, SwiperAutoplay]"
-      :pagination="{
-        clickable: true
-      }"
-    >
+    <ClientOnly>
+      <Swiper
+        v-if="isMounted"
+        class="banner-swiper"
+        :autoplay="{
+          delay: 7000,
+          disableOnInteraction: false
+        }"
+        :effect="'fade'"
+        :loop="true"
+        :modules="modules"
+        :pagination="{
+          clickable: true
+        }"
+      >
       <SwiperSlide v-for="(banner, index) in bannerUrlList" :key="index" class="!h-screen">
         <!-- Ảnh nền -->
         <NuxtImg class="h-full w-full object-cover" :src="banner" width="100vw" />
@@ -70,13 +72,28 @@
         </div>
       </SwiperSlide>
     </Swiper>
+    <template #fallback>
+      <div class="h-screen bg-gray-200 animate-pulse flex items-center justify-center">
+        <span class="text-gray-500">Loading banner...</span>
+      </div>
+    </template>
+  </ClientOnly>
   </section>
 </template>
 
 <script lang="ts" setup>
+// Import modules properly
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules'
+
 const props = defineProps({
   rooms: Boolean
 })
+
+// Ensure component is mounted before initializing Swiper
+const isMounted = ref(false)
+
+// Define modules
+const modules = [Pagination, EffectFade, Autoplay]
 
 /* Danh sách banner */
 const bannerUrlList = ref([
@@ -86,6 +103,18 @@ const bannerUrlList = ref([
   'imgur/24uhdiO.png',
   'imgur/NSnPlgZ.png'
 ])
+
+// Lifecycle hooks
+onMounted(() => {
+  nextTick(() => {
+    isMounted.value = true
+  })
+})
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  isMounted.value = false
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,21 +1,14 @@
 <template>
   <div v-if="room" class="bg-system-primary-10">
-    <VForm
-      v-slot="{ errors }"
-      class="section-container space-y-10"
-      :validation-schema="schema"
-      @invalid-submit="invalidSubmit"
-      @submit="addOrderRefresh"
-    >
+    <VForm v-slot="{ errors }" class="section-container space-y-10" :validation-schema="schema"
+      @invalid-submit="invalidSubmit" @submit="goToPayment">
       <!-- Liên kết: Chi tiết phòng -->
       <div class="container">
         <NuxtLink
-          class="inline-flex items-center gap-2 text-h5 transition-colors hover:text-system-primary-120 xl:text-h3"
-          :to="{
+          class="inline-flex items-center gap-2 text-h5 transition-colors hover:text-system-primary-120 xl:text-h3" :to="{
             name: 'room-id',
             params: { id: room._id }
-          }"
-        >
+          }">
           <Icon class="text-icon-24 xl:text-icon-40" name="ic:baseline-keyboard-arrow-left" />
           Xác nhận thông tin đặt phòng
         </NuxtLink>
@@ -46,10 +39,7 @@
                 <div class="flex items-center justify-between">
                   <div class="space-y-2">
                     <CTitle title="Ngày đặt phòng" size="md" />
-                    <div
-                      v-if="orderStore.order.checkInDate && orderStore.order.checkOutDate"
-                      class="space-y-3"
-                    >
+                    <div v-if="orderStore.order.checkInDate && orderStore.order.checkOutDate" class="space-y-3">
                       <p class="text-body">
                         {{ `Nhận phòng: ${$dayjs(orderStore.order.checkInDate).format('dddd, DD/MM/YYYY')}` }}
                       </p>
@@ -83,46 +73,21 @@
             <section class="space-y-8 xl:space-y-10">
               <div class="flex items-center justify-between">
                 <h3 class="text-h6 xl:text-h4">Thông tin người đặt phòng</h3>
-                <UIButton
-                  text="Áp dụng thông tin thành viên"
-                  variant="text"
-                  @click="getUserRefresh"
-                />
+                <UIButton text="Áp dụng thông tin thành viên" variant="text" @click="getUserRefresh" />
               </div>
 
               <div class="space-y-6">
                 <!-- Họ tên -->
-                <UIInput
-                  v-model="orderStore.order.userInfo.name"
-                  name="name"
-                  label="Họ tên"
-                  placeholder="Vui lòng nhập họ tên"
-                  :error="errors.name"
-                  blackhead
-                  :disabled="apiPending"
-                />
+                <UIInput v-model="orderStore.order.userInfo.name" name="name" label="Họ tên"
+                  placeholder="Vui lòng nhập họ tên" :error="errors.name" blackhead :disabled="apiPending" />
 
                 <!-- Số điện thoại -->
-                <UIInput
-                  v-model="orderStore.order.userInfo.phone"
-                  name="phone"
-                  label="Số điện thoại"
-                  placeholder="Vui lòng nhập số điện thoại"
-                  :error="errors.phone"
-                  blackhead
-                  :disabled="apiPending"
-                />
+                <UIInput v-model="orderStore.order.userInfo.phone" name="phone" label="Số điện thoại"
+                  placeholder="Vui lòng nhập số điện thoại" :error="errors.phone" blackhead :disabled="apiPending" />
 
                 <!-- Email -->
-                <UIInput
-                  v-model="orderStore.order.userInfo.email"
-                  name="email"
-                  label="Email"
-                  placeholder="Vui lòng nhập email"
-                  :error="errors.email"
-                  blackhead
-                  :disabled="apiPending"
-                />
+                <UIInput v-model="orderStore.order.userInfo.email" name="email" label="Email"
+                  placeholder="Vui lòng nhập email" :error="errors.email" blackhead :disabled="apiPending" />
 
                 <!-- Địa chỉ -->
                 <!-- <CAddress
@@ -146,11 +111,7 @@
             <ul class="space-y-6">
               <li class="space-y-4 xl:space-y-6">
                 <CTitle title="Thông tin cơ bản phòng" />
-                <CRoomInfo
-                  :area-info="room.areaInfo"
-                  :bed-info="room.bedInfo"
-                  :max-people="room.maxPeople"
-                />
+                <CRoomInfo :area-info="room.areaInfo" :bed-info="room.bedInfo" :max-people="room.maxPeople" />
               </li>
               <li class="space-y-4 xl:space-y-6">
                 <CTitle title="Bố trí phòng" />
@@ -197,13 +158,7 @@
               </div>
             </ClientOnly>
 
-            <UIButton
-              type="submit"
-              block
-              text="Xác nhận đặt phòng"
-              :disabled="apiPending"
-              :loading="apiPending"
-            />
+            <UIButton type="submit" block text="Xác nhận đặt phòng" :disabled="apiPending" :loading="apiPending" />
           </div>
         </div>
       </div>
@@ -282,6 +237,11 @@ const room = {
   amenityInfo: [{ name: 'Khăn tắm' }, { name: 'Dầu gội' }, { name: 'Xà phòng' }],
   imageUrl: 'https://picsum.photos/400/300?random=1',
   price: 1000000
+}
+
+const goToPayment = async () => {
+  // Có thể thêm validate hoặc lưu thông tin nếu cần
+  await navigateTo('/payment')
 }
 // api: Áp dụng thông tin thành viên
 // const { refresh: getUserRefresh, pending: guPending } = await getUserApi({

@@ -23,11 +23,7 @@ const related = blogList.filter((b) => b.category === blog.category && b.id !== 
     <div class="mx-auto max-w-5xl">
       <!-- Ảnh đại diện -->
       <div v-if="blog.image" class="mb-8">
-        <img
-          class="h-64 w-full rounded-xl object-cover shadow-sm"
-          :src="blog.image"
-          alt="Thumbnail"
-        />
+        <img class="h-64 w-full rounded-xl object-cover shadow-sm" :src="blog.image" alt="Thumbnail" />
       </div>
 
       <!-- Tiêu đề -->
@@ -40,10 +36,8 @@ const related = blogList.filter((b) => b.category === blog.category && b.id !== 
       </p>
 
       <!-- Nội dung -->
-      <div
-        v-html="blog.content"
-        class="prose prose-sm sm:prose lg:prose-lg mb-10 max-w-none leading-relaxed text-gray-700"
-      />
+      <div v-html="blog.content"
+        class="prose prose-sm sm:prose lg:prose-lg mb-10 max-w-none leading-relaxed text-gray-700" />
 
       <!-- Gợi ý -->
       <div>
