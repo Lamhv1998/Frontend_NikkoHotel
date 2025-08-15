@@ -1,87 +1,70 @@
 <template>
-  <div class="min-h-screen">
-    <!-- Banner -->
-    <CBanner />
+  <div class="min-h-screen bg-[#140F0A] p-4">
+    <div class="max-w-7xl mx-auto space-y-8">
 
-    <div class="section-container bg-system-primary-10">
-      <div class="container space-y-10 xl:space-y-20">
-        <!-- Tiêu đề -->
-        <div class="text-center space-y-4">
-          <p class="text-sub-title text-system-gray-80 xl:text-h6">Ưu đãi đặc biệt</p>
-          <h1 class="text-h3 text-system-primary-100 xl:text-h1">
-            Coupon & Khuyến mãi hấp dẫn
-          </h1>
-          <p class="text-body text-gray-600 max-w-2xl mx-auto">
-            Khám phá các ưu đãi đặc biệt từ phòng nghỉ, nhà hàng đến spa. 
-            Thu thập coupon ngay hôm nay để tận hưởng những trải nghiệm tuyệt vời nhất
-          </p>
-          
-          <!-- Progress Bar -->
-          <div class="max-w-md mx-auto mt-6">
-            <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
-              <span>Tiến độ thu thập</span>
-              <span class="font-semibold text-system-primary-100">{{ collectedCount }}/{{ totalCoupons }}</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                class="bg-gradient-to-r from-system-primary-100 to-system-primary-80 h-3 rounded-full transition-all duration-500"
-                :style="{ width: `${(collectedCount / totalCoupons) * 100}%` }"
-              ></div>
-            </div>
+      <!-- Header Section -->
+      <div class="text-center py-8">
+        <h1
+          class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent mb-2">
+          Săn Coupon Miễn Phí
+        </h1>
+        <p class="text-gray-300 text-lg">Nhận ngay các coupon hấp dẫn chỉ với một cú click!</p>
+        <div
+          class="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 rounded-full border border-amber-500/30">
+          <svg class="w-5 h-5 text-amber-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+            </path>
+          </svg>
+          <span class="text-amber-300 text-sm font-medium">{{ collectedCount }}/{{ totalCoupons }} coupon đã thu
+            thập</span>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex justify-center mb-8">
+        <div class="bg-gray-800/50 rounded-2xl p-2 backdrop-blur-sm border border-gray-600/30">
+          <div class="flex space-x-2">
+            <button v-for="tab in filterTabs" :key="tab.key" @click="activeFilter = tab.key" :class="[
+              'px-6 py-3 rounded-xl font-medium transition-all duration-300',
+              activeFilter === tab.key
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white shadow-lg'
+                : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+            ]">
+              {{ tab.label }}
+            </button>
           </div>
         </div>
+      </div>
 
-        <!-- Filter Tabs -->
-        <div class="flex justify-center">
-          <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100">
-            <div class="flex space-x-1">
-              <button 
-                v-for="tab in filterTabs" 
-                :key="tab.key" 
-                @click="activeFilter = tab.key" 
-                :class="[
-                  'px-6 py-3 rounded-xl font-medium transition-all duration-300 text-sm',
-                  activeFilter === tab.key
-                    ? 'bg-system-primary-100 text-white shadow-md'
-                    : 'text-gray-600 hover:text-system-primary-100 hover:bg-gray-50'
-                ]"
-              >
-                {{ tab.label }}
-              </button>
+      <!-- Coupons Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="coupon in filteredCoupons" :key="coupon.id" class="group relative">
+          <!-- Coupon Card -->
+          <div
+            class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-amber-500/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-amber-500/20">
+
+            <!-- Discount Badge -->
+            <div class="absolute top-4 right-4 z-10">
+              <div :class="[
+                'px-4 py-2 rounded-full text-white font-bold text-lg shadow-lg',
+                coupon.type === 'percentage' ? 'bg-gradient-to-r from-red-500 to-pink-600' : 'bg-gradient-to-r from-green-500 to-emerald-600'
+              ]">
+                {{ coupon.type === 'percentage' ? `-${coupon.value}%` : `-${coupon.value.toLocaleString()}đ` }}
+              </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Coupons Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            v-for="coupon in filteredCoupons" 
-            :key="coupon.id" 
-            class="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-gray-100"
-          >
-            <!-- Coupon Header -->
-            <div class="relative p-6 pb-4">
-              <!-- Discount Badge -->
-              <div class="absolute top-4 right-4">
-                <div :class="[
-                  'px-4 py-2 rounded-full text-white font-bold text-lg shadow-lg',
-                  coupon.type === 'percentage' 
-                    ? 'bg-gradient-to-r from-red-500 to-pink-600' 
-                    : 'bg-gradient-to-r from-green-500 to-emerald-600'
-                ]">
-                  {{ coupon.type === 'percentage' ? `-${coupon.value}%` : `-${coupon.value.toLocaleString()}đ` }}
-                </div>
+            <!-- Limited Badge -->
+            <div v-if="coupon.isLimited" class="absolute top-4 left-4 z-10">
+              <div
+                class="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full text-white text-xs font-bold animate-pulse">
+                {{ coupon.remaining }} còn lại
               </div>
+            </div>
 
-              <!-- Limited Badge -->
-              <div v-if="coupon.isLimited" class="absolute top-4 left-4">
-                <div class="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full text-white text-xs font-bold">
-                  {{ coupon.remaining }} còn lại
-                </div>
-              </div>
-
-              <!-- Icon & Title -->
-              <div class="flex items-center mb-4 pt-8">
+            <!-- Card Content -->
+            <div class="p-6 pt-16">
+              <div class="flex items-center mb-4">
                 <div :class="[
                   'w-16 h-16 rounded-2xl flex items-center justify-center mr-4 shadow-lg',
                   `bg-gradient-to-br ${coupon.iconBg}`
@@ -89,49 +72,47 @@
                   <div class="text-2xl">{{ coupon.icon }}</div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-gray-800 mb-1">{{ coupon.title }}</h3>
-                  <p class="text-gray-500 text-sm">{{ getCategoryLabel(coupon.category) }}</p>
+                  <h3 class="text-xl font-bold text-white mb-1">{{ coupon.title }}</h3>
+                  <p class="text-gray-400 text-sm">{{ coupon.category }}</p>
                 </div>
               </div>
 
-              <!-- Description -->
-              <p class="text-gray-600 mb-4">{{ coupon.description }}</p>
-            </div>
+              <p class="text-gray-300 mb-4">{{ coupon.description }}</p>
 
-            <!-- Coupon Details -->
-            <div class="px-6 pb-6 space-y-4">
               <!-- Conditions -->
-              <div class="space-y-2">
-                <div class="flex items-center text-sm text-gray-500">
-                  <svg class="w-4 h-4 mr-2 text-system-primary-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <div class="space-y-2 mb-6">
+                <div class="flex items-center text-sm text-gray-400">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   Hết hạn: {{ formatDate(coupon.expiry) }}
                 </div>
-                <div v-if="coupon.minOrder" class="flex items-center text-sm text-gray-500">
-                  <svg class="w-4 h-4 mr-2 text-system-primary-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                <div v-if="coupon.minOrder" class="flex items-center text-sm text-gray-400">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
                   </svg>
                   Đơn tối thiểu: {{ coupon.minOrder.toLocaleString() }}đ
                 </div>
               </div>
 
               <!-- Action Button -->
-              <button 
-                @click="collectCoupon(coupon)"
-                :disabled="coupon.isCollected || (coupon.isLimited && coupon.remaining <= 0)" 
-                :class="[
+              <button @click="collectCoupon(coupon)"
+                :disabled="coupon.isCollected || (coupon.isLimited && coupon.remaining <= 0)" :class="[
                   'w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg',
                   coupon.isCollected
-                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                     : coupon.isLimited && coupon.remaining <= 0
-                      ? 'bg-red-100 text-red-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-system-primary-100 to-system-primary-80 text-white hover:from-system-primary-80 hover:to-system-primary-100 hover:shadow-xl'
-                ]"
-              >
+                      ? 'bg-red-800 text-red-300 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white hover:from-amber-600 hover:to-yellow-700 hover:scale-105 hover:shadow-amber-500/30'
+                ]">
                 <span v-if="coupon.isCollected" class="flex items-center justify-center">
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"></path>
                   </svg>
                   Đã thu thập
                 </span>
@@ -140,54 +121,61 @@
                 </span>
                 <span v-else class="flex items-center justify-center">
                   <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
                   Thu thập ngay
                 </span>
               </button>
             </div>
-          </div>
-        </div>
 
-        <!-- Empty State -->
-        <div v-if="filteredCoupons.length === 0" class="text-center py-16">
-          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
+            <!-- Decorative Elements -->
+            <div
+              class="absolute -top-2 -right-2 w-8 h-8 bg-amber-500 rounded-full opacity-20 group-hover:opacity-40 transition-opacity">
+            </div>
+            <div
+              class="absolute -bottom-2 -left-2 w-6 h-6 bg-yellow-500 rounded-full opacity-20 group-hover:opacity-40 transition-opacity">
+            </div>
           </div>
-          <h3 class="text-xl font-bold text-gray-700 mb-2">Không có coupon nào</h3>
-          <p class="text-gray-500">Hãy thử lọc theo danh mục khác</p>
         </div>
       </div>
+
+      <!-- Empty State -->
+      <div v-if="filteredCoupons.length === 0" class="text-center py-16">
+        <div class="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-400 mb-2">Không có coupon nào</h3>
+        <p class="text-gray-500">Hãy thử lọc theo danh mục khác</p>
+      </div>
+
+      <!-- Success Toast -->
+      <Transition name="slide-up">
+        <div v-if="showToast"
+          class="fixed bottom-8 right-8 bg-gradient-to-r from-green-600 to-emerald-700 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-500/30 backdrop-blur-sm z-50">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <p class="font-bold">Thu thập thành công!</p>
+              <p class="text-sm text-green-100">Coupon đã được thêm vào ví của bạn</p>
+            </div>
+          </div>
+        </div>
+      </Transition>
     </div>
-
-    <!-- Footer -->
-    <CWave />
-
-    <!-- Success Toast -->
-    <Transition name="slide-up">
-      <div v-if="showToast" class="fixed bottom-8 right-8 bg-white text-gray-800 px-6 py-4 rounded-2xl shadow-2xl border border-green-200 z-50">
-        <div class="flex items-center">
-          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="font-bold text-gray-800">Thu thập thành công!</p>
-            <p class="text-sm text-gray-600">Coupon đã được thêm vào ví của bạn</p>
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
-import CBanner from '~/components/c/CBanner.vue'
-import CWave from '~/components/c/CWave.vue'
 
 // /* PageMeta */
 // definePageMeta({
@@ -367,25 +355,9 @@ const formatDate = (dateString: string) => {
     year: 'numeric'
   })
 }
-
-const getCategoryLabel = (category: string) => {
-  switch (category) {
-    case 'food':
-      return 'Ẩm thực'
-    case 'room':
-      return 'Phòng'
-    case 'spa':
-      return 'Spa & Wellness'
-    case 'special':
-      return 'Đặc biệt'
-    default:
-      return category
-  }
-}
 </script>
 
-<style lang="scss" scoped>
-/* Custom styles cho trang coupons */
+<style scoped>
 .slide-up-enter-active,
 .slide-up-leave-active {
   transition: all 0.3s ease;
@@ -399,53 +371,5 @@ const getCategoryLabel = (category: string) => {
 .slide-up-leave-to {
   transform: translateY(100px);
   opacity: 0;
-}
-
-/* Smooth transitions */
-.transition-all {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Hover effects */
-.hover\:shadow-2xl:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.hover\:-translate-y-2:hover {
-  transform: translateY(-8px);
-}
-
-/* Progress bar animation */
-.bg-gradient-to-r {
-  transition: width 0.5s ease-in-out;
-}
-
-/* Card hover effects */
-.group:hover {
-  transform: translateY(-8px);
-}
-
-/* Responsive improvements */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-/* Toast animation */
-.fixed {
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 </style>

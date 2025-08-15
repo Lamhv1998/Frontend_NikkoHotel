@@ -27,7 +27,7 @@
           <!-- rwd container -->
           <div
             :class="[
-              props.rooms || props.restaurant || props.services
+              props.rooms
                 ? 'justify-center gap-10 xl:!max-w-[52rem] xl:gap-20'
                 : 'xl:gap-[12.5rem] xl:px-20 xl:pt-[7.5rem]',
               'container flex h-full flex-col items-center gap-10 px-5 pt-10 xl:max-w-full xl:flex-row xl:items-stretch'
@@ -35,7 +35,7 @@
           >
             <div
               :class="[
-                props.rooms || props.restaurant || props.services ? 'h-2/5 xl:h-auto xl:flex-1' : 'flex-1',
+                props.rooms ? 'h-2/5 xl:h-auto xl:flex-1' : 'flex-1',
                 'flex  flex-col items-center justify-normal text-system-primary-100 xl:items-start xl:justify-center'
               ]"
             >
@@ -48,7 +48,7 @@
             </div>
 
             <div
-              v-if="!props.rooms && !props.restaurant && !props.services"
+              v-if="!props.rooms"
               class="ml-12 flex h-2/3 items-center rounded-[2.5rem] border-r border-t bg-gradient-to-t from-white/30 backdrop-blur-[1.25rem] xl:h-auto xl:w-1/2 xl:rounded-[5rem]"
             >
               <div class="-ml-10 pr-10 text-white xl:-ml-12 xl:pr-12">
@@ -65,16 +65,8 @@
                 </NuxtLink>
               </div>
             </div>
-            
-            <!-- Tiêu đề cho các trang cụ thể -->
-            <h2 v-else-if="props.rooms" class="flex items-center text-h3 text-white xl:flex-initial xl:text-h1">
+            <h2 v-else class="flex items-center text-h3 text-white xl:flex-initial xl:text-h1">
               Phòng nghỉ
-            </h2>
-            <h2 v-else-if="props.restaurant" class="flex items-center text-h3 text-white xl:flex-initial xl:text-h1">
-              Nhà hàng
-            </h2>
-            <h2 v-else-if="props.services" class="flex items-center text-h3 text-white xl:flex-initial xl:text-h1">
-              Dịch vụ
             </h2>
           </div>
         </div>
@@ -94,9 +86,7 @@
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules'
 
 const props = defineProps({
-  rooms: Boolean,
-  restaurant: Boolean,
-  services: Boolean
+  rooms: Boolean
 })
 
 // Ensure component is mounted before initializing Swiper

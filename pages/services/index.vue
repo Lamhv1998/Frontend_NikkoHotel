@@ -1,477 +1,478 @@
 <template>
-  <div class="min-h-screen">
-    <!-- Banner -->
-    <CBanner services />
-
-    <div class="section-container bg-system-primary-10">
-      <div class="container space-y-10 xl:space-y-20">
-        <!-- Tiêu đề -->
-        <div class="text-center space-y-4">
-          <p class="text-sub-title text-system-gray-80 xl:text-h6">Dịch vụ khách sạn</p>
-          <h1 class="text-h3 text-system-primary-100 xl:text-h1">
-            Đặt dịch vụ tiện ích
-          </h1>
-          <p class="text-body text-gray-600 max-w-2xl mx-auto">
-            Khám phá các dịch vụ đa dạng từ ẩm thực, vận chuyển đến chăm sóc sức khỏe, 
-            giúp bạn có trải nghiệm lưu trú hoàn hảo nhất
-          </p>
+  <div
+    class="min-h-screen bg-white bg-cover bg-center bg-no-repeat p-8 font-serif"
+    style="background-color: antiquewhite"
+  >
+    <div class="mx-auto mb-8 max-w-5xl">
+      <UITitle text1="Đặt dịch vụ khách sạn" />
+    </div>
+    <!-- Danh mục -->
+    <div class="mx-auto mb-10 grid max-w-5xl grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-6">
+      <div
+        v-for="cat in categories"
+        :key="cat"
+        :class="
+          selectedCategory === cat
+            ? 'border-yellow-500 shadow-lg'
+            : 'border-white/50 hover:border-yellow-300'
+        "
+        class="group relative cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-300"
+        @click="selectCategory(cat)"
+      >
+        <img
+          class="h-28 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          :src="categoryImages[cat] || defaultImage"
+          alt=""
+        />
+        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+          <h3 class="text-center text-sm font-semibold text-white drop-shadow">{{ cat }}</h3>
         </div>
+      </div>
+    </div>
 
-        <!-- Bộ lọc nâng cao -->
-        <div class="search-filter-container relative rounded-2xl bg-white p-6 shadow-lg">
-          <div class="mb-6">
-            <h3 class="text-xl font-bold text-system-primary-100">Tìm kiếm dịch vụ</h3>
-            <p class="text-sm text-gray-600">Chọn loại dịch vụ và khoảng giá phù hợp</p>
+    <!-- Danh sách dịch vụ -->
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        v-for="service in pagedServices"
+        :key="service.id"
+        class="overflow-hidden rounded-xl bg-white text-[#3B2500] shadow-md transition-all hover:shadow-xl"
+      >
+        <img class="h-40 w-full object-cover" :src="service.image" alt="" />
+        <div class="space-y-2 p-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">{{ service.name }}</h2>
+            <span class="font-bold text-yellow-500">{{ service.price.toLocaleString() }}₫</span>
           </div>
-          
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            <!-- Tìm kiếm -->
-            <div class="relative">
-              <label class="mb-2 block text-sm font-medium text-gray-700">Tìm kiếm</label>
-              <input
-                v-model="searchQuery"
-                class="w-full rounded-lg border border-gray-300 p-3 focus:border-system-primary-100 focus:outline-none focus:ring-2 focus:ring-system-primary-100/20"
-                type="text"
-                placeholder="Tên dịch vụ..."
-                @input="filterServices"
-              />
-            </div>
+          <p class="text-sm italic text-gray-500">{{ service.category }}</p>
 
-            <!-- Loại dịch vụ -->
-            <div>
-              <label class="mb-2 block text-sm font-medium text-gray-700">Loại dịch vụ</label>
-              <select 
-                v-model="selectedCategory" 
-                class="w-full rounded-lg border border-gray-300 p-3 focus:border-system-primary-100 focus:outline-none focus:ring-2 focus:ring-system-primary-100/20"
-                @change="filterServices"
+          <div class="mt-4 flex justify-between">
+            <NuxtLink class="block flex-1 hover:text-yellow-600" :to="`/services/${service.id}`">
+              <button
+                class="rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-400"
               >
-                <option value="Tất cả">Tất cả loại</option>
-                <option value="Đồ ăn">Đồ ăn</option>
-                <option value="Thức uống">Thức uống</option>
-                <option value="Giặt ủi">Giặt ủi</option>
-                <option value="Đặt xe">Đặt xe</option>
-                <option value="Khác">Khác</option>
-              </select>
-            </div>
-
-            <!-- Khoảng giá -->
-            <div>
-              <label class="mb-2 block text-sm font-medium text-gray-700">Khoảng giá</label>
-              <select 
-                v-model="priceRange" 
-                class="w-full rounded-lg border border-gray-300 p-3 focus:border-system-primary-100 focus:outline-none focus:ring-2 focus:ring-system-primary-100/20"
-                @change="filterServices"
-              >
-                <option value="">Tất cả giá</option>
-                <option value="50000">Dưới 50k</option>
-                <option value="100000">50k - 100k</option>
-                <option value="200000">100k - 200k</option>
-                <option value="500000">200k - 500k</option>
-                <option value="1000000">Trên 500k</option>
-              </select>
-            </div>
-
-            <!-- Sắp xếp -->
-            <div>
-              <label class="mb-2 block text-sm font-medium text-gray-700">Sắp xếp</label>
-              <select 
-                v-model="sortBy" 
-                class="w-full rounded-lg border border-gray-300 p-3 focus:border-system-primary-100 focus:outline-none focus:ring-2 focus:ring-system-primary-100/20"
-                @change="filterServices"
-              >
-                <option value="name">Tên A-Z</option>
-                <option value="price-low">Giá thấp-cao</option>
-                <option value="price-high">Giá cao-thấp</option>
-                <option value="category">Loại dịch vụ</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Nút reset -->
-          <div class="mt-6 flex justify-end">
-            <button
-              class="rounded-lg border border-gray-300 px-6 py-3 text-gray-700 transition-all duration-300 hover:bg-gray-50"
-              @click="resetFilters"
-            >
-              🔄 Đặt lại
-            </button>
-          </div>
-        </div>
-
-        <!-- Thống kê kết quả -->
-        <div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm">
-          <div class="text-sm text-gray-600">
-            Hiển thị <span class="font-semibold text-system-primary-100">{{ pagedServices.length }}</span> 
-            trong tổng số <span class="font-semibold">{{ filteredServices.length }}</span> dịch vụ
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-600">Hiển thị:</span>
-            <select 
-              v-model="pageSize" 
-              class="rounded-lg border border-gray-300 px-3 py-1 text-sm focus:border-system-primary-100 focus:outline-none"
-              @change="currentPage = 1"
-            >
-              <option value="9">9 dịch vụ</option>
-              <option value="12">12 dịch vụ</option>
-              <option value="18">18 dịch vụ</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Danh sách dịch vụ -->
-        <div v-if="pagedServices.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="service in pagedServices"
-            :key="service.id"
-            class="group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
-          >
-            <div class="relative overflow-hidden">
-              <img 
-                class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                :src="service.image" 
-                :alt="service.name"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
-              <div class="absolute top-4 right-4">
-                <span class="rounded-full bg-system-primary-100 px-3 py-1 text-xs font-semibold text-white">
-                  {{ service.category }}
-                </span>
-              </div>
-            </div>
-            
-            <div class="space-y-4 p-6">
-              <div class="flex items-start justify-between">
-                <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ service.name }}</h3>
-                <span class="ml-2 text-xl font-bold text-system-primary-100">
-                  {{ formatPrice(service.price) }}
-                </span>
-              </div>
-              
-              <div class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="flex items-center gap-1">
-                  <Icon name="ic:baseline-category" class="text-system-primary-100" />
-                  {{ service.category }}
-                </span>
-              </div>
-
-              <div class="flex gap-3">
-                <NuxtLink 
-                  :to="`/services/${service.id}`"
-                  class="flex-1 rounded-lg bg-system-primary-100 px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-system-primary-80 hover:shadow-lg"
-                >
-                  Xem chi tiết
-                </NuxtLink>
-                <button 
-                  class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 transition-all duration-300 hover:bg-gray-50 hover:border-system-primary-100"
-                  @click="toggleFavorite(service.id)"
-                >
-                  <Icon 
-                    :name="favorites.includes(service.id) ? 'ic:baseline-favorite' : 'ic:baseline-favorite-border'" 
-                    :class="favorites.includes(service.id) ? 'text-red-500' : 'text-gray-400'"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Không có kết quả -->
-        <div v-else class="text-center py-16">
-          <div class="text-6xl mb-4">🔍</div>
-          <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy dịch vụ phù hợp</h3>
-          <p class="text-gray-500 mb-6">Hãy thử thay đổi tiêu chí tìm kiếm</p>
-          <button
-            class="rounded-lg bg-system-primary-100 px-6 py-3 text-white transition-all duration-300 hover:bg-system-primary-80"
-            @click="resetFilters"
-          >
-            Đặt lại bộ lọc
-          </button>
-        </div>
-
-        <!-- Phân trang -->
-        <div v-if="totalPages > 1" class="flex justify-center">
-          <div class="flex items-center gap-2">
-            <button
-              :disabled="currentPage === 1"
-              class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              :class="currentPage === 1 ? 'text-gray-400' : 'text-system-primary-100 hover:bg-system-primary-10'"
-              @click="currentPage = currentPage - 1"
-            >
-              ← Trước
-            </button>
-            
-            <button
-              v-for="page in visiblePages"
-              :key="page"
-              :class="[
-                'rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-300',
-                currentPage === page
-                  ? 'bg-system-primary-100 text-white shadow-lg'
-                  : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-system-primary-100'
-              ]"
-              @click="currentPage = page"
-            >
-              {{ page }}
-            </button>
-            
-            <button
-              :disabled="currentPage === totalPages"
-              class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              :class="currentPage === totalPages ? 'text-gray-400' : 'text-system-primary-100 hover:bg-system-primary-10'"
-              @click="currentPage = currentPage + 1"
-            >
-              Sau →
-            </button>
+                Xem chi tiết
+              </button>
+            </NuxtLink>
+            <button class="text-sm text-yellow-500 hover:text-red-500">💖 Yêu thích</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <CWave />
+    <!-- Phân trang -->
+    <div class="mt-12 flex justify-center space-x-4">
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        :class="[
+          'rounded-md px-4 py-2 font-semibold transition-colors duration-300',
+          currentPage === page
+            ? 'bg-yellow-500 text-white shadow-lg'
+            : 'border border-yellow-500 bg-white/20 text-white hover:bg-yellow-300 hover:text-[#4B2E00]'
+        ]"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import CWave from '~/components/c/CWave.vue'
+import UITitle from '~/pages/blog/components/UI/UITitle.vue'
 
-definePageMeta({ layout: 'landing' })
+const categories = ['Tất cả', 'Đồ ăn', 'Thức uống', 'Giặt ủi', 'Đặt xe', 'Khác']
 
-// Dữ liệu dịch vụ cải tiến
 const services = [
   {
     id: 1,
-    name: 'Phở bò đặc biệt',
+    name: 'Phở bò',
     category: 'Đồ ăn',
     price: 75000,
-    image: 'https://picsum.photos/400/300?random=10',
-    description: 'Phở bò truyền thống với nước dùng đậm đà, thịt bò tươi ngon'
+    image: 'https://picsum.photos/400/300?random=10'
   },
   {
     id: 2,
-    name: 'Cafe sữa đá',
+    name: 'Cafe sữa',
     category: 'Thức uống',
     price: 40000,
-    image: 'https://picsum.photos/400/300?random=11',
-    description: 'Cafe sữa đá đặc trưng Việt Nam với hương vị đậm đà'
+    image: 'https://picsum.photos/400/300?random=11'
   },
   {
     id: 3,
     name: 'Giặt áo sơ mi',
     category: 'Giặt ủi',
     price: 20000,
-    image: 'https://picsum.photos/400/300?random=12',
-    description: 'Dịch vụ giặt ủi chuyên nghiệp, đảm bảo áo sạch sẽ và phẳng phiu'
+    image: 'https://picsum.photos/400/300?random=12'
   },
   {
     id: 4,
     name: 'Thuê xe máy',
     category: 'Đặt xe',
     price: 150000,
-    image: 'https://picsum.photos/400/300?random=13',
-    description: 'Thuê xe máy để khám phá thành phố một cách thuận tiện'
+    image: 'https://picsum.photos/400/300?random=13'
   },
   {
     id: 5,
-    name: 'Massage thư giãn',
+    name: 'Massage',
     category: 'Khác',
     price: 250000,
-    image: 'https://picsum.photos/400/300?random=14',
-    description: 'Dịch vụ massage chuyên nghiệp giúp thư giãn cơ thể'
+    image: 'https://picsum.photos/400/300?random=14'
   },
   {
     id: 6,
-    name: 'Bún chả Hà Nội',
+    name: 'Bún chả',
     category: 'Đồ ăn',
     price: 70000,
-    image: 'https://picsum.photos/400/300?random=15',
-    description: 'Bún chả truyền thống Hà Nội với thịt nướng thơm ngon'
+    image: 'https://picsum.photos/400/300?random=15'
   },
   {
     id: 7,
-    name: 'Nước ép cam tươi',
+    name: 'Nước ép cam',
     category: 'Thức uống',
     price: 45000,
-    image: 'https://picsum.photos/400/300?random=16',
-    description: 'Nước cam tươi nguyên chất, giàu vitamin C'
+    image: 'https://picsum.photos/400/300?random=16'
   },
   {
     id: 8,
     name: 'Bánh mì pate',
     category: 'Đồ ăn',
     price: 30000,
-    image: 'https://picsum.photos/400/300?random=17',
-    description: 'Bánh mì pate truyền thống với nhân đậm đà'
+    image: 'https://picsum.photos/400/300?random=17'
   },
   {
     id: 9,
-    name: 'Cơm tấm sườn nướng',
+    name: 'Cơm tấm',
     category: 'Đồ ăn',
     price: 60000,
-    image: 'https://picsum.photos/400/300?random=18',
-    description: 'Cơm tấm với sườn nướng thơm ngon, đặc trưng miền Nam'
+    image: 'https://picsum.photos/400/300?random=18'
   },
   {
     id: 10,
     name: 'Bún bò Huế',
     category: 'Đồ ăn',
     price: 80000,
-    image: 'https://picsum.photos/400/300?random=19',
-    description: 'Bún bò Huế với nước dùng đậm đà, thịt bò mềm ngon'
+    image: 'https://picsum.photos/400/300?random=19'
   },
   {
     id: 11,
-    name: 'Bánh xèo miền Tây',
+    name: 'Bánh xèo',
     category: 'Đồ ăn',
     price: 50000,
-    image: 'https://picsum.photos/400/300?random=20',
-    description: 'Bánh xèo giòn rụm với nhân tôm thịt đầy đủ'
+    image: 'https://picsum.photos/400/300?random=20'
   },
   {
     id: 12,
-    name: 'Cháo gà nấm',
+    name: 'Cháo gà',
     category: 'Đồ ăn',
     price: 40000,
-    image: 'https://picsum.photos/400/300?random=21',
-    description: 'Cháo gà nấm thơm ngon, bổ dưỡng'
+    image: 'https://picsum.photos/400/300?random=21'
   },
   {
     id: 13,
-    name: 'Gỏi cuốn tôm thịt',
+    name: 'Gỏi cuốn',
     category: 'Đồ ăn',
     price: 35000,
-    image: 'https://picsum.photos/400/300?random=22',
-    description: 'Gỏi cuốn tươi ngon với nước chấm đặc biệt'
+    image: 'https://picsum.photos/400/300?random=22'
   },
   {
     id: 14,
-    name: 'Trà sữa trân châu',
+    name: 'Trà sữa',
     category: 'Thức uống',
     price: 50000,
-    image: 'https://picsum.photos/400/300?random=23',
-    description: 'Trà sữa trân châu với hương vị đa dạng'
+    image: 'https://picsum.photos/400/300?random=23'
   },
   {
     id: 15,
-    name: 'Sinh tố bơ sữa',
+    name: 'Sinh tố bơ',
     category: 'Thức uống',
     price: 45000,
-    image: 'https://picsum.photos/400/300?random=24',
-    description: 'Sinh tố bơ sữa béo ngậy, bổ dưỡng'
+    image: 'https://picsum.photos/400/300?random=24'
+  },
+  {
+    id: 16,
+    name: 'Cà phê đen',
+    category: 'Thức uống',
+    price: 35000,
+    image: 'https://picsum.photos/400/300?random=25'
+  },
+  {
+    id: 17,
+    name: 'Trà đào cam sả',
+    category: 'Thức uống',
+    price: 48000,
+    image: 'https://picsum.photos/400/300?random=26'
+  },
+  {
+    id: 18,
+    name: 'Soda chanh',
+    category: 'Thức uống',
+    price: 30000,
+    image: 'https://picsum.photos/400/300?random=27'
+  },
+  {
+    id: 19,
+    name: 'Giặt quần jeans',
+    category: 'Giặt ủi',
+    price: 25000,
+    image: 'https://picsum.photos/400/300?random=28'
+  },
+  {
+    id: 20,
+    name: 'Giặt áo khoác',
+    category: 'Giặt ủi',
+    price: 30000,
+    image: 'https://picsum.photos/400/300?random=29'
+  },
+  {
+    id: 21,
+    name: 'Giặt chăn mền',
+    category: 'Giặt ủi',
+    price: 60000,
+    image: 'https://picsum.photos/400/300?random=30'
+  },
+  {
+    id: 22,
+    name: 'Ủi áo dài',
+    category: 'Giặt ủi',
+    price: 20000,
+    image: 'https://picsum.photos/400/300?random=31'
+  },
+  {
+    id: 23,
+    name: 'Giặt khăn lông',
+    category: 'Giặt ủi',
+    price: 15000,
+    image: 'https://picsum.photos/400/300?random=32'
+  },
+  {
+    id: 24,
+    name: 'Đặt taxi 4 chỗ',
+    category: 'Đặt xe',
+    price: 120000,
+    image: 'https://picsum.photos/400/300?random=33'
+  },
+  {
+    id: 25,
+    name: 'Đặt taxi 7 chỗ',
+    category: 'Đặt xe',
+    price: 180000,
+    image: 'https://picsum.photos/400/300?random=34'
+  },
+  {
+    id: 26,
+    name: 'Đặt xe ôm',
+    category: 'Đặt xe',
+    price: 40000,
+    image: 'https://picsum.photos/400/300?random=35'
+  },
+  {
+    id: 27,
+    name: 'Thuê xe đạp',
+    category: 'Đặt xe',
+    price: 50000,
+    image: 'https://picsum.photos/400/300?random=36'
+  },
+  {
+    id: 28,
+    name: 'Thuê xe hơi',
+    category: 'Đặt xe',
+    price: 500000,
+    image: 'https://picsum.photos/400/300?random=37'
+  },
+  {
+    id: 29,
+    name: 'Gội đầu thư giãn',
+    category: 'Khác',
+    price: 100000,
+    image: 'https://picsum.photos/400/300?random=38'
+  },
+  {
+    id: 30,
+    name: 'Trang điểm dự tiệc',
+    category: 'Khác',
+    price: 300000,
+    image: 'https://picsum.photos/400/300?random=39'
+  },
+  {
+    id: 31,
+    name: 'Cắt tóc nam',
+    category: 'Khác',
+    price: 80000,
+    image: 'https://picsum.photos/400/300?random=40'
+  },
+  {
+    id: 32,
+    name: 'Cắt tóc nữ',
+    category: 'Khác',
+    price: 120000,
+    image: 'https://picsum.photos/400/300?random=41'
+  },
+  {
+    id: 33,
+    name: 'Làm móng tay',
+    category: 'Khác',
+    price: 90000,
+    image: 'https://picsum.photos/400/300?random=42'
+  },
+  {
+    id: 34,
+    name: 'Bún riêu',
+    category: 'Đồ ăn',
+    price: 60000,
+    image: 'https://picsum.photos/400/300?random=43'
+  },
+  {
+    id: 35,
+    name: 'Bánh cuốn',
+    category: 'Đồ ăn',
+    price: 50000,
+    image: 'https://picsum.photos/400/300?random=44'
+  },
+  {
+    id: 36,
+    name: 'Cơm chiên dương châu',
+    category: 'Đồ ăn',
+    price: 70000,
+    image: 'https://picsum.photos/400/300?random=45'
+  },
+  {
+    id: 37,
+    name: 'Trà gừng mật ong',
+    category: 'Thức uống',
+    price: 40000,
+    image: 'https://picsum.photos/400/300?random=46'
+  },
+  {
+    id: 38,
+    name: 'Cacao sữa nóng',
+    category: 'Thức uống',
+    price: 45000,
+    image: 'https://picsum.photos/400/300?random=47'
+  },
+  {
+    id: 39,
+    name: 'Giặt bộ vest',
+    category: 'Giặt ủi',
+    price: 80000,
+    image: 'https://picsum.photos/400/300?random=48'
+  },
+  {
+    id: 40,
+    name: 'Ủi quần âu',
+    category: 'Giặt ủi',
+    price: 20000,
+    image: 'https://picsum.photos/400/300?random=49'
+  },
+  {
+    id: 41,
+    name: 'Giặt khăn trải giường',
+    category: 'Giặt ủi',
+    price: 35000,
+    image: 'https://picsum.photos/400/300?random=50'
+  },
+  {
+    id: 42,
+    name: 'Đặt xe VIP',
+    category: 'Đặt xe',
+    price: 800000,
+    image: 'https://picsum.photos/400/300?random=51'
+  },
+  {
+    id: 43,
+    name: 'Tắm trắng toàn thân',
+    category: 'Khác',
+    price: 400000,
+    image: 'https://picsum.photos/400/300?random=52'
+  },
+  {
+    id: 44,
+    name: 'Spa thư giãn',
+    category: 'Khác',
+    price: 600000,
+    image: 'https://picsum.photos/400/300?random=53'
+  },
+  {
+    id: 45,
+    name: 'Cạo mặt',
+    category: 'Khác',
+    price: 60000,
+    image: 'https://picsum.photos/400/300?random=54'
+  },
+  {
+    id: 46,
+    name: 'Xông hơi',
+    category: 'Khác',
+    price: 200000,
+    image: 'https://picsum.photos/400/300?random=55'
+  },
+  {
+    id: 47,
+    name: 'Giặt đồ khẩn cấp',
+    category: 'Giặt ủi',
+    price: 40000,
+    image: 'https://picsum.photos/400/300?random=56'
+  },
+  {
+    id: 48,
+    name: 'Bánh flan',
+    category: 'Đồ ăn',
+    price: 25000,
+    image: 'https://picsum.photos/400/300?random=57'
+  },
+  {
+    id: 49,
+    name: 'Trà vải',
+    category: 'Thức uống',
+    price: 42000,
+    image: 'https://picsum.photos/400/300?random=58'
+  },
+  {
+    id: 50,
+    name: 'Đặt xe đường dài',
+    category: 'Đặt xe',
+    price: 1000000,
+    image: 'https://picsum.photos/400/300?random=59'
+  },
+  {
+    id: 51,
+    name: 'Gội đầu dưỡng sinh',
+    category: 'Khác',
+    price: 180000,
+    image: 'https://picsum.photos/400/300?random=60'
   }
 ]
 
-// Biến reactive
-const searchQuery = ref('')
 const selectedCategory = ref('Tất cả')
-const priceRange = ref('')
-const sortBy = ref('name')
 const currentPage = ref(1)
-const pageSize = ref(9)
-const favorites = ref([])
+const pageSize = 9
 
-// Computed properties
+function selectCategory(cat) {
+  selectedCategory.value = cat
+  currentPage.value = 1
+}
+
 const filteredServices = computed(() => {
-  let result = services.filter((service) => {
-    const matchSearch = service.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                       service.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    
-    const matchCategory = selectedCategory.value === 'Tất cả' || service.category === selectedCategory.value
-    
-    const matchPrice = priceRange.value ? service.price <= Number(priceRange.value) : true
-    
-    return matchSearch && matchCategory && matchPrice
-  })
-
-  // Sắp xếp
-  switch (sortBy.value) {
-    case 'name':
-      result.sort((a, b) => a.name.localeCompare(b.name))
-      break
-    case 'price-low':
-      result.sort((a, b) => a.price - b.price)
-      break
-    case 'price-high':
-      result.sort((a, b) => b.price - a.price)
-      break
-    case 'category':
-      result.sort((a, b) => a.category.localeCompare(b.category))
-      break
-  }
-
-  return result
+  if (selectedCategory.value === 'Tất cả') return services
+  return services.filter((s) => s.category === selectedCategory.value)
 })
 
-const totalPages = computed(() => Math.ceil(filteredServices.value.length / pageSize.value))
+const totalPages = computed(() => Math.ceil(filteredServices.value.length / pageSize))
 
 const pagedServices = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value
-  return filteredServices.value.slice(start, start + pageSize.value)
+  const start = (currentPage.value - 1) * pageSize
+  return filteredServices.value.slice(start, start + pageSize)
 })
 
-const visiblePages = computed(() => {
-  const pages = []
-  const maxVisible = 5
-  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
-  let end = Math.min(totalPages.value, start + maxVisible - 1)
-  
-  if (end - start + 1 < maxVisible) {
-    start = Math.max(1, end - maxVisible + 1)
-  }
-  
-  for (let i = start; i <= end; i++) {
-    pages.push(i)
-  }
-  
-  return pages
-})
+const defaultImage = 'https://picsum.photos/400/300?random=99'
 
-// Methods
-const filterServices = () => {
-  currentPage.value = 1
+const categoryImages = {
+  'Tất cả': 'https://picsum.photos/400/300?random=0',
+  'Đồ ăn': 'https://picsum.photos/400/300?random=1',
+  'Thức uống': 'https://picsum.photos/400/300?random=2',
+  'Giặt ủi': 'https://picsum.photos/400/300?random=3',
+  'Đặt xe': 'https://picsum.photos/400/300?random=4',
+  Khác: 'https://picsum.photos/400/300?random=5'
 }
-
-const resetFilters = () => {
-  searchQuery.value = ''
-  selectedCategory.value = 'Tất cả'
-  priceRange.value = ''
-  sortBy.value = 'name'
-  currentPage.value = 1
-}
-
-const toggleFavorite = (serviceId) => {
-  const index = favorites.value.indexOf(serviceId)
-  if (index > -1) {
-    favorites.value.splice(index, 1)
-  } else {
-    favorites.value.push(serviceId)
-  }
-}
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND'
-  }).format(price)
-}
-
-// Watch for changes
-watch([searchQuery, selectedCategory, priceRange, sortBy], () => {
-  filterServices()
-})
 </script>
-
-<style scoped>
-.search-filter-container {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border: 1px solid #e2e8f0;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-</style>
