@@ -1,185 +1,236 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-    <div class="max-w-7xl mx-auto space-y-8">
+  <div class="min-h-screen bg-[rgb(225,209,194)] relative overflow-hidden">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 right-0 w-96 h-96 bg-amber-600/10 rounded-full translate-x-48 -translate-y-48"></div>
+      <div class="absolute bottom-0 left-0 w-80 h-80 bg-yellow-600/10 rounded-full -translate-x-40 translate-y-40"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10 p-6">
       <!-- Header Section -->
-      <div class="text-center py-8">
-        <h1 class="text-4xl font-bold text-system-primary-120 mb-4">
-          📋 Lịch sử đặt phòng
-        </h1>
-        <p class="text-gray-600 text-lg">Theo dõi và quản lý các đơn đặt phòng của bạn</p>
+      <div class="text-center py-12 mb-12">
+        <div class="relative">
+          <!-- Decorative line above title -->
+          <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent"></div>
+          
+          <h1 class="text-5xl xl:text-6xl font-bold text-amber-800 mb-6 mt-8 leading-tight">
+            📋 Lịch sử đặt phòng
+          </h1>
+          
+          <!-- Decorative line below title -->
+          <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-yellow-600 to-transparent"></div>
+        </div>
+        
+        <p class="text-amber-700 text-xl xl:text-2xl max-w-3xl mx-auto leading-relaxed">
+          Theo dõi và quản lý tất cả đơn đặt phòng của bạn tại Nikko Luxury Hotel
+        </p>
       </div>
 
-      <!-- Main Content Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Left Column - Recent Orders -->
-        <div class="lg:col-span-7">
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <Icon name="ic:baseline-schedule" class="text-2xl text-system-primary-120 mr-3" />
-              Chuyến đi sắp tới
-            </h2>
-            
-            <div v-if="recentOrder" class="space-y-4">
-              <CRecentOrder :order="recentOrder">
-                <div class="grid grid-cols-2 gap-4 mt-4">
-                  <UIButton 
-                    block 
-                    text="Hủy đặt phòng" 
-                    variant="secondary" 
-                    @click="deleteOrder" 
-                  />
-                  <NuxtLink :to="`/order/${recentOrder._id}`">
-                    <UIButton block text="Xem chi tiết" />
-                  </NuxtLink>
-                </div>
-              </CRecentOrder>
-            </div>
-            
-            <div v-else class="text-center py-12">
-              <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Icon name="ic:baseline-hotel" class="text-4xl text-gray-400" />
+      <!-- Order Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-receipt" class="text-3xl text-white" />
               </div>
-              <h3 class="text-xl font-semibold text-gray-700 mb-2">Chưa có chuyến đi nào</h3>
-              <p class="text-gray-500 mb-6">Hãy đặt phòng để có những trải nghiệm tuyệt vời</p>
-              <NuxtLink to="/rooms">
-                <UIButton 
-                  icon="mdi:arrow-right" 
-                  text="Đặt phòng ngay" 
-                  variant="secondary" 
-                  class="px-8 py-3"
-                />
-              </NuxtLink>
+              <p class="text-2xl font-bold text-gray-800">{{ orderList.length }}</p>
+              <p class="text-sm text-gray-600 font-medium">Tổng đơn hàng</p>
             </div>
           </div>
         </div>
 
-        <!-- Right Column - Order History -->
-        <div class="lg:col-span-5">
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <Icon name="ic:baseline-history" class="text-2xl text-system-primary-120 mr-3" />
-              Lịch sử đặt phòng
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-check-circle" class="text-3xl text-white" />
+              </div>
+              <p class="text-2xl font-bold text-gray-800">{{ completedOrders }}</p>
+              <p class="text-sm text-gray-600 font-medium">Đã hoàn thành</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-500 to-amber-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-schedule" class="text-3xl text-white" />
+              </div>
+              <p class="text-2xl font-bold text-gray-800">{{ upcomingOrders }}</p>
+              <p class="text-sm text-gray-600 font-medium">Sắp tới</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-account-balance-wallet" class="text-3xl text-white" />
+              </div>
+              <p class="text-2xl font-bold text-gray-800">{{ formatCurrency(totalSpent) }}</p>
+              <p class="text-sm text-gray-600 font-medium">Tổng chi tiêu</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Order -->
+      <div v-if="recentOrder" class="mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-star" class="text-2xl text-white" />
+              </div>
+              Đơn đặt phòng sắp tới
             </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <!-- Room Image -->
+              <div class="relative overflow-hidden rounded-2xl">
+                <img :src="recentOrder.roomId.imageUrl" :alt="recentOrder.roomId.name" class="w-full h-48 object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                  <span class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {{ recentOrder.status }}
+                  </span>
+                </div>
+              </div>
 
-            <div v-if="historyOrder && historyOrder.length > 0" class="space-y-6">
-              <div 
-                v-for="(order, index) in historyOrder" 
-                :key="index"
-                class="border border-gray-100 rounded-xl p-4 hover:shadow-md transition-shadow duration-300"
-              >
-                <div class="flex gap-4">
-                  <NuxtImg
-                    class="h-20 w-28 rounded-lg object-cover flex-shrink-0"
-                    :src="order.roomId.imageUrl"
-                    alt="Room image"
-                  />
-
-                  <div class="flex-1 space-y-3">
-                    <div class="flex items-start justify-between">
-                      <h3 class="font-semibold text-gray-800 line-clamp-2">
-                        {{ order.roomId.name }}
-                      </h3>
-                      <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                        {{ order.status || 'Hoàn thành' }}
-                      </span>
+              <!-- Room Details -->
+              <div class="lg:col-span-2 space-y-4">
+                <h3 class="text-2xl font-bold text-gray-800">{{ recentOrder.roomId.name }}</h3>
+                
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-50 to-transparent border border-blue-100">
+                    <Icon name="ic:baseline-calendar-today" class="text-blue-600 mr-3" />
+                    <div>
+                      <p class="text-sm text-gray-600">Check-in</p>
+                      <p class="font-semibold text-gray-800">{{ formatDate(recentOrder.checkInDate) }}</p>
                     </div>
-
-                    <div class="space-y-2 text-sm text-gray-600">
-                      <div class="flex items-center gap-2">
-                        <Icon name="ic:baseline-calendar-today" class="text-system-primary-120" />
-                        <span>
-                          {{ $dayjs(order.checkInDate).format('DD/MM/YYYY') }} - 
-                          {{ $dayjs(order.checkOutDate).format('DD/MM/YYYY') }}
-                        </span>
-                      </div>
-                      
-                      <div class="flex items-center gap-2">
-                        <Icon name="ic:baseline-people" class="text-system-primary-120" />
-                        <span>{{ order.peopleNum }} người</span>
-                      </div>
-                      
-                      <div class="flex items-center gap-2">
-                        <Icon name="ic:baseline-hotel" class="text-system-primary-120" />
-                        <span>
-                          {{ $dayjs(order.checkOutDate).diff($dayjs(order.checkInDate), 'day') }} đêm
-                        </span>
-                      </div>
+                  </div>
+                  
+                  <div class="flex items-center p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-transparent border border-emerald-100">
+                    <Icon name="ic:baseline-calendar-today" class="text-emerald-600 mr-3" />
+                    <div>
+                      <p class="text-sm text-gray-600">Check-out</p>
+                      <p class="font-semibold text-gray-800">{{ formatDate(recentOrder.checkOutDate) }}</p>
                     </div>
-
-                    <div class="flex items-center justify-between pt-2">
-                      <p class="text-lg font-bold text-system-primary-120">
-                        {{ useFormatCurrency(
-                          order.roomId.price * $dayjs(order.checkOutDate).diff(order.checkInDate, 'day')
-                        ) }}
-                      </p>
-                      <NuxtLink 
-                        :to="`/order/${order._id}`"
-                        class="text-system-primary-120 hover:text-system-primary-80 text-sm font-medium"
-                      >
-                        Xem chi tiết →
-                      </NuxtLink>
+                  </div>
+                  
+                  <div class="flex items-center p-3 rounded-xl bg-gradient-to-r from-purple-50 to-transparent border border-purple-100">
+                    <Icon name="ic:baseline-people" class="text-purple-600 mr-3" />
+                    <div>
+                      <p class="text-sm text-gray-600">Số người</p>
+                      <p class="font-semibold text-gray-800">{{ recentOrder.peopleNum }} người</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center p-3 rounded-xl bg-gradient-to-r from-yellow-50 to-transparent border border-yellow-100">
+                    <Icon name="ic:baseline-account-balance-wallet" class="text-yellow-600 mr-3" />
+                    <div>
+                      <p class="text-sm text-gray-600">Giá phòng</p>
+                      <p class="font-semibold text-gray-800">{{ formatCurrency(recentOrder.roomId.price) }}/đêm</p>
                     </div>
                   </div>
                 </div>
 
-                <UILine v-if="index + 1 !== historyOrder.length" color="lightGrey" class="mt-4" />
+                <div class="flex gap-4 pt-4">
+                  <button class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    Xem chi tiết
+                  </button>
+                  <button @click="deleteOrder" class="border-2 border-red-500 text-red-500 px-6 py-3 rounded-2xl font-semibold hover:bg-red-500 hover:text-white transition-all duration-300">
+                    Hủy đặt phòng
+                  </button>
+                </div>
               </div>
-
-              <UIButton
-                v-if="!more && orderList && orderList.length > 3"
-                block
-                icon="ic:baseline-keyboard-arrow-down"
-                text="Xem thêm"
-                variant="secondary"
-                @click="more = true"
-              />
-            </div>
-
-            <div v-else class="text-center py-12">
-              <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Icon name="ic:baseline-receipt" class="text-4xl text-gray-400" />
-              </div>
-              <h3 class="text-xl font-semibold text-gray-700 mb-2">Chưa có lịch sử đặt phòng</h3>
-              <p class="text-gray-500">Bắt đầu đặt phòng để tạo lịch sử của bạn</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Order Statistics -->
-      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          <Icon name="ic:baseline-analytics" class="text-2xl text-system-primary-120 mr-3" />
-          Thống kê đặt phòng
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div class="text-center p-4 bg-blue-50 rounded-xl">
-            <div class="text-3xl font-bold text-blue-600 mb-2">
-              {{ orderList?.length || 0 }}
+      <!-- Order History -->
+      <div class="group relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+        <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+          <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+            <div class="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+              <Icon name="ic:baseline-history" class="text-2xl text-white" />
             </div>
-            <p class="text-blue-800 font-medium">Tổng đơn đặt phòng</p>
+            Lịch sử đặt phòng
+          </h2>
+
+          <div v-if="historyOrder.length === 0" class="text-center py-16">
+            <div class="w-24 h-24 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Icon name="ic:baseline-hotel" class="text-4xl text-gray-400" />
+            </div>
+            <h3 class="text-2xl font-bold text-gray-600 mb-2">Chưa có đơn đặt phòng</h3>
+            <p class="text-gray-500">Hãy đặt phòng đầu tiên để bắt đầu trải nghiệm tại Nikko Luxury Hotel</p>
           </div>
-          
-          <div class="text-center p-4 bg-green-50 rounded-xl">
-            <div class="text-3xl font-bold text-green-600 mb-2">
-              {{ completedOrders || 0 }}
+
+          <div v-else class="space-y-6">
+            <div v-for="order in historyOrder" :key="order._id" class="group/order relative">
+              <div class="absolute inset-0 bg-gradient-to-r from-gray-50 to-transparent rounded-2xl opacity-0 group-hover/order:opacity-100 transition-all duration-300"></div>
+              <div class="relative bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-center">
+                  <!-- Room Image -->
+                  <div class="relative overflow-hidden rounded-xl">
+                    <img :src="order.roomId.imageUrl" :alt="order.roomId.name" class="w-full h-32 object-cover" />
+                    <div class="absolute top-2 right-2">
+                      <span :class="[
+                        'px-3 py-1 rounded-full text-xs font-medium',
+                        order.status === 'Đã xác nhận' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'
+                      ]">
+                        {{ order.status }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Room Info -->
+                  <div class="lg:col-span-2">
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">{{ order.roomId.name }}</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                      <div class="flex items-center text-gray-600">
+                        <Icon name="ic:baseline-calendar-today" class="mr-2" />
+                        <span>{{ formatDate(order.checkInDate) }} - {{ formatDate(order.checkOutDate) }}</span>
+                      </div>
+                      <div class="flex items-center text-gray-600">
+                        <Icon name="ic:baseline-people" class="mr-2" />
+                        <span>{{ order.peopleNum }} người</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Price & Actions -->
+                  <div class="text-right space-y-3">
+                    <p class="text-2xl font-bold text-amber-600">{{ formatCurrency(order.roomId.price) }}</p>
+                    <div class="flex gap-2 justify-end">
+                      <button class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300">
+                        Chi tiết
+                      </button>
+                      <button v-if="order.status === 'Đã xác nhận'" @click="deleteOrder" class="border border-red-500 text-red-500 px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-500 hover:text-white transition-all duration-300">
+                        Hủy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="text-green-800 font-medium">Đã hoàn thành</p>
           </div>
-          
-          <div class="text-center p-4 bg-amber-50 rounded-xl">
-            <div class="text-3xl font-bold text-amber-600 mb-2">
-              {{ upcomingOrders || 0 }}
-            </div>
-            <p class="text-amber-800 font-medium">Sắp tới</p>
-          </div>
-          
-          <div class="text-center p-4 bg-purple-50 rounded-xl">
-            <div class="text-3xl font-bold text-purple-600 mb-2">
-              {{ totalSpent || 0 }}
-            </div>
-            <p class="text-purple-800 font-medium">Tổng chi tiêu</p>
+
+          <!-- Load More Button -->
+          <div v-if="historyOrder.length > 3" class="text-center pt-8">
+            <button @click="more = !more" class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+              {{ more ? 'Thu gọn' : 'Xem thêm' }}
+            </button>
           </div>
         </div>
       </div>
@@ -288,6 +339,20 @@ const totalSpent = computed(() => {
 const deleteOrder = () => {
   // Logic xóa đơn đặt phòng
   console.log('Xóa đơn đặt phòng')
+}
+
+// Format functions
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amount)
+}
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return 'Chưa cập nhật'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('vi-VN')
 }
 </script>
 

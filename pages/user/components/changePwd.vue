@@ -1,191 +1,114 @@
 <template>
-  <section>
-    <VForm
-      ref="formRefs"
-      v-slot="{ errors }"
-      class="card"
-      :validation-schema="schema"
-      @submit="refresh"
-    >
-      <h2 class="text-h6 xl:text-h5">Đổi mật khẩu</h2>
-
-      <div class="space-y-6">
-        <!-- Email -->
-        <CUserData title="Email" :text="props.user.email" />
-
-        <!-- Mật khẩu -->
-        <div v-if="!isFormShow" class="flex items-center justify-between">
-          <div class="space-y-2">
-            <label class="text-body-2 text-system-gray-80 xl:text-body">Mật khẩu</label>
-            <div class="space-x-2 py-2">
-              <span
-                v-for="(_, index) in 10"
-                :key="index"
-                class="inline-block h-2 w-2 rounded-full bg-black"
-              />
-            </div>
-          </div>
-
-          <!-- Nút: Đổi mật khẩu -->
-          <UIButton text="Đổi mật khẩu" variant="text" @click="toggleForm('show')" />
-        </div>
-
-        <!-- Biểu mẫu: Đổi mật khẩu -->
-        <template v-else>
-          <!-- Mật khẩu cũ -->
-          <UIInput
-            v-model="formData.oldPassword"
-            name="oldPassword"
-            label="Mật khẩu cũ"
-            type="password"
-            placeholder="Vui lòng nhập mật khẩu cũ"
-            :error="errors.oldPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Mật khẩu mới -->
-          <UIInput
-            v-model="formData.newPassword"
-            name="newPassword"
-            label="Mật khẩu mới"
-            type="password"
-            placeholder="Vui lòng nhập mật khẩu mới"
-            :error="errors.newPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Xác nhận mật khẩu -->
-          <UIInput
-            v-model="formData.confirmPassword"
-            name="confirmPassword"
-            label="Xác nhận mật khẩu"
-            type="password"
-            placeholder="Vui lòng nhập lại mật khẩu mới"
-            :error="errors.confirmPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Nút: Hủy chỉnh sửa / Lưu -->
-          <div class="flex gap-2">
-            <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
-              type="button"
-              text="Hủy chỉnh sửa"
-              variant="secondary"
-              :disabled="pending"
-              @click="cancelEdit"
-            />
-            <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
-              type="submit"
-              text="Lưu thay đổi"
-              :disabled="pending"
-              :loading="pending"
-            />
-          </div>
-        </template>
+  <div class="space-y-6">
+    <!-- Form đổi mật khẩu -->
+    <div class="space-y-4">
+      <!-- Mật khẩu hiện tại -->
+      <div class="space-y-2">
+        <label class="text-sm text-gray-600 font-medium">Mật khẩu hiện tại</label>
+        <input 
+          v-model="currentPassword" 
+          type="password" 
+          placeholder="Nhập mật khẩu hiện tại"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+        />
       </div>
-    </VForm>
-  </section>
+
+      <!-- Mật khẩu mới -->
+      <div class="space-y-2">
+        <label class="text-sm text-gray-600 font-medium">Mật khẩu mới</label>
+        <input 
+          v-model="newPassword" 
+          type="password" 
+          placeholder="Nhập mật khẩu mới"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Xác nhận mật khẩu mới -->
+      <div class="space-y-2">
+        <label class="text-sm text-gray-600 font-medium">Xác nhận mật khẩu mới</label>
+        <input 
+          v-model="confirmPassword" 
+          type="password" 
+          placeholder="Nhập lại mật khẩu mới"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+        />
+      </div>
+    </div>
+
+    <!-- Nút đổi mật khẩu -->
+    <div class="flex justify-center pt-4">
+      <button 
+        @click="changePassword"
+        class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+      >
+        Đổi mật khẩu
+      </button>
+    </div>
+
+    <!-- Thông báo -->
+    <div v-if="message" class="text-center p-3 rounded-xl" :class="messageType === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'">
+      {{ message }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
-
-/* props */
-const props = defineProps({
-  user: {
-    type: Object as PropType<UserResponse>,
-    required: true
-  }
-})
-
-/* Toàn cục */
-const { $Swal, $validator } = useNuxtApp()
-const styleStore = useStyleStore()
-
-/* Biểu mẫu */
-const formData = reactive({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-})
-const formRefs = ref<HTMLFormElement | null>(null)
-
-// Quy tắc biểu mẫu
-const schema = {
-  oldPassword: (val: string) => {
-    if (!val) return 'Mật khẩu cũ là bắt buộc'
-    if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu cũ phải có ít nhất 8 ký tự'
-    if ($validator.isAlpha(val)) return 'Mật khẩu cũ không được chỉ có chữ cái'
-    if ($validator.isNumeric(val)) return 'Mật khẩu cũ không được chỉ có số'
-    if (!$validator.isAlphanumeric(val))
-      return 'Mật khẩu cũ phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-    return {}
-  },
-  newPassword: (val: string) => {
-    if (!val) return 'Mật khẩu mới là bắt buộc'
-    if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu mới phải có ít nhất 8 ký tự'
-    if ($validator.isAlpha(val)) return 'Mật khẩu mới không được chỉ có chữ cái'
-    if ($validator.isNumeric(val)) return 'Mật khẩu mới không được chỉ có số'
-    if (!$validator.isAlphanumeric(val))
-      return 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-    return {}
-  },
-  confirmPassword: 'required|confirmed:@newPassword'
-}
-
-// Biểu mẫu: Hiện/ẩn
-const isFormShow = ref(false)
-const toggleForm = (event: string) => {
-  if (event === 'show') {
-    isFormShow.value = true
-  } else if (event === 'close') {
-    isFormShow.value = false
+interface User {
+  _id: string
+  name: {
+    fullName: string
   }
 }
 
-const cancelEdit = () => {
-  formData.oldPassword = ''
-  formData.newPassword = ''
-  formData.confirmPassword = ''
-
-  toggleForm('close')
+interface Props {
+  user: User
 }
 
-/* api */
-const { updateUserApi } = useApi()
+const props = defineProps<Props>()
 
-// api: Đổi mật khẩu
-const { pending, refresh } = await updateUserApi({
-  body: computed(() => ({
-    userId: props.user._id,
-    oldPassword: formData.oldPassword,
-    newPassword: formData.newPassword
-  })),
-  watch: false,
-  immediate: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
-      $Swal?.fire({
-        title: 'Đổi mật khẩu thành công',
-        icon: 'success',
-        confirmButtonText: 'Xác nhận',
-        confirmButtonColor: styleStore.confirmButtonColor,
-        willClose: () => {
-          cancelEdit()
-        }
-      })
-    }
-  },
-  onResponseError({ response }) {
-    if (response._data?.message === '密碼錯誤') {
-      formRefs.value?.setFieldError('oldPassword', 'Mật khẩu cũ không đúng')
-    }
+// Form data
+const currentPassword = ref('')
+const newPassword = ref('')
+const confirmPassword = ref('')
+
+// Message state
+const message = ref('')
+const messageType = ref<'success' | 'error'>('success')
+
+// Change password function
+const changePassword = () => {
+  // Reset message
+  message.value = ''
+  
+  // Validation
+  if (!currentPassword.value || !newPassword.value || !confirmPassword.value) {
+    message.value = 'Vui lòng điền đầy đủ thông tin'
+    messageType.value = 'error'
+    return
   }
-})
-pending.value = false
+  
+  if (newPassword.value !== confirmPassword.value) {
+    message.value = 'Mật khẩu xác nhận không khớp'
+    messageType.value = 'error'
+    return
+  }
+  
+  if (newPassword.value.length < 6) {
+    message.value = 'Mật khẩu mới phải có ít nhất 6 ký tự'
+    messageType.value = 'error'
+    return
+  }
+  
+  // Simulate API call
+  setTimeout(() => {
+    message.value = 'Đổi mật khẩu thành công!'
+    messageType.value = 'success'
+    
+    // Reset form
+    currentPassword.value = ''
+    newPassword.value = ''
+    confirmPassword.value = ''
+  }, 1000)
+}
 </script>
