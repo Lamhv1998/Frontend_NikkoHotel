@@ -71,6 +71,9 @@
       </div>
     </div>
   </section>
+
+  <!-- Footer -->
+  <CWave />
 </template>
 
 <script lang="ts" setup>
@@ -80,6 +83,7 @@ import UITitle from './components/UI/UITitle.vue'
 import BlogCard from './components/BlogCard.vue'
 import BlogFilters from './components/BlogFilters.vue'
 import Pagination from './components/Pagination.vue'
+import CWave from '~/components/c/CWave.vue'
 
 const search = ref('')
 const category = ref('')

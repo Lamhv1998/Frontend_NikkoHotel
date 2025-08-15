@@ -291,11 +291,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <CWave />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import CWave from '~/components/c/CWave.vue'
 
 definePageMeta({ layout: 'landing' })
 

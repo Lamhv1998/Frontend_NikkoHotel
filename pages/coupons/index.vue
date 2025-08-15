@@ -162,6 +162,9 @@
       </div>
     </div>
 
+    <!-- Footer -->
+    <CWave />
+
     <!-- Success Toast -->
     <Transition name="slide-up">
       <div v-if="showToast" class="fixed bottom-8 right-8 bg-white text-gray-800 px-6 py-4 rounded-2xl shadow-2xl border border-green-200 z-50">
@@ -184,6 +187,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
 import CBanner from '~/components/c/CBanner.vue'
+import CWave from '~/components/c/CWave.vue'
 
 // /* PageMeta */
 // definePageMeta({

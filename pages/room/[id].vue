@@ -55,6 +55,9 @@
       <!-- Mobile: Tùy chọn đặt phòng -->
       <MBooking :room="room" />
     </div>
+
+    <!-- Footer -->
+    <CWave />
   </div>
 </template>
 
@@ -63,6 +66,7 @@ import Hero from './components/hero.vue'
 import Terms from './components/terms.vue'
 import Booking from './components/booking.vue'
 import MBooking from './components/m-booking.vue'
+import CWave from '~/components/c/CWave.vue'
 
 // const route = useRoute()
 

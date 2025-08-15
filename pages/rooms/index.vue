@@ -167,6 +167,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <CWave />
   </div>
 </template>
 
@@ -174,6 +177,7 @@
 import { ref, computed } from 'vue'
 import Card from './components/card.vue'
 import CBanner from '~/components/c/CBanner.vue'
+import CWave from '~/components/c/CWave.vue'
 
 definePageMeta({ layout: 'landing' })
 
