@@ -123,12 +123,64 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
-      mapApiKey: process.env.MAP_API_KEY,
+      // API Gateway
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8080/api',
       apiGatewayUrl: process.env.API_GATEWAY_URL || 'http://localhost:8080',
+      apiGatewayTimeout: parseInt(process.env.API_GATEWAY_TIMEOUT || '30000'),
+      
+      // Authentication & User Services
       authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:8081',
-      userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8082'
-    }
+      authServiceTimeout: parseInt(process.env.AUTH_SERVICE_TIMEOUT || '15000'),
+      userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8082',
+      userServiceTimeout: parseInt(process.env.USER_SERVICE_TIMEOUT || '15000'),
+      
+      // Core Business Services
+      roomServiceUrl: process.env.ROOM_SERVICE_URL || 'http://localhost:8083',
+      roomServiceTimeout: parseInt(process.env.ROOM_SERVICE_TIMEOUT || '20000'),
+      bookingServiceUrl: process.env.BOOKING_SERVICE_URL || 'http://localhost:8084',
+      bookingServiceTimeout: parseInt(process.env.BOOKING_SERVICE_TIMEOUT || '25000'),
+      paymentServiceUrl: process.env.PAYMENT_SERVICE_URL || 'http://localhost:8085',
+      paymentServiceTimeout: parseInt(process.env.PAYMENT_SERVICE_TIMEOUT || '30000'),
+      
+      // Supporting Services
+      notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:8086',
+      notificationServiceTimeout: parseInt(process.env.NOTIFICATION_SERVICE_TIMEOUT || '10000'),
+      fileServiceUrl: process.env.FILE_SERVICE_URL || 'http://localhost:8087',
+      fileServiceTimeout: parseInt(process.env.FILE_SERVICE_TIMEOUT || '20000'),
+      emailServiceUrl: process.env.EMAIL_SERVICE_URL || 'http://localhost:8088',
+      emailServiceTimeout: parseInt(process.env.EMAIL_SERVICE_TIMEOUT || '15000'),
+      
+      // Analytics & Reporting
+      analyticsServiceUrl: process.env.ANALYTICS_SERVICE_URL || 'http://localhost:8089',
+      analyticsServiceTimeout: parseInt(process.env.ANALYTICS_SERVICE_TIMEOUT || '30000'),
+      reportServiceUrl: process.env.REPORT_SERVICE_URL || 'http://localhost:8090',
+      reportServiceTimeout: parseInt(process.env.REPORT_SERVICE_TIMEOUT || '25000'),
+      
+      // Integration Services
+      integrationServiceUrl: process.env.INTEGRATION_SERVICE_URL || 'http://localhost:8091',
+      integrationServiceTimeout: parseInt(process.env.INTEGRATION_SERVICE_TIMEOUT || '20000'),
+      workflowServiceUrl: process.env.WORKFLOW_SERVICE_URL || 'http://localhost:8092',
+      workflowServiceTimeout: parseInt(process.env.WORKFLOW_SERVICE_TIMEOUT || '25000'),
+      
+      // WebSocket & Real-time
+      wsUrl: process.env.NUXT_PUBLIC_WS_URL || 'ws://localhost:8080/ws',
+      
+      // External Services
+      mapApiKey: process.env.GOOGLE_MAPS_API_KEY,
+      payosClientId: process.env.PAYOS_CLIENT_ID,
+      payosApiKey: process.env.PAYOS_API_KEY,
+      payosChecksumKey: process.env.PAYOS_CHECKSUM_KEY,
+      
+      // App Configuration
+      appEnv: process.env.NUXT_PUBLIC_APP_ENV || 'development',
+      appVersion: process.env.npm_package_version || '1.0.0'
+    },
+    
+    // Private server-side configs
+    jwtSecret: process.env.JWT_SECRET || 'your-secret-key',
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h',
+    rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || '100'),
+    rateLimitWindow: process.env.RATE_LIMIT_WINDOW || '15m'
   },
 
   i18n: {
