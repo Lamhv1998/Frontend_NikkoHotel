@@ -3,9 +3,21 @@
     <!-- Banner -->
     <CBanner rooms />
 
-    <div v-if="rooms" class="section-container bg-system-primary-10">
+    <div class="section-container bg-system-primary-10">
       <div class="container space-y-10 xl:space-y-20">
-        <!-- Khối tìm kiếm nâng cao -->
+        <!-- Tiêu đề -->
+        <div class="text-center space-y-4">
+          <p class="text-sub-title text-system-gray-80 xl:text-h6">Phòng nghỉ sang trọng</p>
+          <h1 class="text-h3 text-system-primary-100 xl:text-h1">
+            Khám phá phòng nghỉ đẳng cấp 5 sao
+          </h1>
+          <p class="text-body text-gray-600 max-w-2xl mx-auto">
+            Trải nghiệm lưu trú sang trọng với các loại phòng đa dạng, 
+            thiết kế hiện đại và tiện nghi đầy đủ tại trung tâm thành phố Hồ Chí Minh
+          </p>
+        </div>
+
+        <!-- Bộ lọc nâng cao -->
         <div class="search-filter-container relative rounded-2xl bg-white p-6 shadow-lg">
           <div class="mb-6">
             <h3 class="text-xl font-bold text-system-primary-100">Tìm kiếm phòng</h3>
@@ -13,7 +25,7 @@
           </div>
           
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <!-- Thanh tìm kiếm -->
+            <!-- Tìm kiếm -->
             <div class="relative">
               <label class="mb-2 block text-sm font-medium text-gray-700">Tìm kiếm</label>
               <input
@@ -21,8 +33,8 @@
                 class="w-full rounded-lg border border-gray-300 p-3 focus:border-system-primary-100 focus:outline-none focus:ring-2 focus:ring-system-primary-100/20"
                 type="text"
                 placeholder="Tên phòng, mô tả..."
-                @blur="hideSuggestions"
                 @focus="showSuggestions = true"
+                @blur="hideSuggestions"
                 @input="updateSuggestions"
               />
               <!-- Danh sách gợi ý -->
@@ -107,18 +119,6 @@
           </div>
         </div>
 
-        <!-- Tiêu đề -->
-        <div class="text-center space-y-4">
-          <p class="text-sub-title text-system-gray-80 xl:text-h6">Chọn loại phòng</p>
-          <h2 class="text-h3 text-system-primary-100 xl:text-h1">
-            Nhiều loại phòng, thoải mái lựa chọn
-          </h2>
-          <p class="text-body text-gray-600 max-w-2xl mx-auto">
-            Khám phá các loại phòng đa dạng từ phòng tiêu chuẩn đến suite cao cấp, 
-            mỗi phòng đều được thiết kế để mang đến trải nghiệm lưu trú tuyệt vời nhất
-          </p>
-        </div>
-
         <!-- Thống kê kết quả -->
         <div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm">
           <div class="text-sm text-gray-600">
@@ -133,17 +133,19 @@
               @change="sortRooms"
             >
               <option value="name">Tên phòng</option>
-              <option value="price">Giá</option>
+              <option value="price">Giá (thấp → cao)</option>
+              <option value="price-desc">Giá (cao → thấp)</option>
               <option value="area">Diện tích</option>
               <option value="people">Số người</option>
+              <option value="rating">Đánh giá (cao → thấp)</option>
             </select>
           </div>
         </div>
 
         <!-- Danh sách phòng -->
-        <div v-if="filteredRooms.length > 0" class="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <div 
-            v-for="(room, index) in filteredRooms" 
+        <div v-if="filteredRooms.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            v-for="(room, index) in filteredRooms"
             :key="index"
             class="group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
           >
@@ -171,6 +173,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import Card from './components/card.vue'
+import CBanner from '~/components/c/CBanner.vue'
 
 definePageMeta({ layout: 'landing' })
 
@@ -184,7 +187,10 @@ const rooms = ref([
     bedInfo: '1 giường đôi',
     maxPeople: 2,
     price: 1800000,
-    amenities: ['WiFi', 'TV', 'Mini bar', 'Phòng tắm riêng']
+    amenities: ['WiFi', 'TV', 'Mini bar', 'Phòng tắm riêng'],
+    rating: 4.8,
+    reviews: 156,
+    image: '/img/room-deluxe.jpg'
   },
   {
     _id: '2',
@@ -194,7 +200,10 @@ const rooms = ref([
     bedInfo: '1 giường đôi + 1 sofa giường',
     maxPeople: 4,
     price: 3200000,
-    amenities: ['WiFi', 'TV 2 màn hình', 'Mini bar', 'Phòng tắm riêng', 'Phòng khách']
+    amenities: ['WiFi', 'TV 2 màn hình', 'Mini bar', 'Phòng tắm riêng', 'Phòng khách'],
+    rating: 4.9,
+    reviews: 89,
+    image: '/img/room-suite.jpg'
   },
   {
     _id: '3',
@@ -204,7 +213,10 @@ const rooms = ref([
     bedInfo: '1 giường đôi',
     maxPeople: 2,
     price: 1200000,
-    amenities: ['WiFi', 'TV', 'Phòng tắm riêng']
+    amenities: ['WiFi', 'TV', 'Phòng tắm riêng'],
+    rating: 4.6,
+    reviews: 234,
+    image: '/img/room-standard.jpg'
   },
   {
     _id: '4',
@@ -214,7 +226,10 @@ const rooms = ref([
     bedInfo: '2 giường đôi',
     maxPeople: 5,
     price: 4500000,
-    amenities: ['WiFi', 'TV 2 màn hình', 'Mini bar', '2 phòng tắm', 'Phòng khách']
+    amenities: ['WiFi', 'TV 2 màn hình', 'Mini bar', '2 phòng tắm', 'Phòng khách'],
+    rating: 4.7,
+    reviews: 67,
+    image: '/img/room-family.jpg'
   },
   {
     _id: '5',
@@ -224,7 +239,10 @@ const rooms = ref([
     bedInfo: '1 giường đôi',
     maxPeople: 2,
     price: 2800000,
-    amenities: ['WiFi', 'TV', 'Mini bar', 'Phòng tắm riêng', 'View thành phố']
+    amenities: ['WiFi', 'TV', 'Mini bar', 'Phòng tắm riêng', 'View thành phố'],
+    rating: 4.9,
+    reviews: 123,
+    image: '/img/room-executive.jpg'
   }
 ])
 
@@ -299,11 +317,17 @@ const filteredRooms = computed(() => {
     case 'price':
       result.sort((a, b) => a.price - b.price)
       break
+    case 'price-desc':
+      result.sort((a, b) => b.price - a.price)
+      break
     case 'area':
       result.sort((a, b) => parseInt(a.areaInfo) - parseInt(b.areaInfo))
       break
     case 'people':
       result.sort((a, b) => a.maxPeople - b.maxPeople)
+      break
+    case 'rating':
+      result.sort((a, b) => b.rating - a.rating)
       break
   }
 
@@ -322,9 +346,46 @@ const filterRooms = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+/* Custom styles cho trang phòng nghỉ */
 .search-filter-container {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   border: 1px solid #e2e8f0;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects */
+.hover\:shadow-2xl:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.hover\:-translate-y-2:hover {
+  transform: translateY(-8px);
+}
+
+/* Focus states */
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Card hover animations */
+.group:hover .card-image {
+  transform: scale(1.05);
+}
+
+.card-image {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

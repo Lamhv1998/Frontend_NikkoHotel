@@ -1,155 +1,170 @@
 <template>
-  <div
-    class="overflow-hidden rounded-[1.25rem] bg-white transition-shadow hover:shadow-md xl:grid xl:grid-cols-12"
-  >
-    <!-- Xem trước phòng -->
-    <div class="aspect-video xl:col-span-7 xl:aspect-auto">
-      <ClientOnly>
-        <Swiper
-          v-if="isMounted"
-          class="room-swiper h-full"
-          :autoplay="{
-            delay: 5000,
-            disableOnInteraction: false
-          }"
-          :loop="true"
-          :modules="modules"
-          :navigation="{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          }"
-          :pagination="{
-            clickable: true
-          }"
-        >
-          <!-- Ảnh phòng -->
-          <SwiperSlide v-for="(slide, index) in room.imageUrlList" :key="index">
-            <NuxtImg class="h-full w-full object-cover" :src="slide" />
-          </SwiperSlide>
-
-          <!-- Nút chọn phòng -->
-          <div
-            class="swiper-button-prev !left-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
-          >
-            <Icon
-              class="!h-auto !w-auto !object-none text-[2.5rem]"
-              name="ic:baseline-keyboard-arrow-left"
-            />
-          </div>
-          <div
-            class="swiper-button-next !right-6 !-mt-7 !hidden !h-14 !w-14 place-items-center rounded-full bg-white !text-system-gray-80 opacity-75 transition-opacity after:hidden hover:opacity-100 xl:!flex"
-          >
-            <Icon
-              class="!h-auto !w-auto !object-none text-[2.5rem]"
-              name="ic:baseline-keyboard-arrow-right"
-            />
-          </div>
-        </Swiper>
-        <template #fallback>
-          <div class="h-full w-full bg-gray-200 animate-pulse flex items-center justify-center">
-            <span class="text-gray-500">Loading...</span>
-          </div>
-        </template>
-      </ClientOnly>
+  <div class="h-full overflow-hidden bg-white">
+    <!-- Ảnh phòng -->
+    <div class="relative overflow-hidden">
+      <img 
+        :src="room.image || '/img/room-placeholder.jpg'" 
+        :alt="room.name"
+        class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+      
+      <!-- Badge loại phòng -->
+      <div class="absolute top-4 right-4">
+        <span class="rounded-full bg-system-primary-100 px-3 py-1 text-xs font-semibold text-white">
+          {{ getRoomType(room.price) }}
+        </span>
+      </div>
+      
+      <!-- Badge đánh giá -->
+      <div class="absolute top-4 left-4">
+        <span class="rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-gray-800 flex items-center gap-1">
+          <span class="text-yellow-500">⭐</span>
+          {{ room.rating }}
+        </span>
+      </div>
+      
+      <!-- Badge số người -->
+      <div v-if="room.maxPeople > 2" class="absolute top-16 left-4">
+        <span class="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white">
+          👥 {{ room.maxPeople }} người
+        </span>
+      </div>
     </div>
-
+    
     <!-- Thông tin phòng -->
-    <div class="space-y-6 p-4 xl:col-span-5 xl:space-y-10 xl:p-10">
-      <!-- Tên phòng và mô tả -->
-      <div class="space-y-2">
-        <h3 class="text-h4 xl:text-h2">{{ room.name }}</h3>
-        <p class="text-body-2 text-system-gray-80 xl:text-body">{{ room.description }}</p>
+    <div class="space-y-4 p-6">
+      <div class="flex items-start justify-between">
+        <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ room.name }}</h3>
+        <span class="ml-2 text-xl font-bold text-system-primary-100">
+          {{ formatPrice(room.price) }}
+        </span>
+      </div>
+      
+      <p class="text-sm text-gray-600 line-clamp-2">{{ room.description }}</p>
+      
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <span class="flex items-center gap-1">
+          <span class="text-system-primary-100">📏</span>
+          {{ room.areaInfo }}
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="text-system-primary-100">🛏️</span>
+          {{ room.bedInfo }}
+        </span>
       </div>
 
-      <!-- Thông tin cơ bản phòng -->
-      <CRoomInfo
-        :area-info="room.areaInfo"
-        :bed-info="room.bedInfo"
-        :max-people="room.maxPeople"
-        border
-      />
-
-      <!-- Đường kẻ phân cách -->
-      <UILine class="!h-[0.125rem]" color="primary" />
-
-      <div class="flex items-center justify-between py-4">
-        <!-- Giá phòng -->
-        <p class="text-title text-system-primary-100 xl:text-h5">
-          {{ useFormatCurrency(room.price) }}
-        </p>
-
-        <!-- Liên kết: Chi tiết phòng -->
-        <NuxtLink :to="`/room/${room._id}`">
-          <div
-            class="flex h-6 w-6 cursor-pointer items-center justify-center text-[1.25rem] text-system-primary-100 transition-colors hover:text-system-primary-120"
-          >
-            <Icon name="mdi:arrow-right" />
-          </div>
-        </NuxtLink>
+      <div class="flex gap-3">
+        <button 
+          class="flex-1 rounded-lg bg-system-primary-100 px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-system-primary-80 hover:shadow-lg"
+          @click="bookRoom(room)"
+        >
+          🏨 Đặt phòng
+        </button>
+        <button 
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 transition-all duration-300 hover:bg-gray-50 hover:border-system-primary-100"
+          @click="toggleFavorite(room._id)"
+        >
+          <span :class="favorites.includes(room._id) ? 'text-red-500' : 'text-gray-400'">
+            {{ favorites.includes(room._id) ? '❤️' : '🤍' }}
+          </span>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-// Import Swiper modules properly
-import { Autoplay, Navigation, Pagination } from 'swiper/modules'
+import { ref } from 'vue'
 
-// import type { RoomResponse } from '@/types'
-
-/* props */
-// const props = defineProps({
-//   room: {
-//     type: Object as PropType<RoomResponse>,
-//     required: true
-//   }
-// })
-
-// Mount state
-const isMounted = ref(false)
-
-// Define modules
-const modules = [Pagination, Autoplay, Navigation]
-
-const room = {
-  name: 'Phòng Deluxesss',
-  description: 'Phòng Deluxe với đầy đủ tiện nghi',
-  imageUrlList: [
-    'https://picsum.photos/600/400?random=1',
-    'https://picsum.photos/600/400?random=2',
-    'https://picsum.photos/600/400?random=3'
-  ],
-  areaInfo: '30 m²',
-  bedInfo: '1 giường đôi',
-  maxPeople: 2,
-  price: 1000000,
-  _id: '1'
+interface Room {
+  _id: string
+  name: string
+  description: string
+  areaInfo: string
+  bedInfo: string
+  maxPeople: number
+  price: number
+  amenities: string[]
+  rating: number
+  reviews: number
+  image?: string
 }
 
-// Lifecycle hooks
-onMounted(() => {
-  nextTick(() => {
-    isMounted.value = true
-  })
-})
+const props = defineProps<{
+  room: Room
+}>()
 
-onBeforeUnmount(() => {
-  isMounted.value = false
-})
+// State cho favorites
+const favorites = ref<string[]>([])
+
+// Xác định loại phòng dựa trên giá
+const getRoomType = (price: number) => {
+  if (price >= 4000000) return 'Premium'
+  if (price >= 2500000) return 'Deluxe'
+  if (price >= 1500000) return 'Standard'
+  return 'Basic'
+}
+
+// Format giá tiền
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    minimumFractionDigits: 0
+  }).format(price)
+}
+
+// Toggle favorite
+const toggleFavorite = (roomId: string) => {
+  const index = favorites.value.indexOf(roomId)
+  if (index > -1) {
+    favorites.value.splice(index, 1)
+  } else {
+    favorites.value.push(roomId)
+  }
+}
+
+// Đặt phòng
+const bookRoom = (room: Room) => {
+  console.log('Đặt phòng:', room.name)
+  // TODO: Implement booking logic
+}
 </script>
 
 <style lang="scss" scoped>
-:deep(.room-swiper) {
-  .swiper-pagination {
-    @apply bottom-6 flex justify-center gap-2;
-  }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-  .swiper-pagination-bullet {
-    @apply m-0 block h-1 w-8 rounded-full bg-system-primary-40 opacity-100 transition-colors hover:bg-system-primary-100;
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    &.swiper-pagination-bullet-active {
-      @apply w-[3.75rem]  bg-system-primary-100;
-    }
-  }
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+.transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hover effects */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}
+
+/* Backdrop blur */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 </style>
