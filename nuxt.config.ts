@@ -39,10 +39,15 @@ export default defineNuxtConfig({
         output: {
           manualChunks: {
             vendor: ['vue', 'vue-router', 'pinia'],
-            ui: ['@nuxt/image', 'nuxt-icon', 'nuxt-swiper']
+            ui: ['@nuxt/image', 'nuxt-icon', 'nuxt-swiper'],
+            utils: ['@vueuse/core', 'dayjs', 'axios']
           }
         }
       }
+    },
+    // Tối ưu development
+    optimizeDeps: {
+      include: ['vue', 'vue-router', 'pinia', '@vueuse/core']
     }
   },
 
@@ -54,13 +59,20 @@ export default defineNuxtConfig({
   experimental: {
     payloadExtraction: false,
     inlineSSRStyles: false,
-    renderJsonPayloads: true
+    renderJsonPayloads: true,
+    treeshakeClientOnly: true
   },
 
   // Tối ưu nitro
   nitro: {
     compressPublicAssets: true,
-    minify: true
+    minify: true,
+    // Tối ưu caching
+    storage: {
+      redis: {
+        driver: 'memory'
+      }
+    }
   },
 
   app: {

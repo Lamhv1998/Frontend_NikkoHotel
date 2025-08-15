@@ -340,13 +340,11 @@ const filteredRooms = computed(() => {
 
 // Tìm kiếm
 const filterRooms = () => {
-  console.log('Tìm kiếm:', {
-    search: searchQuery.value,
-    area: areaFilter.value,
-    people: peopleFilter.value,
-    price: priceFilter.value,
-    sort: sortBy.value
-  })
+  // Search logic will be implemented when API is ready
+  // For now, just filter local data
+  if (searchQuery.value.trim()) {
+    // Implement search functionality
+  }
 }
 </script>
 

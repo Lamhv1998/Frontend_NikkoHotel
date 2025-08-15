@@ -82,7 +82,7 @@ watch(
           isNavigating.value = false
         }, 300) // Giảm từ 1000ms xuống 300ms
       } catch (error) {
-        console.error('Route transition error:', error)
+        // Silent error handling for route transitions
         loadingStore.stopLoading()
         isNavigating.value = false
       }

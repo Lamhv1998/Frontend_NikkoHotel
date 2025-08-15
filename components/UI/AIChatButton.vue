@@ -207,9 +207,7 @@ const isMinimized = ref(false)
 
 // Methods
 const toggleChat = () => {
-  console.log('Toggle chat clicked, current state:', isOpen.value)
   isOpen.value = !isOpen.value
-  console.log('New state:', isOpen.value)
   if (isOpen.value) {
     unreadCount.value = 0
   }
@@ -224,7 +222,6 @@ const sendMessage = () => {
   if (!newMessage.value.trim()) return
   
   // TODO: Implement actual chat functionality
-  console.log('Sending message:', newMessage.value)
   
   // Thêm tin nhắn người dùng vào chat
   const userMessage = {
@@ -240,7 +237,6 @@ const sendMessage = () => {
   // Simulate AI response
   setTimeout(() => {
     // Add your AI logic here
-    console.log('AI response received')
     
     // Thêm tin nhắn AI (placeholder)
     const aiMessage = {

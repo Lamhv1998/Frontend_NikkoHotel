@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <!-- Đổi mật khẩu -->
+    <!-- Đổi mật khẩu -->
           <div class="group relative">
             <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
             <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
@@ -285,6 +285,7 @@ const navigateToRooms = () => {
 
 // Refresh user data (placeholder)
 const getUserRefresh = () => {
-  console.log('Refreshing user data...')
+  // Refresh user data logic here
+  // This will be implemented when API is ready
 }
 </script>

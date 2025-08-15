@@ -367,8 +367,11 @@ const clearAll = () => {
   filters.forEach(f => f.count = 0)
 }
 
-const handleAction = (action: any, notification: any) => {
-  console.log('Action clicked:', action.label, 'for notification:', notification.id)
-  // Handle different actions here
+const handleAction = (action: NotificationAction, notification: Notification) => {
+  // Action logic will be implemented when API is ready
+  // For now, just show a message
+  if (action.type === 'mark-read') {
+    notification.isRead = true
+  }
 }
 </script>

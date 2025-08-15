@@ -57,7 +57,7 @@
       <div class="flex gap-3">
         <button 
           class="flex-1 rounded-lg bg-system-primary-100 px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-system-primary-80 hover:shadow-lg"
-          @click="bookRoom(room)"
+          @click="handleBooking"
         >
           🏨 Đặt phòng
         </button>
@@ -126,9 +126,10 @@ const toggleFavorite = (roomId: string) => {
 }
 
 // Đặt phòng
-const bookRoom = (room: Room) => {
-  console.log('Đặt phòng:', room.name)
-  // TODO: Implement booking logic
+const handleBooking = () => {
+  // Booking logic will be implemented when API is ready
+  // Navigate to booking page
+  navigateTo(`/reserve/${room._id}`)
 }
 </script>
 

@@ -212,13 +212,9 @@ const {
 /* API */
 const { getOrderApi } = useApi()
 
-// API: Lấy loại phòng
-const { data: room } = await getOrderApi(id as string, {
-  server: false,
-  transform(res: any): OrderResponse {
-    // eslint-disable-next-line no-console
-    console.log(res.result)
-    return res.result
-  }
-})
+// Fetch order details
+const { data: orderData } = await useFetch(`/api/orders/${id}`)
+if (orderData.value) {
+  order.value = orderData.value
+}
 </script>

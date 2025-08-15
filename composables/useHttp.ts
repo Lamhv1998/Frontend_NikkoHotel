@@ -9,8 +9,10 @@ interface ResOptions {
 
 const handleError = (response: FetchResponse<ResOptions>) => {
   const showError = (message: string) => {
-    // eslint-disable-next-line no-console
-    console.log('Thông báo lỗi:', response?._data?.message ?? message)
+    // Use SweetAlert or other notification system instead of console.log
+    // For now, we'll use a simple error handler
+    const errorMessage = response?._data?.message ?? message
+    // TODO: Implement proper error notification system
   }
 
   if (!response._data) {

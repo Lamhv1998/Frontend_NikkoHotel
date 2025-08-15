@@ -9,8 +9,12 @@
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.js,.vue .",
+    "lint:fix": "eslint --ext .ts,.js,.vue . --fix",
+    "type-check": "vue-tsc --noEmit",
     "preview": "nuxt preview",
-    "start": "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs",
+    "clean": "rm -rf .nuxt .output node_modules/.cache",
+    "analyze": "nuxt build --analyze"
   },
   "config": {
     "commitizen": {

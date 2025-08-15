@@ -147,7 +147,7 @@
                   <button class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
                     Xem chi tiết
                   </button>
-                  <button @click="deleteOrder" class="border-2 border-red-500 text-red-500 px-6 py-3 rounded-2xl font-semibold hover:bg-red-500 hover:text-white transition-all duration-300">
+                  <button @click="deleteOrder(recentOrder._id)" class="border-2 border-red-500 text-red-500 px-6 py-3 rounded-2xl font-semibold hover:bg-red-500 hover:text-white transition-all duration-300">
                     Hủy đặt phòng
                   </button>
                 </div>
@@ -207,7 +207,7 @@
                         <span>{{ order.peopleNum }} người</span>
                       </div>
                     </div>
-                  </div>
+              </div>
 
                   <!-- Price & Actions -->
                   <div class="text-right space-y-3">
@@ -216,7 +216,7 @@
                       <button class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300">
                         Chi tiết
                       </button>
-                      <button v-if="order.status === 'Đã xác nhận'" @click="deleteOrder" class="border border-red-500 text-red-500 px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-500 hover:text-white transition-all duration-300">
+                      <button v-if="order.status === 'Đã xác nhận'" @click="deleteOrder(order._id)" class="border border-red-500 text-red-500 px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-500 hover:text-white transition-all duration-300">
                         Hủy
                       </button>
                     </div>
@@ -336,9 +336,13 @@ const totalSpent = computed(() => {
 })
 
 // Methods
-const deleteOrder = () => {
-  // Logic xóa đơn đặt phòng
-  console.log('Xóa đơn đặt phòng')
+const deleteOrder = (orderId: string) => {
+  // Delete order logic will be implemented when API is ready
+  // For now, just remove from local state
+  const index = historyOrder.value.findIndex(order => order._id === orderId)
+  if (index > -1) {
+    historyOrder.value.splice(index, 1)
+  }
 }
 
 // Format functions
