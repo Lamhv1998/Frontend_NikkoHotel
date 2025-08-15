@@ -1,184 +1,186 @@
 <template>
-  <div class="min-h-screen bg-[#140F0A] p-4">
-    <div class="mx-auto max-w-6xl space-y-8">
+  <div class="min-h-screen bg-[rgb(225,209,194)] relative overflow-hidden">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-0 w-96 h-96 bg-amber-600/10 rounded-full -translate-x-48 -translate-y-48"></div>
+      <div class="absolute bottom-0 right-0 w-80 h-80 bg-yellow-600/10 rounded-full translate-x-40 translate-y-40"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10 p-6">
       <!-- Header Section -->
-      <div class="py-8 text-center">
-        <h1 class="mb-2 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-4xl font-bold text-transparent">
-          Voucher của tôi
-        </h1>
-        <p class="text-gray-300">Quản lý và sử dụng voucher khuyến mãi</p>
+      <div class="text-center py-12 mb-12">
+        <div class="relative">
+          <!-- Decorative line above title -->
+          <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent"></div>
+          
+          <h1 class="text-5xl xl:text-6xl font-bold text-amber-800 mb-6 mt-8 leading-tight">
+            🎫 Voucher của tôi
+          </h1>
+          
+          <!-- Decorative line below title -->
+          <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-yellow-600 to-transparent"></div>
+        </div>
+        
+        <p class="text-amber-700 text-xl xl:text-2xl max-w-3xl mx-auto leading-relaxed">
+          Quản lý và sử dụng các voucher ưu đãi tại Nikko Luxury Hotel
+        </p>
       </div>
 
       <!-- Add Voucher Section -->
-      <div
-        class="overflow-hidden rounded-3xl border border-amber-500/20 bg-gradient-to-br from-gray-900 to-gray-800 shadow-2xl backdrop-blur-sm">
-        <div class="p-8">
-          <h2 class="mb-6 flex items-center text-2xl font-bold text-white">
-            <svg class="mr-2 h-6 w-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-              </path>
-            </svg>
-            Thêm voucher mới
-          </h2>
-
-          <div class="flex flex-col gap-4 md:flex-row">
-            <div class="flex-1">
-              <input v-model="newVoucherCode"
-                class="w-full rounded-2xl border border-amber-500/30 bg-gray-800/50 px-6 py-4 text-white placeholder-gray-400 transition-all duration-300 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
-                type="text" placeholder="Nhập mã voucher..." @keyup.enter="addVoucher" />
+      <div class="mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-add" class="text-2xl text-white" />
+              </div>
+              Thêm voucher mới
+            </h2>
+            
+            <div class="flex gap-4">
+              <input 
+                v-model="newVoucherCode" 
+                type="text" 
+                placeholder="Nhập mã voucher..." 
+                class="flex-1 px-6 py-4 rounded-2xl border border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                @keyup.enter="addVoucher"
+              />
+              <button 
+                @click="addVoucher"
+                class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                Thêm voucher
+              </button>
             </div>
-            <button
-              class="transform rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-amber-600 hover:to-yellow-700 hover:shadow-amber-500/25"
-              @click="addVoucher">
-              Thêm voucher
-            </button>
-          </div>
-
-          <div v-if="addMessage" :class="addMessage.type === 'success'
-              ? 'border border-emerald-500/30 bg-emerald-900/50 text-emerald-300'
-              : 'border border-red-500/30 bg-red-900/50 text-red-300'
-            " class="mt-4 rounded-xl p-4">
-            {{ addMessage.text }}
           </div>
         </div>
       </div>
 
-      <!-- Tabs Navigation -->
-      <div class="flex space-x-1 rounded-2xl border border-amber-500/20 bg-gray-900/50 p-2 backdrop-blur-sm">
-        <button v-for="tab in tabs" :key="tab.id" :class="activeTab === tab.id
-            ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white shadow-lg'
-            : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
-          " class="flex-1 rounded-xl px-6 py-3 font-semibold transition-all duration-300" @click="activeTab = tab.id">
-          {{ tab.name }}
-        </button>
-      </div>
-
-      <!-- Available Vouchers Tab -->
-      <div v-if="activeTab === 'available'" class="space-y-6">
-        <h3 class="mb-4 text-xl font-bold text-white">
-          Voucher khả dụng ({{ availableVouchers.length }})
-        </h3>
-
-        <div v-if="availableVouchers.length === 0" class="py-12 text-center">
-          <svg class="mx-auto mb-4 h-16 w-16 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m8-8h.01M12 16h.01"
-              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-          </svg>
-          <p class="text-gray-400">Bạn chưa có voucher nào</p>
+      <!-- Voucher Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-check-circle" class="text-3xl text-white" />
+              </div>
+              <p class="text-2xl font-bold text-gray-800">{{ availableVouchers.length }}</p>
+              <p class="text-sm text-gray-600 font-medium">Voucher khả dụng</p>
+            </div>
+          </div>
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div v-for="voucher in availableVouchers" :key="voucher.id"
-            class="overflow-hidden rounded-3xl border border-amber-500/20 bg-gradient-to-br from-gray-800/80 to-gray-700/80 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/10">
-            <!-- Voucher Type Badge -->
-            <div class="p-6 pb-0">
-              <div class="mb-4 flex items-start justify-between">
-                <span
-                  class="rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white">
-                  {{ getVoucherTypeText(voucher.type) }}
-                </span>
-                <span class="text-sm text-gray-400">{{ formatExpiry(voucher.expiry) }}</span>
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-history" class="text-3xl text-white" />
               </div>
+              <p class="text-2xl font-bold text-gray-800">{{ usedVouchers.length }}</p>
+              <p class="text-sm text-gray-600 font-medium">Đã sử dụng</p>
+            </div>
+          </div>
+        </div>
 
-              <!-- Discount Amount -->
-              <div class="mb-4 text-center">
-                <div class="mb-1 text-3xl font-bold text-amber-400">
-                  {{
-                    voucher.type === 'percentage'
-                      ? voucher.value + '%'
-                      : formatCurrency(voucher.value)
-                  }}
-                </div>
-                <p class="text-sm text-gray-300">{{ voucher.description }}</p>
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+          <div class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Icon name="ic:baseline-schedule" class="text-3xl text-white" />
               </div>
+              <p class="text-2xl font-bold text-gray-800">{{ expiredVouchers.length }}</p>
+              <p class="text-sm text-gray-600 font-medium">Đã hết hạn</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <!-- Voucher Code -->
-              <div class="mb-4 rounded-xl border border-amber-500/20 bg-gray-900/50 p-3">
-                <div class="flex items-center justify-between">
-                  <span class="font-mono text-sm text-amber-300">{{ voucher.code }}</span>
-                  <button class="text-amber-400 transition-colors hover:text-amber-300"
-                    @click="copyVoucherCode(voucher.code)">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
+      <!-- Available Vouchers -->
+      <div v-if="availableVouchers.length > 0" class="mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-card-giftcard" class="text-2xl text-white" />
+              </div>
+              Voucher khả dụng
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div v-for="voucher in availableVouchers" :key="voucher.id" class="group/voucher relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-50 to-transparent rounded-2xl opacity-0 group-hover/voucher:opacity-100 transition-all duration-300"></div>
+                <div class="relative bg-white rounded-2xl p-6 border border-emerald-100 hover:shadow-lg transition-all duration-300">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {{ voucher.discount }}% OFF
+                    </span>
+                    <span class="text-emerald-600 text-sm font-medium">{{ voucher.type }}</span>
+                  </div>
+                  
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">{{ voucher.title }}</h3>
+                  <p class="text-gray-600 text-sm mb-4">{{ voucher.description }}</p>
+                  
+                  <div class="space-y-2 mb-4">
+                    <div class="flex items-center text-sm text-gray-600">
+                      <Icon name="ic:baseline-calendar-today" class="mr-2" />
+                      <span>Hết hạn: {{ formatDate(voucher.expiry) }}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600">
+                      <Icon name="ic:baseline-account-balance-wallet" class="mr-2" />
+                      <span>Giá trị tối thiểu: {{ formatCurrency(voucher.minValue) }}</span>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    @click="useVoucher(voucher)"
+                    class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    Sử dụng ngay
                   </button>
                 </div>
               </div>
-
-              <!-- Conditions -->
-              <div class="mb-4 text-xs text-gray-400">
-                <p>• Đơn tối thiểu: {{ formatCurrency(voucher.minOrder) }}</p>
-                <p v-if="voucher.maxDiscount">
-                  • Giảm tối đa: {{ formatCurrency(voucher.maxDiscount) }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Use Button -->
-            <div class="p-6 pt-0">
-              <button
-                class="w-full transform rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-amber-600 hover:to-yellow-700"
-                @click="useVoucher(voucher)">
-                Sử dụng ngay
-              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Used Vouchers Tab -->
-      <div v-if="activeTab === 'used'" class="space-y-6">
-        <h3 class="mb-4 text-xl font-bold text-white">
-          Lịch sử sử dụng ({{ usedVouchers.length }})
-        </h3>
-
-        <div v-if="usedVouchers.length === 0" class="py-12 text-center">
-          <svg class="mx-auto mb-4 h-16 w-16 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-          </svg>
-          <p class="text-gray-400">Chưa có lịch sử sử dụng voucher</p>
-        </div>
-
-        <div class="space-y-4">
-          <div v-for="voucher in usedVouchers" :key="voucher.id"
-            class="rounded-2xl border border-gray-600/30 bg-gradient-to-r from-gray-800/60 to-gray-700/60 p-6 backdrop-blur-sm">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="mb-2 flex items-center space-x-3">
-                  <span class="rounded-full bg-gray-600 px-3 py-1 text-xs font-semibold text-gray-300">
-                    Đã sử dụng
-                  </span>
-                  <span class="text-sm text-gray-400">{{ formatDate(voucher.usedAt) }}</span>
-                </div>
-
-                <h4 class="mb-1 font-semibold text-white">{{ voucher.title }}</h4>
-                <p class="font-mono text-sm text-gray-400">{{ voucher.code }}</p>
-
-                <div class="mt-3 text-sm text-gray-300">
-                  <p>
-                    Giá trị giảm:
-                    <span class="font-semibold text-emerald-400">{{
-                      formatCurrency(voucher.value)
-                      }}</span>
-                  </p>
-                  <p>
-                    Đơn hàng: <span class="text-amber-400">{{ voucher.orderCode }}</span>
-                  </p>
-                </div>
+      <!-- Used Vouchers -->
+      <div v-if="usedVouchers.length > 0" class="mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-history" class="text-2xl text-white" />
               </div>
-
-              <div class="text-right">
-                <div class="text-2xl font-bold text-gray-400 line-through">
-                  {{
-                    voucher.type === 'percentage'
-                      ? voucher.value + '%'
-                      : formatCurrency(voucher.value)
-                  }}
+              Voucher đã sử dụng
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div v-for="voucher in usedVouchers" :key="voucher.id" class="group/voucher relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent rounded-2xl opacity-0 group-hover/voucher:opacity-100 transition-all duration-300"></div>
+                <div class="relative bg-white rounded-2xl p-6 border border-blue-100 hover:shadow-lg transition-all duration-300">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {{ voucher.discount }}% OFF
+                    </span>
+                    <span class="text-blue-600 text-sm font-medium">Đã sử dụng</span>
+                  </div>
+                  
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">{{ voucher.title }}</h3>
+                  <p class="text-gray-600 text-sm mb-4">{{ voucher.description }}</p>
+                  
+                  <div class="space-y-2">
+                    <div class="flex items-center text-sm text-gray-600">
+                      <Icon name="ic:baseline-calendar-today" class="mr-2" />
+                      <span>Đã sử dụng: {{ formatDate(voucher.usedAt) }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -186,74 +188,52 @@
         </div>
       </div>
 
-      <!-- Expired Vouchers Tab -->
-      <div v-if="activeTab === 'expired'" class="space-y-6">
-        <h3 class="mb-4 text-xl font-bold text-white">
-          Voucher hết hạn ({{ expiredVouchers.length }})
-        </h3>
-
-        <div v-if="expiredVouchers.length === 0" class="py-12 text-center">
-          <svg class="mx-auto mb-4 h-16 w-16 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"
-              stroke-width="2"></path>
-          </svg>
-          <p class="text-gray-400">Không có voucher hết hạn</p>
-        </div>
-
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div v-for="voucher in expiredVouchers" :key="voucher.id"
-            class="overflow-hidden rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-900/30 to-gray-800/30 opacity-60 backdrop-blur-sm">
-            <div class="p-6">
-              <div class="mb-4 flex items-start justify-between">
-                <span class="rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">
-                  Hết hạn
-                </span>
-                <span class="text-sm text-red-400">{{ formatExpiry(voucher.expiry) }}</span>
+      <!-- Expired Vouchers -->
+      <div v-if="expiredVouchers.length > 0">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-schedule" class="text-2xl text-white" />
               </div>
-
-              <div class="mb-4 text-center">
-                <div class="mb-1 text-3xl font-bold text-red-400 line-through">
-                  {{
-                    voucher.type === 'percentage'
-                      ? voucher.value + '%'
-                      : formatCurrency(voucher.value)
-                  }}
+              Voucher đã hết hạn
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div v-for="voucher in expiredVouchers" :key="voucher.id" class="group/voucher relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-50 to-transparent rounded-2xl opacity-0 group-hover/voucher:opacity-100 transition-all duration-300"></div>
+                <div class="relative bg-white rounded-2xl p-6 border border-red-100 hover:shadow-lg transition-all duration-300">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {{ voucher.discount }}% OFF
+                    </span>
+                    <span class="text-red-600 text-sm font-medium">Đã hết hạn</span>
+                  </div>
+                  
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">{{ voucher.title }}</h3>
+                  <p class="text-gray-600 text-sm mb-4">{{ voucher.description }}</p>
+                  
+                  <div class="space-y-2">
+                    <div class="flex items-center text-sm text-gray-600">
+                      <Icon name="ic:baseline-calendar-today" class="mr-2" />
+                      <span>Hết hạn: {{ formatDate(voucher.expiry) }}</span>
+                    </div>
+                  </div>
                 </div>
-                <p class="text-sm text-gray-400">{{ voucher.description }}</p>
               </div>
-
-              <div class="mb-4 rounded-xl border border-red-500/20 bg-gray-900/50 p-3">
-                <span class="font-mono text-sm text-red-300">{{ voucher.code }}</span>
-              </div>
-
-              <button class="w-full cursor-not-allowed rounded-2xl bg-gray-700 py-3 font-semibold text-gray-400"
-                disabled>
-                Đã hết hạn
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Success Modal -->
-    <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div class="mx-4 max-w-md rounded-3xl border border-amber-500/20 bg-gradient-to-br from-gray-900 to-gray-800 p-8">
-        <div class="text-center">
-          <div
-            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-600">
-            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-            </svg>
-          </div>
-          <h3 class="mb-2 text-xl font-bold text-white">Thành công!</h3>
-          <p class="mb-6 text-gray-300">{{ modalMessage }}</p>
-          <button
-            class="rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:from-amber-600 hover:to-yellow-700"
-            @click="showModal = false">
-            Đóng
-          </button>
+      <!-- Empty State -->
+      <div v-if="allVouchers.length === 0" class="text-center py-16">
+        <div class="w-24 h-24 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Icon name="ic:baseline-card-giftcard" class="text-4xl text-gray-400" />
         </div>
+        <h3 class="text-2xl font-bold text-gray-600 mb-2">Chưa có voucher nào</h3>
+        <p class="text-gray-500">Hãy thêm voucher đầu tiên để bắt đầu sử dụng ưu đãi</p>
       </div>
     </div>
   </div>

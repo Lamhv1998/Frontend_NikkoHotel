@@ -1,150 +1,116 @@
 <template>
-  <div class="min-h-screen bg-[#140F0A] p-4">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
+  <div class="min-h-screen bg-[rgb(225,209,194)] relative overflow-hidden">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 right-0 w-96 h-96 bg-amber-600/10 rounded-full translate-x-48 -translate-y-48"></div>
+      <div class="absolute bottom-0 left-0 w-80 h-80 bg-yellow-600/10 rounded-full -translate-x-40 translate-y-40"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10 p-6">
       <!-- Header Section -->
-      <div class="text-center py-8">
-        <!-- <h1 class="text-4xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent mb-2">
-          Hạng Thành Viên
-        </h1> -->
-        <p class="text-gray-300">Theo dõi tiến trình và phần thưởng của bạn</p>
+      <div class="text-center py-12 mb-12">
+        <div class="relative">
+          <!-- Decorative line above title -->
+          <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent"></div>
+          
+          <h1 class="text-5xl xl:text-6xl font-bold text-amber-800 mb-6 mt-8 leading-tight">
+            👑 Hạng thành viên
+          </h1>
+          
+          <!-- Decorative line below title -->
+          <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-yellow-600 to-transparent"></div>
+        </div>
+        
+        <p class="text-amber-700 text-xl xl:text-2xl max-w-3xl mx-auto leading-relaxed">
+          Khám phá các đặc quyền và lợi ích dành cho thành viên tại Nikko Luxury Hotel
+        </p>
       </div>
 
-      <!-- Main Membership Card -->
-      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-amber-500/20 backdrop-blur-sm">
-        <!-- Card Header -->
-        <div class="bg-gradient-to-r from-amber-600 via-yellow-600 to-orange-600 p-8 text-white relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
-          <div class="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full translate-y-12 -translate-x-12"></div>
-          
-          <div class="relative z-10">
-            <div class="flex items-center justify-between mb-6">
-              <div>
-                <h2 class="text-3xl font-bold mb-2">{{ member.level }}</h2>
-                <p class="text-amber-100">Hạng thành viên hiện tại</p>
+      <!-- Current Membership Status -->
+      <div class="mb-12">
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Icon name="ic:baseline-star" class="text-2xl text-white" />
               </div>
-              <div class="text-right">
-                <div class="text-4xl font-bold">{{ member.points }}</div>
-                <p class="text-amber-100">điểm tích lũy</p>
-              </div>
-            </div>
+              Trạng thái hiện tại
+            </h2>
             
-            <!-- Progress Section -->
-            <div class="space-y-3">
-              <div class="flex justify-between text-sm text-amber-100">
-                <span>Tiến độ lên hạng</span>
-                <span>{{ member.nextLevelPoint - member.points }} điểm nữa</span>
-              </div>
-              <ProgressBar :current="member.points" :nextLevel="member.nextLevelPoint" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Benefits Section -->
-        <div class="p-8 bg-gray-900/50">
-          <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
-            </svg>
-            Đặc quyền thành viên
-          </h3>
-          
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-emerald-900/80 to-green-800/80 p-6 rounded-2xl border border-emerald-500/30 backdrop-blur-sm">
-              <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                </svg>
-              </div>
-              <h4 class="font-semibold text-white mb-2">Giảm giá 10%</h4>
-              <p class="text-gray-300 text-sm">Áp dụng cho tất cả dịch vụ</p>
-            </div>
-            
-            <div class="bg-gradient-to-br from-blue-900/80 to-cyan-800/80 p-6 rounded-2xl border border-blue-500/30 backdrop-blur-sm">
-              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-              </div>
-              <h4 class="font-semibold text-white mb-2">Ưu tiên đặt phòng</h4>
-              <p class="text-gray-300 text-sm">Đặt phòng trước 24h</p>
-            </div>
-            
-            <div class="bg-gradient-to-br from-purple-900/80 to-pink-800/80 p-6 rounded-2xl border border-purple-500/30 backdrop-blur-sm">
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                </svg>
-              </div>
-              <h4 class="font-semibold text-white mb-2">Dịch vụ đặc biệt</h4>
-              <p class="text-gray-300 text-sm">Spa & massage miễn phí</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-            <!-- Next Level Preview -->
-      <div class="bg-gradient-to-r from-amber-900/80 via-yellow-900/80 to-orange-900/80 rounded-3xl p-8 border border-amber-500/30 backdrop-blur-sm">
-        <div class="text-center">
-          <h3 class="text-2xl font-bold text-amber-300 mb-4">🏆 Hạng tiếp theo: Vàng</h3>
-          <p class="text-amber-200 mb-6">Chỉ cần thêm {{ member.nextLevelPoint - member.points }} điểm nữa để lên hạng!</p>
-          <div class="flex justify-center space-x-6 text-sm text-amber-200">
-            <div class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-              </svg>
-              Giảm giá 15%
-            </div>
-            <div class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-              </svg>
-              Phòng VIP miễn phí
-            </div>
-            <div class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-              </svg>
-              Butler cá nhân
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Point History Section -->
-      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl shadow-xl overflow-hidden border border-amber-500/20 backdrop-blur-sm">
-        <div class="p-8">
-          <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            Lịch sử điểm thưởng
-          </h3>
-          
-          <div class="space-y-4">
-            <div v-for="(item, index) in member.pointHistory" :key="index" 
-                 class="flex items-center justify-between p-6 bg-gradient-to-r from-gray-800/80 to-gray-700/80 rounded-2xl border border-amber-500/20 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300 hover:scale-[1.02] backdrop-blur-sm">
-              <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                  </svg>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <!-- Current Level -->
+              <div class="text-center">
+                <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Icon name="ic:baseline-emoji-events" class="text-4xl text-white" />
                 </div>
-                <div>
-                  <p class="font-semibold text-white">{{ item.note }}</p>
-                  <p class="text-gray-400 text-sm">{{ formatDate(item.date) }}</p>
-                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ member.level }}</h3>
+                <p class="text-gray-600">Hạng thành viên</p>
               </div>
-              <div class="text-right">
-                <div class="text-2xl font-bold text-emerald-400">+{{ item.point }}</div>
-                <p class="text-gray-400 text-sm">điểm</p>
+
+              <!-- Current Points -->
+              <div class="text-center">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Icon name="ic:baseline-stars" class="text-4xl text-white" />
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ member.points }}</h3>
+                <p class="text-gray-600">Điểm tích lũy</p>
+              </div>
+
+              <!-- Next Level -->
+              <div class="text-center">
+                <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Icon name="ic:baseline-trending-up" class="text-4xl text-white" />
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ member.nextLevelPoint - member.points }}</h3>
+                <p class="text-gray-600">Điểm cần để lên hạng</p>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-8">
+              <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Tiến độ: {{ member.points }} / {{ member.nextLevelPoint }}</span>
+                <span>{{ Math.round((member.points / member.nextLevelPoint) * 100) }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div 
+                  class="bg-gradient-to-r from-amber-500 to-amber-600 h-3 rounded-full transition-all duration-500"
+                  :style="{ width: `${(member.points / member.nextLevelPoint) * 100}%` }"
+                ></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-
+      <!-- Membership Benefits -->
+      <div class="group relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+        <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-500">
+          <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+            <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+              <Icon name="ic:baseline-card-giftcard" class="text-2xl text-white" />
+            </div>
+            Quyền lợi thành viên
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="benefit in member.benefits" :key="benefit.title" class="group/benefit relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-transparent rounded-2xl opacity-0 group-hover/benefit:opacity-100 transition-all duration-300"></div>
+              <div class="relative bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4 shadow-md" :class="`bg-gradient-to-br from-${benefit.color}-500 to-${benefit.color}-600`">
+                    <Icon :name="benefit.icon" class="text-2xl text-white" />
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-800">{{ benefit.title }}</h3>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">{{ benefit.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
