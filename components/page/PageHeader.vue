@@ -30,6 +30,10 @@
           <UIButton text="Phòng nghỉ" variant="ghost" />
         </NuxtLink>
 
+        <NuxtLink to="/restaurant">
+          <UIButton text="Nhà hàng" variant="ghost" />
+        </NuxtLink>
+
         <NuxtLink to="/blog">
           <UIButton text="Blog" variant="ghost" />
         </NuxtLink>
@@ -88,6 +92,9 @@
         <nav class="space-y-10">
           <NuxtLink class="block" to="/rooms" @click="toggleModal('close')">
             <UIButton block text="Phòng nghỉ" variant="ghost" />
+          </NuxtLink>
+          <NuxtLink class="block" to="/restaurant" @click="toggleModal('close')">
+            <UIButton block text="Nhà hàng" variant="ghost" />
           </NuxtLink>
           <NuxtLink
             v-if="authStore.userName && authStore.token"

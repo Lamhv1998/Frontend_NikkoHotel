@@ -139,7 +139,8 @@ module.exports = {
             80: '#D0B79F',
             60: '#E1D1C2',
             40: '#F1EAE4',
-            10: '#FAF7F5'
+            10: '#FAF7F5',
+            5: '#FDFCFB'
           },
           success: {
             120: '#299F65',

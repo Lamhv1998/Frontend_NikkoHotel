@@ -9,6 +9,7 @@
 <script lang="ts" setup>
 import AppLoading from './components/global/AppLoading.vue'
 import { useLoadingStore } from './stores/loading'
+
 /* Thuộc tính toàn cục */
 const commonStore = useCommonStore()
 const { $Swal } = useNuxtApp()
@@ -58,17 +59,32 @@ onMounted(() => {
     }
   })
 })
+
+/* Tối ưu loading system */
+const isNavigating = ref(false)
 watch(
   () => route.fullPath,
-  async () => {
-    console.log('Loading started')
-    loadingStore.startLoading()
-    await nextTick() // chờ Nuxt render lại giao diện
-    // Dừng loading sau một khoảng delay nhỏ (hoặc khi API xong)
-    setTimeout(() => {
-      console.log('Loading stopped')
-      loadingStore.stopLoading()
-    }, 1000)
+  async (newRoute, oldRoute) => {
+    // Chỉ loading khi thực sự chuyển route
+    if (newRoute !== oldRoute && !isNavigating.value) {
+      isNavigating.value = true
+      loadingStore.startLoading()
+      
+      try {
+        // Chờ route transition hoàn tất
+        await nextTick()
+        
+        // Loading ngắn hơn để UX tốt hơn
+        setTimeout(() => {
+          loadingStore.stopLoading()
+          isNavigating.value = false
+        }, 300) // Giảm từ 1000ms xuống 300ms
+      } catch (error) {
+        console.error('Route transition error:', error)
+        loadingStore.stopLoading()
+        isNavigating.value = false
+      }
+    }
   }
 )
 </script>

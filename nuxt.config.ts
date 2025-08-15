@@ -32,11 +32,35 @@ export default defineNuxtConfig({
           additionalData: '@import "assets/scss/_variable.scss";'
         }
       }
+    },
+    // Tối ưu build performance
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['vue', 'vue-router', 'pinia'],
+            ui: ['@nuxt/image', 'nuxt-icon', 'nuxt-swiper']
+          }
+        }
+      }
     }
   },
 
   build: {
     transpile: ['@googlemaps/js-api-loader']
+  },
+
+  // Tối ưu performance
+  experimental: {
+    payloadExtraction: false,
+    inlineSSRStyles: false,
+    renderJsonPayloads: true
+  },
+
+  // Tối ưu nitro
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
   },
 
   app: {
@@ -128,6 +152,10 @@ export default defineNuxtConfig({
       lg: 992,
       xl: 1200,
       '2xl': 1400
-    }
+    },
+    // Tối ưu image loading
+    format: ['webp', 'avif', 'jpg', 'png'],
+    quality: 80,
+    loading: 'lazy'
   }
 })

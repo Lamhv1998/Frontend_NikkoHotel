@@ -5,8 +5,6 @@
     <main class="overflow-x-hidden">
       <slot />
     </main>
-
-    <PageFooter />
   </div>
 </template>
 
