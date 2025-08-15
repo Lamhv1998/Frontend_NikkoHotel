@@ -4,10 +4,12 @@
     <NuxtPage />
   </NuxtLayout>
   <UIScrollTop />
+  <AIChatButton />
 </template>
 
 <script lang="ts" setup>
 import AppLoading from './components/global/AppLoading.vue'
+import AIChatButton from './components/UI/AIChatButton.vue'
 import { useLoadingStore } from './stores/loading'
 
 /* Thuộc tính toàn cục */
