@@ -158,16 +158,48 @@ definePageMeta({
   // middleware: 'auth'  // COMMENT DÒNG NÀY ĐỂ TẠM THỜI BYPASS AUTH
 })
 
-const member = reactive({
-  level: 'Bạc',
-  points: 320,
-  nextLevelPoint: 500,
-  pointHistory: [
-    { date: '2025-05-20', point: 50, note: 'Đặt phòng thành công' },
-    { date: '2025-05-10', point: 30, note: 'Đánh giá khách sạn' },
-    { date: '2025-05-05', point: 25, note: 'Check-in đúng giờ' },
-    { date: '2025-04-28', point: 100, note: 'Đặt phòng premium' },
-    { date: '2025-04-20', point: 15, note: 'Chia sẻ trên mạng xã hội' }
+// Mock data cho demo
+const member = ref({
+  level: 'Silver',
+  points: 1250,
+  nextLevelPoint: 2000,
+  benefits: [
+    {
+      title: 'Giảm giá 15%',
+      description: 'Áp dụng cho tất cả dịch vụ',
+      icon: '💰',
+      color: 'from-emerald-500 to-green-600'
+    },
+    {
+      title: 'Ưu tiên đặt phòng',
+      description: 'Đặt phòng trước 24h',
+      icon: '🏨',
+      color: 'from-blue-500 to-cyan-600'
+    },
+    {
+      title: 'Dịch vụ đặc biệt',
+      description: 'Spa & massage miễn phí',
+      icon: '💆',
+      color: 'from-purple-500 to-pink-600'
+    },
+    {
+      title: 'Check-in sớm',
+      description: 'Check-in từ 12:00',
+      icon: '⏰',
+      color: 'from-amber-500 to-orange-600'
+    },
+    {
+      title: 'Late checkout',
+      description: 'Check-out đến 15:00',
+      icon: '🕒',
+      color: 'from-indigo-500 to-purple-600'
+    },
+    {
+      title: 'Welcome drink',
+      description: 'Cocktail chào mừng miễn phí',
+      icon: '🍹',
+      color: 'from-red-500 to-pink-600'
+    }
   ]
 })
 

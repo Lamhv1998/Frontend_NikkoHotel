@@ -153,17 +153,17 @@
                   <span class="rounded-full bg-gray-600 px-3 py-1 text-xs font-semibold text-gray-300">
                     Đã sử dụng
                   </span>
-                  <span class="text-sm text-gray-400">{{ formatDate(voucher.usedDate) }}</span>
+                  <span class="text-sm text-gray-400">{{ formatDate(voucher.usedAt) }}</span>
                 </div>
 
-                <h4 class="mb-1 font-semibold text-white">{{ voucher.description }}</h4>
+                <h4 class="mb-1 font-semibold text-white">{{ voucher.title }}</h4>
                 <p class="font-mono text-sm text-gray-400">{{ voucher.code }}</p>
 
                 <div class="mt-3 text-sm text-gray-300">
                   <p>
                     Giá trị giảm:
                     <span class="font-semibold text-emerald-400">{{
-                      formatCurrency(voucher.discountAmount)
+                      formatCurrency(voucher.value)
                       }}</span>
                   </p>
                   <p>
@@ -281,67 +281,91 @@ const tabs = [
   { id: 'expired', name: 'Hết hạn' }
 ]
 
-// Sample data
-const vouchers = reactive([
+
+
+// Tạo một mảng tổng hợp cho tất cả voucher
+const allVouchers = ref([
   {
     id: 1,
-    code: 'WELCOME20',
+    code: 'SUMMER20',
+    title: 'Giảm giá mùa hè',
+    description: 'Giảm giá 20% cho tất cả dịch vụ',
     type: 'percentage',
     value: 20,
-    description: 'Giảm 20% cho khách hàng mới',
+    expiry: '2024-12-31',
     minOrder: 500000,
-    maxDiscount: 100000,
-    expiry: '2025-12-31',
+    isLimited: true,
+    remaining: 5,
     status: 'available'
   },
   {
     id: 2,
-    code: 'SAVE50K',
-    type: 'fixed',
-    value: 50000,
-    description: 'Giảm 50K cho đơn từ 300K',
-    minOrder: 300000,
-    maxDiscount: null,
-    expiry: '2025-06-30',
+    code: 'SPA50',
+    title: 'Spa thư giãn',
+    description: 'Giảm giá 50% cho dịch vụ spa',
+    type: 'percentage',
+    value: 50,
+    expiry: '2024-11-30',
+    minOrder: 200000,
+    isLimited: false,
+    remaining: null,
     status: 'available'
   },
   {
     id: 3,
-    code: 'LUXURY15',
-    type: 'percentage',
-    value: 15,
-    description: 'Giảm 15% phòng hạng sang',
-    minOrder: 1000000,
-    maxDiscount: 200000,
-    expiry: '2025-05-20',
-    status: 'expired'
+    code: 'WELCOME100',
+    title: 'Chào mừng thành viên mới',
+    description: 'Giảm giá 100k cho đơn hàng đầu tiên',
+    type: 'fixed',
+    value: 100000,
+    expiry: '2024-12-31',
+    minOrder: 300000,
+    isLimited: true,
+    remaining: 10,
+    status: 'available'
   },
   {
     id: 4,
-    code: 'USED100K',
-    type: 'fixed',
-    value: 100000,
-    description: 'Voucher đã sử dụng',
-    minOrder: 500000,
-    maxDiscount: null,
-    expiry: '2025-08-15',
+    code: 'HOTEL30',
+    title: 'Khách sạn cao cấp',
+    description: 'Giảm giá 30% cho phòng premium',
+    type: 'percentage',
+    value: 30,
+    expiry: '2024-10-15',
+    minOrder: 1000000,
+    isLimited: false,
+    remaining: null,
     status: 'used',
-    usedDate: '2025-05-15',
-    discountAmount: 100000,
-    orderCode: 'NH20250515001'
+    usedAt: '2024-10-10',
+    orderCode: 'NH20241010001'
+  },
+  {
+    id: 5,
+    code: 'SPRING25',
+    title: 'Mùa xuân rực rỡ',
+    description: 'Giảm giá 25% cho dịch vụ mùa xuân',
+    type: 'percentage',
+    value: 25,
+    expiry: '2024-09-30',
+    minOrder: 400000,
+    isLimited: false,
+    remaining: null,
+    status: 'expired'
   }
 ])
 
 // Computed properties
 const availableVouchers = computed(() =>
-  vouchers.filter((v) => v.status === 'available' && new Date(v.expiry) > new Date())
+  allVouchers.value.filter((v) => v.status === 'available' && new Date(v.expiry) > new Date())
 )
 
-const usedVouchers = computed(() => vouchers.filter((v) => v.status === 'used'))
+const usedVouchers = computed(() => 
+  allVouchers.value.filter((v) => v.status === 'used')
+)
 
 const expiredVouchers = computed(() =>
-  vouchers.filter(
-    (v) => v.status === 'expired' || (v.status === 'available' && new Date(v.expiry) <= new Date())
+  allVouchers.value.filter((v) => 
+    v.status === 'expired' || (v.status === 'available' && new Date(v.expiry) <= new Date())
   )
 )
 
@@ -354,7 +378,7 @@ const addVoucher = () => {
   }
 
   // Check if voucher already exists
-  const exists = vouchers.find((v) => v.code === newVoucherCode.value.trim().toUpperCase())
+  const exists = allVouchers.value.find((v) => v.code === newVoucherCode.value.trim().toUpperCase())
   if (exists) {
     addMessage.value = { type: 'error', text: 'Mã voucher đã tồn tại' }
     setTimeout(() => (addMessage.value = null), 3000)
@@ -367,14 +391,16 @@ const addVoucher = () => {
     code: newVoucherCode.value.trim().toUpperCase(),
     type: 'percentage' as const,
     value: 10,
+    title: 'Voucher được thêm thủ công',
     description: 'Voucher được thêm thủ công',
     minOrder: 200000,
-    maxDiscount: 50000,
+    isLimited: false,
+    remaining: null,
     expiry: '2025-12-31',
     status: 'available' as const
   }
 
-  vouchers.push(newVoucher)
+  allVouchers.value.push(newVoucher)
   newVoucherCode.value = ''
   addMessage.value = { type: 'success', text: 'Thêm voucher thành công!' }
   setTimeout(() => (addMessage.value = null), 3000)
@@ -383,11 +409,7 @@ const addVoucher = () => {
 const useVoucher = (voucher: any) => {
   // In real app, this would integrate with booking system
   voucher.status = 'used'
-  voucher.usedDate = new Date().toISOString().split('T')[0]
-  voucher.discountAmount =
-    voucher.type === 'percentage'
-      ? Math.min(1000000 * (voucher.value / 100), voucher.maxDiscount || Infinity)
-      : voucher.value
+  voucher.usedAt = new Date().toISOString().split('T')[0]
   voucher.orderCode = 'NH' + Date.now()
 
   modalMessage.value = `Voucher ${voucher.code} đã được áp dụng thành công!`
