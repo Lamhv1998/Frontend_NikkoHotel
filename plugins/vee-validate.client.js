@@ -1,5 +1,3 @@
-import { localize, setLocale } from '@vee-validate/i18n'
-import vi from '@vee-validate/i18n/dist/locale/vi.json'
 import * as allRules from '@vee-validate/rules'
 import { configure, defineRule } from 'vee-validate'
 
@@ -13,10 +11,23 @@ export default defineNuxtPlugin((_nuxtApp) => {
       defineRule(rule, allRules[rule])
     })
 
-  // Cấu hình thông báo
+  // Cấu hình thông báo mặc định
   configure({
-    generateMessage: localize({ vi })
+    generateMessage: (ctx) => {
+      const messages = {
+        required: 'Trường này là bắt buộc',
+        email: 'Email không hợp lệ',
+        min: `Trường này phải có ít nhất ${ctx.rule.params} ký tự`,
+        max: `Trường này không được vượt quá ${ctx.rule.params} ký tự`,
+        numeric: 'Trường này phải là số',
+        alpha: 'Trường này chỉ được chứa chữ cái',
+        alpha_num: 'Trường này chỉ được chứa chữ cái và số',
+        confirmed: 'Giá trị không khớp',
+        url: 'URL không hợp lệ',
+        phone: 'Số điện thoại không hợp lệ'
+      }
+      
+      return messages[ctx.rule.name] || 'Giá trị không hợp lệ'
+    }
   })
-
-  setLocale('vi')
 })

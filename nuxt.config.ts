@@ -10,7 +10,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/i18n',
     '@vueuse/nuxt',
     'nuxt-icon',
     '@nuxt/image',
@@ -95,17 +94,7 @@ export default defineNuxtConfig({
     }
   },
 
-  i18n: {
-    langDir: 'locales',
-    locales: [
-      { code: 'vi', file: 'vi.json', iso: 'vi-VN', name: 'Tiếng Việt' },
-      { code: 'en', file: 'en.json', iso: 'en-US', name: 'English' }
-    ],
-    lazy: true,
-    defaultLocale: 'vi',
-    strategy: 'no_prefix',
-    vueI18n: './i18n.config.js'
-  },
+
 
   veeValidate: {
     autoImports: true,

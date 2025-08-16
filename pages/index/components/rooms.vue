@@ -98,7 +98,6 @@ const changeRoom = (direction: string) => {
   }
 }
 
-/* api */
 // const { getRoomsApi } = useApi()
 
 // api: 取得所有房型
