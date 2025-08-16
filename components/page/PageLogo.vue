@@ -174,6 +174,6 @@ const props = defineProps({
 })
 
 const svgColor = computed(() => {
-  return props.white ? 'text-white' : 'text-system-primary-10'
+  return props.white ? 'text-white' : 'text-text-primary'
 })
 </script>

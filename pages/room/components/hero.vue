@@ -67,7 +67,7 @@ const props = defineProps({
   }
 })
 
-/* 圖片預覽 */
+/* Xem trước ảnh */
 const lightboxShow = ref(false)
 const images = computed(() =>
   props.images.map((src, i) => ({ src, title: `${props.name} - ${i + 1}` }))

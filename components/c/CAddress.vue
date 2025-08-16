@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-2">
-    <label :class="[blackhead ? 'text-black' : 'text-white', 'text-sub-title  xl:text-title']"
+    <label :class="[blackhead ? 'text-black' : 'text-text-inverse', 'text-sub-title  xl:text-title']"
       >Địa chỉ</label
     >
 
@@ -66,25 +66,25 @@ const props = defineProps({
   }
 })
 
-/* 地址 */
+/* Địa chỉ */
 const address = defineModel<Address>({
   default: { zipcode: 0, detail: '' }
 })
 
-/* 縣市 */
+/* Tỉnh/Thành phố */
 const city = ref('')
 
 /* api */
 const { getCitysApi, getDistrictApi } = useApi()
 
-// api: 取得縣市
+// api: Lấy danh sách tỉnh/thành phố
 const { data: citys } = await getCitysApi({
   transform(input) {
     return input.data
   }
 })
 
-// api: 取得地區
+// api: Lấy danh sách quận/huyện
 const { data: districts } = await getDistrictApi({
   query: { city },
   immediate: false,
@@ -92,7 +92,7 @@ const { data: districts } = await getDistrictApi({
     return input.data
   },
   onResponse({ response }) {
-    // zipcode 不在地區列表中時，重設 zipcode 為 0
+    // Khi zipcode không có trong danh sách quận/huyện, đặt lại zipcode về 0
     if (
       response.status === 200 &&
       response._data.data.every((item: any) => {
@@ -104,11 +104,11 @@ const { data: districts } = await getDistrictApi({
   }
 })
 
-// zipcode 變動時，取得縣市地區
+// Khi zipcode thay đổi, lấy thông tin tỉnh/thành phố và quận/huyện
 watch(
   () => address.value.zipcode,
   () => {
-    //  zipcode 0 不處理
+    // Không xử lý khi zipcode là 0
     if (address.value.zipcode === 0) return
 
     getDistrictApi({

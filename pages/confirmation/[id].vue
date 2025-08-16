@@ -84,11 +84,11 @@ definePageMeta({
   middleware: 'auth'
 })
 
-/* 全局屬性 */
+/* Thuộc tính toàn cục */
 const route = useRoute()
 const authStore = useAuthStore()
 
-/* 房型 id */
+/* ID phòng */
 const {
   params: { id }
 } = route
@@ -96,7 +96,7 @@ const {
 /* api */
 const { getOrderApi } = useApi()
 
-//  api: 取得訂單資訊
+// api: Lấy thông tin đơn đặt phòng
 const {
   data: result,
   refresh

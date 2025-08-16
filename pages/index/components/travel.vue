@@ -65,10 +65,10 @@ const travels = [
   }
 ]
 
-/* google 地圖 */
+/* Google Maps */
 const mapRefs = ref<HTMLElement | null>(null)
 
-// 座標
+// Tọa độ
 const location = { lat: 10.764645231021714, lng: 106.68311493253726 }
 // ApiKey
 const loader = new Loader({
@@ -76,7 +76,7 @@ const loader = new Loader({
   version: 'weekly'
 })
 
-// 實例化
+// Khởi tạo
 onMounted(() => {
   loader.importLibrary('maps').then(async () => {
     const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary

@@ -2,114 +2,198 @@
   <header
     v-show="commonStore.isClient"
     ref="pageHeaderRefs"
-    :class="[bgBlack && ' bg-system-background', 'transition-colors duration-300']"
+    :class="[
+      'transition-all duration-300 bg-black text-text-primary',
+      scrolled ? 'scrolled' : ''
+    ]"
   >
-    <div class="flex items-center justify-between xl:max-w-full xl:px-20">
-      <!-- Liên kết: Trang chủ -->
-      <NuxtLink to="/">
+    <div class="container flex items-center justify-between py-4">
+      <!-- Logo -->
+      <NuxtLink to="/" class="flex items-center">
         <PageLogo
-          class="shrink-0 transition-colors hover:text-system-primary-100"
+          class="transition-colors hover:text-primary-500"
           :size="svgSize"
-          white
+          :white="false"
         />
       </NuxtLink>
 
-      <!-- Mobile: Nút menu -->
+      <!-- Mobile Menu Button -->
       <button
         v-if="commonStore.isMobile"
-        class="flex h-10 w-10 items-center justify-center text-icon-24 text-white transition-colors hover:text-system-primary-100"
+        class="flex h-10 w-10 items-center justify-center rounded-lg text-icon-lg transition-all hover:bg-neutral-100 hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         type="button"
         @click="toggleModal('show')"
+        aria-label="Toggle menu"
       >
-        <Icon name="ic:round-menu"></Icon>
+        <Icon name="ic:round-menu" />
       </button>
 
-      <!-- Desktop: Thanh điều hướng -->
-      <nav v-else class="flex items-center gap-4">
-        <NuxtLink to="/rooms">
-          <UIButton text="Phòng nghỉ" variant="ghost" />
+      <!-- Desktop Navigation -->
+      <nav v-else class="flex items-center gap-6">
+        <NuxtLink 
+          to="/rooms"
+          class="text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md px-3 py-2"
+        >
+          Phòng nghỉ
         </NuxtLink>
 
-        <NuxtLink to="/blog">
-          <UIButton text="Blog" variant="ghost" />
+        <NuxtLink 
+          to="/blog"
+          class="text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md px-3 py-2"
+        >
+          Blog
         </NuxtLink>
 
-        <NuxtLink to="/services">
-          <UIButton text="Dịch vụ" variant="ghost" />
+        <NuxtLink 
+          to="/services"
+          class="text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md px-3 py-2"
+        >
+          Dịch vụ
         </NuxtLink>
 
-        <NuxtLink to="/coupons">
-          <UIButton text="Mã giảm giá" variant="ghost" />
+        <NuxtLink 
+          to="/coupons"
+          class="text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md px-3 py-2"
+        >
+          Mã giảm giá
         </NuxtLink>
 
+        <!-- User Menu -->
         <ClientOnly>
           <Transition name="dropdown" mode="out-in">
             <UIDropdown v-if="authStore.userName && authStore.token" v-model="userDropdown">
-              <UIButton
-                class="flex-row-reverse"
-                :text="authStore.userName"
-                icon="ic:outline-account-circle"
-                variant="ghost"
-              />
+              <button
+                class="flex items-center gap-2 rounded-lg px-4 py-2 text-body font-medium transition-all hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              >
+                <Icon name="ic:outline-account-circle" class="text-icon-md" />
+                <span>{{ authStore.userName }}</span>
+                <Icon name="ic:baseline-keyboard-arrow-down" class="text-icon-sm transition-transform" :class="{ 'rotate-180': userDropdown }" />
+              </button>
+              
               <template #item>
-                <NuxtLink to="/user" @click="userDropdown = false">
-                  <UIButton block text="Tài khoản của tôi" variant="dropdown" />
-                </NuxtLink>
+                <div class="min-w-[200px] rounded-xl bg-background-primary p-2 shadow-xl border border-border-light">
+                  <NuxtLink 
+                    to="/user" 
+                    @click="userDropdown = false"
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-body transition-colors hover:bg-neutral-100"
+                  >
+                    <Icon name="ic:outline-person" class="text-icon-sm" />
+                    Tài khoản của tôi
+                  </NuxtLink>
 
-                <UIButton block text="Đăng xuất" variant="dropdown" @click="logout" />
+                  <button 
+                    @click="logout"
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-body text-error-600 transition-colors hover:bg-error-50"
+                  >
+                    <Icon name="ic:outline-logout" class="text-icon-sm" />
+                    Đăng xuất
+                  </button>
+                </div>
               </template>
             </UIDropdown>
 
-            <NuxtLink v-else to="/auth/login">
-              <UIButton text="Đăng nhập" variant="ghost" />
+            <NuxtLink 
+              v-else 
+              to="/auth/login"
+              class="rounded-lg px-4 py-2 text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            >
+              Đăng nhập
             </NuxtLink>
           </Transition>
         </ClientOnly>
 
+        <!-- CTA Button -->
         <NuxtLink to="/rooms">
-          <UIButton text="Đặt phòng ngay" />
+          <button class="rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-2 text-body font-semibold text-text-inverse transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-primary">
+            Đặt phòng ngay
+          </button>
         </NuxtLink>
       </nav>
     </div>
 
-    <!-- Mobile: Menu popup -->
+    <!-- Mobile Menu Modal -->
     <UIModal v-model="isModalShow" black fullscreen>
       <div
         v-if="isModalShow"
-        class="relative flex h-screen flex-col items-stretch justify-center px-5"
+        class="relative flex h-screen flex-col items-stretch justify-center bg-background-dark p-6"
       >
+        <!-- Close Button -->
         <button
-          class="absolute right-5 top-5 flex h-16 w-16 items-center justify-center text-icon-48 text-white transition-colors hover:text-system-primary-100"
+          class="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-background-primary/10 text-icon-2xl text-text-inverse transition-all hover:bg-background-primary/20 focus:outline-none focus:ring-2 focus:ring-primary-500"
           type="button"
           @click="toggleModal('close')"
+          aria-label="Close menu"
         >
           <Icon name="ic:baseline-close" />
         </button>
-        <nav class="space-y-10">
-          <NuxtLink class="block" to="/rooms" @click="toggleModal('close')">
-            <UIButton block text="Phòng nghỉ" variant="ghost" />
+        
+        <!-- Mobile Navigation -->
+        <nav class="space-y-6">
+          <NuxtLink 
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10" 
+            to="/rooms" 
+            @click="toggleModal('close')"
+          >
+            Phòng nghỉ
           </NuxtLink>
+          
+          <NuxtLink 
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10" 
+            to="/blog" 
+            @click="toggleModal('close')"
+          >
+            Blog
+          </NuxtLink>
+          
+          <NuxtLink 
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10" 
+            to="/services" 
+            @click="toggleModal('close')"
+          >
+            Dịch vụ
+          </NuxtLink>
+          
+          <NuxtLink 
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10" 
+            to="/coupons" 
+            @click="toggleModal('close')"
+          >
+            Mã giảm giá
+          </NuxtLink>
+          
           <NuxtLink
             v-if="authStore.userName && authStore.token"
-            class="block"
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10"
             to="/user"
             @click="toggleModal('close')"
           >
-            <UIButton block text="Tài khoản của tôi" variant="ghost" />
+            Tài khoản của tôi
           </NuxtLink>
-          <NuxtLink v-else class="block" to="/auth/login" @click="toggleModal('close')">
-            <UIButton block text="Đăng nhập" variant="ghost" />
+          
+          <NuxtLink 
+            v-else 
+            class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10" 
+            to="/auth/login" 
+            @click="toggleModal('close')"
+          >
+            Đăng nhập
           </NuxtLink>
-          <NuxtLink class="block" to="/rooms" @click="toggleModal('close')">
-            <UIButton block text="Đặt phòng ngay" />
+          
+          <NuxtLink 
+            class="block rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-3 text-h5 font-semibold text-text-inverse transition-all hover:from-primary-600 hover:to-primary-700" 
+            to="/rooms" 
+            @click="toggleModal('close')"
+          >
+            Đặt phòng ngay
           </NuxtLink>
-          <UIButton
+          
+          <button
             v-if="authStore.userName && authStore.token"
-            block
-            text="Đăng xuất"
-            variant="ghost"
+            class="block w-full rounded-lg px-4 py-3 text-h5 font-medium text-error-400 transition-colors hover:bg-error-500/10"
             @click="logout"
-          />
+          >
+            Đăng xuất
+          </button>
         </nav>
       </div>
     </UIModal>
@@ -117,12 +201,12 @@
 </template>
 
 <script lang="ts" setup>
-/* Thuộc tính toàn cục */
+/* Global properties */
 const commonStore = useCommonStore()
 const authStore = useAuthStore()
 const route = useRoute()
 
-/* Tính toán kích thước Logo */
+/* Logo size calculation */
 const svgSize = computed(() => ({
   height: commonStore.isMobile ? 40 : 72,
   width: commonStore.isMobile ? 109.76 : 196
@@ -138,20 +222,20 @@ const toggleModal = (event: string) => {
   }
 }
 
-/* Đổi nền header khi cuộn */
-const { height } = useWindowSize()
+/* Header background change on scroll */
 const { y } = useWindowScroll()
-const bgBlack = ref(false)
+const scrolled = ref(false)
+
 onMounted(() => {
   watch(y, () => {
-    bgBlack.value = height.value / 4 < y.value
+    scrolled.value = y.value > 50
   })
 })
 
-/* Dropdown người dùng */
+/* User dropdown */
 const userDropdown = ref(false)
 
-// Đăng xuất
+// Logout function
 const logout = async () => {
   userDropdown.value = false
   authStore.token = ''
@@ -162,3 +246,25 @@ const logout = async () => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+header {
+  &.scrolled {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+// Dropdown animation
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all var(--transition-fast);
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

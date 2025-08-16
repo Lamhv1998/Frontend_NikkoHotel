@@ -9,6 +9,7 @@
     <main>
       <slot />
     </main>
+    <PageFooter />
   </div>
 </template>
 
@@ -17,11 +18,11 @@
   @apply relative flex min-h-screen flex-col;
 
   > header {
-    @apply sticky top-0 z-[25] bg-system-background;
+    @apply sticky top-0 z-[25] bg-black;
   }
 
   > main {
-    @apply relative flex flex-1 items-center justify-center bg-system-background xl:-mt-[7.5rem] xl:ml-[50%] xl:w-1/2;
+    @apply relative flex flex-1 items-center justify-center bg-system-background xl:-mt-[7.5rem] xl:ml-[50%] xl:w-1/2 p-32;
     background-image: url('/img/line3.png');
     background-size: 100vw;
     background-position-x: center;

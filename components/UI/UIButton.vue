@@ -1,52 +1,142 @@
 <template>
-  <button :class="[cssColor, props.block ? 'flex w-full' : 'inline-flex']" :type="props.type">
-    {{ props.text }}
-    <template v-if="loading">
-      <Icon class="text-icon-24" name="eos-icons:loading" />
-    </template>
-    <Icon v-else-if="props.icon" class="text-icon-24" :name="props.icon" />
+  <button
+    :class="[
+      'ui-button',
+      `ui-button--${props.variant}`,
+      props.block && 'ui-button--block',
+      props.size && `ui-button--${props.size}`
+    ]"
+    :disabled="props.disabled"
+    @click="$emit('click')"
+  >
+    <Icon v-if="props.loading" class="text-icon-md animate-spin" name="eos-icons:loading" />
+    <Icon v-else-if="props.icon" class="text-icon-md" :name="props.icon" />
+    <span v-if="props.text">{{ props.text }}</span>
+    <slot />
   </button>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-  type: {
-    type: String as PropType<'button' | 'submit' | 'reset' | undefined>,
-    default: 'button'
-  },
-  text: {
-    type: String,
-    default: 'Button'
-  },
-  icon: {
-    type: String,
-    default: ''
-  },
-  variant: {
-    type: String as PropType<
-      'primary' | 'secondary' | 'ghost' | 'ghost-light' | 'text' | 'text-black' | 'dropdown'
-    >,
-    default: 'primary'
-  },
-  block: Boolean,
-  loading: Boolean
+interface Props {
+  text?: string
+  icon?: string
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'dropdown'
+  size?: 'small' | 'large'
+  block?: boolean
+  disabled?: boolean
+  loading?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  block: false,
+  disabled: false,
+  loading: false
 })
 
-const cssColor = computed<string>(() => {
-  return {
-    primary:
-      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg bg-system-primary-100 px-8 py-4 text-sub-title xl:text-title text-white transition-colors hover:bg-system-primary-60 disabled:bg-system-gray-40 disabled:text-system-gray-60',
-    secondary:
-      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg border border-system-primary-100 bg-white px-8 py-4 text-sub-title xl:text-title text-system-primary-100 transition-colors hover:border-system-primary-120 hover:bg-system-primary-10 hover:text-system-primary-120 disabled:border-system-gray-60 disabled:text-system-gray-60 disabled:bg-white',
-    ghost:
-      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg px-8 py-4 text-sub-title xl:text-title text-white transition-colors hover:text-system-primary-100 disabled:text-system-gray-60',
-    dropdown:
-      'h-14 text-nowrap select-none items-center gap-1 rounded-lg px-8 py-4 text-sub-title xl:text-title text-system-gray-80 transition-colors hover:text-system-primary-100 hover:bg-system-primary-10 disabled:text-system-gray-60',
-    'ghost-light':
-      'h-14 text-nowrap select-none items-center justify-center gap-1 rounded-lg px-8 py-4 text-sub-title xl:text-title text-system-gray-80 transition-colors hover:text-black disabled:text-system-gray-60',
-    text: 'text-nowrap select-none items-center justify-center gap-1 rounded-lg text-sub-title xl:text-title text-system-primary-100 underline transition-colors hover:text-system-primary-120 disabled:text-system-gray-60',
-    'text-black':
-      'text-nowrap select-none items-center justify-center gap-1 rounded-lg text-sub-title xl:text-title text-black underline transition-colors hover:text-system-primary-120 disabled:text-system-gray-80'
-  }[props.variant]
-})
+defineEmits<{
+  click: []
+}>()
 </script>
+
+<style lang="scss" scoped>
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-base);
+  
+  &:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &--block {
+    width: 100%;
+  }
+  
+  &--small {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-md);
+  }
+  
+  &--large {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    border-radius: var(--radius-xl);
+  }
+  
+  // Primary variant
+  &--primary {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    color: var(--color-text-inverse);
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+  
+  // Secondary variant
+  &--secondary {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-medium);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-bg-tertiary);
+      border-color: var(--color-primary-500);
+    }
+  }
+  
+  // Outline variant
+  &--outline {
+    background: transparent;
+    color: var(--color-primary-600);
+    border: 2px solid var(--color-primary-600);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-primary-600);
+      color: var(--color-text-inverse);
+    }
+  }
+  
+  // Ghost variant
+  &--ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-bg-secondary);
+      color: var(--color-text-primary);
+    }
+  }
+  
+  // Dropdown variant
+  &--dropdown {
+    background: transparent;
+    color: var(--color-text-primary);
+    width: 100%;
+    justify-content: flex-start;
+    
+    &:hover:not(:disabled) {
+      background: var(--color-bg-secondary);
+    }
+  }
+}
+</style>

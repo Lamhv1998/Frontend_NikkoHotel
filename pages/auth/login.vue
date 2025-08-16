@@ -51,7 +51,7 @@
     />
 
     <div class="flex gap-2">
-      <p class="text-body-2 text-white xl:text-body">Chưa có tài khoản?</p>
+      <p class="text-body-2 text-text-inverse xl:text-body">Chưa có tài khoản?</p>
       <!-- Liên kết: Đăng ký -->
       <NuxtLink class="hot-link-wrapper" to="/auth/signup">
         <UIButton text="Đăng ký ngay" variant="text" />

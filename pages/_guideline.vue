@@ -9,7 +9,7 @@
         <ul class="space-y-2 pt-6">
           <li v-for="item in scrollPointData" :key="item.title">
             <button
-              class="text-title transition-colors hover:text-system-info-100 active:text-system-info-120"
+              class="text-h5 transition-colors hover:text-system-info-100 active:text-system-info-120"
               type="button"
               @click="scrollPoint(item.refs as HTMLElement)"
             >
@@ -31,14 +31,14 @@
               <h3 class="card-title">Line Height</h3>
               <div class="flex gap-4">
                 <div class="box">
-                  <div class="text-title">Heading</div>
-                  <div class="text-h2">120%</div>
-                  <div class="text-body-2">Dùng cho tiêu đề lớn</div>
-                </div>
-                <div class="box">
-                  <div class="text-title">Normal</div>
-                  <div class="text-h2">150%</div>
-                  <div class="text-body-2">Dùng cho nội dung</div>
+                                  <div class="text-h5">Heading</div>
+                <div class="text-h2">120%</div>
+                <div class="text-body-sm">Dùng cho tiêu đề lớn</div>
+              </div>
+              <div class="box">
+                <div class="text-h5">Normal</div>
+                <div class="text-h2">150%</div>
+                <div class="text-body-sm">Dùng cho nội dung</div>
                 </div>
               </div>
             </li>
@@ -81,14 +81,14 @@
                   <p class="text-h6">The quick brown fox jumps over the lazy dog.</p>
                 </li>
                 <li>
-                  <button type="button" @click="toCopy">text-title</button>
+                  <button type="button" @click="toCopy">text-h5</button>
                   <p>Normal 16px B</p>
-                  <p class="text-title">The quick brown fox jumps over the lazy dog.</p>
+                  <p class="text-h5">The quick brown fox jumps over the lazy dog.</p>
                 </li>
                 <li>
-                  <button type="button" @click="toCopy">text-sub-title</button>
+                  <button type="button" @click="toCopy">text-h6</button>
                   <p>Normal 14px B</p>
-                  <p class="text-sub-title">The quick brown fox jumps over the lazy dog.</p>
+                  <p class="text-h6">The quick brown fox jumps over the lazy dog.</p>
                 </li>
                 <li>
                   <button type="button" @click="toCopy">text-body</button>
@@ -96,14 +96,14 @@
                   <p class="text-body">The quick brown fox jumps over the lazy dog.</p>
                 </li>
                 <li>
-                  <button type="button" @click="toCopy">text-body-2</button>
+                  <button type="button" @click="toCopy">text-body-sm</button>
                   <p>Normal 14px R</p>
-                  <p class="text-body-2">The quick brown fox jumps over the lazy dog.</p>
+                  <p class="text-body-sm">The quick brown fox jumps over the lazy dog.</p>
                 </li>
                 <li>
-                  <button type="button" @click="toCopy">text-tiny</button>
+                  <button type="button" @click="toCopy">text-body-xs</button>
                   <p>Normal 12px R</p>
-                  <p class="text-tiny">The quick brown fox jumps over the lazy dog.</p>
+                  <p class="text-body-xs">The quick brown fox jumps over the lazy dog.</p>
                 </li>
               </ul>
             </li>
@@ -147,7 +147,7 @@
               <h3 class="card-title">Màu phụ Semantic</h3>
               <ul class="space-y-2">
                 <li>
-                  <h4 class="text-title">Success</h4>
+                  <h4 class="text-h5">Success</h4>
                   <ul class="color-box-wrapper">
                     <li class="bg-system-success-120">
                       <button type="button" @click="toCopyColor">success-120</button>
@@ -170,7 +170,7 @@
                   </ul>
                 </li>
                 <li>
-                  <h4 class="text-title">Info</h4>
+                  <h4 class="text-h5">Info</h4>
                   <ul class="color-box-wrapper">
                     <li class="bg-system-info-120">
                       <button type="button" @click="toCopyColor">info-120</button>
@@ -193,7 +193,7 @@
                   </ul>
                 </li>
                 <li>
-                  <h4 class="text-title">Alert / Error</h4>
+                  <h4 class="text-h5">Alert / Error</h4>
                   <ul class="color-box-wrapper">
                     <li class="bg-system-error-120">
                       <button type="button" @click="toCopyColor">error-120</button>
@@ -765,10 +765,10 @@ ul {
 
     li {
       > :first-child {
-        @apply select-none text-title transition-colors hover:text-system-info-100 active:text-system-info-120;
+        @apply select-none text-h5 transition-colors hover:text-system-info-100 active:text-system-info-120;
       }
       > :nth-child(2) {
-        @apply text-body-2;
+        @apply text-body-sm;
       }
       > :last-child {
         @apply text-system-gray-60;
@@ -784,10 +784,10 @@ ul {
       width: 100%;
 
       > :first-child {
-        @apply text-title transition-colors hover:text-system-info-100 active:text-system-info-120;
+        @apply text-h5 transition-colors hover:text-system-info-100 active:text-system-info-120;
       }
       > :last-child {
-        @apply text-tiny opacity-80 md:text-body-2;
+        @apply text-body-xs opacity-80 md:text-body-sm;
       }
     }
 
@@ -829,11 +829,11 @@ table {
     }
 
     th {
-      @apply text-title;
+      @apply text-h5;
     }
 
     td:first-child {
-      @apply text-title;
+      @apply text-h5;
     }
   }
 }

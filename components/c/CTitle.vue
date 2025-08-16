@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-/* 文字大小 */
+/* Kích thước chữ */
 const size = computed(() => {
   return {
     sm: 'text-body-2 xl:text-body',

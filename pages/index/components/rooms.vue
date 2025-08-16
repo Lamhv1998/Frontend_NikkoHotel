@@ -1,75 +1,138 @@
 <template>
-  <section v-if="rooms" class="section-container">
-    <div key="key" class="relative grid grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-20">
-      <!-- Xem trước phòng -->
-      <div class="container relative xl:z-0 xl:max-w-full xl:pl-0 xl:pr-5">
-        <Swiper
-          class="rooms-swiper aspect-[5/4] rounded-lg xl:rounded-l-none"
-          :autoplay="{
-            delay: 7000,
-            disableOnInteraction: false
-          }"
-          :effect="'fade'"
-          :loop="true"
-          :modules="[SwiperPagination, SwiperEffectFade, SwiperAutoplay]"
-          :pagination="{
-            clickable: true
-          }"
-          @swiper="setSwiperRefs"
-        >
-          <SwiperSlide v-for="(slide, index) in rooms[currentRoom].imageUrlList" :key="index">
-            <NuxtImg class="h-full w-full object-cover" :src="slide" width="50vw" />
-          </SwiperSlide>
-        </Swiper>
+  <section v-if="rooms" class="section-container bg-background-secondary">
+    <div class="container">
+      <!-- Section Header -->
+      <div class="mb-16 text-center">
+        <h2 class="text-h2 font-display font-bold text-text-primary lg:text-h1">
+          Phòng nghỉ sang trọng
+        </h2>
+        <p class="mt-4 text-body-lg text-text-secondary lg:text-h5">
+          Khám phá các loại phòng độc đáo của chúng tôi
+        </p>
       </div>
 
-      <!-- Trang trí sọc -->
-      <div class="absolute -top-[6.5rem] left-1/4 xl:relative xl:left-auto xl:top-auto">
-        <div class="w-[120vw] xl:-ml-[8.75rem] xl:w-[56vw] xl:pt-[3.75rem]">
-          <NuxtImg src="/img/line3.png" width="100vw" />
+      <!-- Room Showcase -->
+      <div class="relative grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16 xl:gap-20">
+        <!-- Room Image Slider -->
+        <div class="relative lg:z-10">
+          <Swiper
+            class="rooms-swiper aspect-[5/4] overflow-hidden rounded-2xl shadow-xl lg:rounded-3xl"
+            :autoplay="{
+              delay: 7000,
+              disableOnInteraction: false
+            }"
+            :effect="'fade'"
+            :loop="true"
+            :modules="[SwiperPagination, SwiperEffectFade, SwiperAutoplay]"
+            :pagination="{
+              clickable: true
+            }"
+            @swiper="setSwiperRefs"
+          >
+            <SwiperSlide v-for="(slide, index) in rooms[currentRoom].imageUrlList" :key="index">
+              <NuxtImg 
+                class="h-full w-full object-cover" 
+                :src="slide" 
+                width="50vw"
+                loading="lazy"
+                :alt="`${rooms[currentRoom].name} - Image ${index + 1}`"
+              />
+            </SwiperSlide>
+          </Swiper>
+          
+          <!-- Room Navigation -->
+          <div class="absolute bottom-6 right-6 flex gap-2 lg:bottom-8 lg:right-8">
+            <button
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-background-primary/90 text-icon-lg text-text-primary transition-all hover:bg-background-primary hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 backdrop-blur-sm"
+              type="button"
+              @click="changeRoom('prev')"
+              aria-label="Previous room"
+            >
+              <Icon name="ic:baseline-keyboard-arrow-left" />
+            </button>
+            <button
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-background-primary/90 text-icon-lg text-text-primary transition-all hover:bg-background-primary hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 backdrop-blur-sm"
+              type="button"
+              @click="changeRoom('next')"
+              aria-label="Next room"
+            >
+              <Icon name="ic:baseline-keyboard-arrow-right" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Room Information -->
+        <div class="flex flex-col justify-center lg:pl-8">
+          <div class="space-y-8">
+            <!-- Room Details -->
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <h3 class="text-h3 font-display font-bold text-text-primary lg:text-h2">
+                  {{ rooms[currentRoom].name }}
+                </h3>
+                <p class="text-body text-text-secondary leading-relaxed lg:text-body-lg">
+                  {{ rooms[currentRoom].description }}
+                </p>
+              </div>
+
+              <!-- Price -->
+              <div class="flex items-baseline gap-2">
+                <span class="text-h4 font-bold text-primary-600 lg:text-h3">
+                  {{ useFormatCurrency(rooms[currentRoom].price) }}
+                </span>
+                <span class="text-body-sm text-text-tertiary">/ đêm</span>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+                  <Icon name="ic:outline-king-bed" class="text-icon-md" />
+                </div>
+                <span class="text-body-sm font-medium text-text-primary">Giường King</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+                  <Icon name="ic:outline-people" class="text-icon-md" />
+                </div>
+                <span class="text-body-sm font-medium text-text-primary">2-4 người</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+                  <Icon name="ic:outline-ac-unit" class="text-icon-md" />
+                </div>
+                <span class="text-body-sm font-medium text-text-primary">Điều hòa</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+                  <Icon name="ic:outline-wifi" class="text-icon-md" />
+                </div>
+                <span class="text-body-sm font-medium text-text-primary">WiFi miễn phí</span>
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="flex flex-col gap-4 sm:flex-row">
+              <NuxtLink :to="`/room/${rooms[currentRoom]._id}`" class="flex-1">
+                <button class="w-full rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-4 text-body-lg font-semibold text-text-inverse transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-primary">
+                  Xem chi tiết
+                </button>
+              </NuxtLink>
+              <NuxtLink :to="`/reserve/${rooms[currentRoom]._id}`" class="flex-1">
+                <button class="w-full rounded-xl border-2 border-primary-500 bg-transparent px-8 py-4 text-body-lg font-semibold text-primary-600 transition-all hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                  Đặt ngay
+                </button>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Thông tin phòng -->
-      <div class="rooms-info-wrapper pointer-events-none xl:absolute xl:inset-0">
-        <div class="container xl:grid xl:h-full xl:grid-cols-2 xl:gap-20">
-          <div
-            class="pointer-events-auto col-start-2 flex flex-col justify-end gap-6 text-white xl:gap-10"
-          >
-            <!-- Tên phòng và mô tả -->
-            <div class="space-y-2">
-              <h3 class="text-h4 xl:text-h2">{{ rooms[currentRoom].name }}</h3>
-              <p class="text-body-2 xl:text-body">{{ rooms[currentRoom].description }}</p>
-            </div>
-
-            <!-- Giá phòng -->
-            <div class="text-h5 xl:text-h3">
-              {{ useFormatCurrency(rooms[currentRoom].price) }}
-            </div>
-
-            <!-- Xem chi tiết phòng -->
-            <NuxtLink :to="`/room/${rooms[currentRoom]._id}`">
-              <UIHeroButton text="Xem chi tiết" />
-            </NuxtLink>
-
-            <!-- Nút chọn phòng -->
-            <div class="flex justify-end">
-              <button
-                class="flex h-14 w-14 items-center justify-center p-4 text-icon-24 text-system-primary-100 transition-colors hover:text-system-primary-120"
-                type="button"
-                @click="changeRoom('prev')"
-              >
-                <Icon class="shrink-0" name="ic:baseline-keyboard-arrow-left"></Icon>
-              </button>
-              <button
-                class="flex h-14 w-14 items-center justify-center p-4 text-icon-24 text-system-primary-100 transition-colors hover:text-system-primary-120"
-                type="button"
-                @click="changeRoom('next')"
-              >
-                <Icon class="shrink-0" name="ic:baseline-keyboard-arrow-right"></Icon>
-              </button>
-            </div>
-          </div>
+      <!-- Decorative Elements -->
+      <div class="absolute -top-16 left-1/4 hidden lg:block">
+        <div class="w-32 opacity-10">
+          <NuxtImg src="/img/line3.png" width="128" alt="Decorative line" />
         </div>
       </div>
     </div>
@@ -77,7 +140,6 @@
 </template>
 
 <script lang="ts" setup>
-// import type { RoomResponse } from '@/types'
 import type { Swiper } from 'swiper'
 
 const swiperRefs = ref<Swiper | null>(null)
@@ -98,36 +160,39 @@ const changeRoom = (direction: string) => {
   }
 }
 
-// const { getRoomsApi } = useApi()
-
-// api: 取得所有房型
-// const { data: rooms }: { data: Ref<RoomResponse[] | null> } = await getRoomsApi({
-//   transform(res: any): RoomResponse[] {
-//     return res.result
-//   }
-// })
-// Dữ liệu mẫu
+// Sample data
 const rooms = ref([
   {
     _id: '1',
     name: 'Phòng Deluxe',
-    description: 'Phòng Deluxe với đầy đủ tiện nghi.',
+    description: 'Phòng Deluxe với đầy đủ tiện nghi hiện đại, không gian rộng rãi và view tuyệt đẹp. Phù hợp cho cả công tác và nghỉ dưỡng.',
     price: 2000000,
     imageUrlList: [
-      'https://picsum.photos/400/300?random=1',
-      'https://picsum.photos/400/300?random=2',
-      'https://picsum.photos/400/300?random=3'
+      'https://picsum.photos/800/600?random=1',
+      'https://picsum.photos/800/600?random=2',
+      'https://picsum.photos/800/600?random=3'
     ]
   },
   {
     _id: '2',
     name: 'Phòng Superior',
-    description: 'Phòng Superior với không gian rộng rãi.',
+    description: 'Phòng Superior với thiết kế sang trọng, nội thất cao cấp và dịch vụ đẳng cấp 5 sao. Trải nghiệm lưu trú hoàn hảo.',
     price: 2500000,
     imageUrlList: [
-      'https://picsum.photos/400/300?random=4',
-      'https://picsum.photos/400/300?random=5',
-      'https://picsum.photos/400/300?random=6'
+      'https://picsum.photos/800/600?random=4',
+      'https://picsum.photos/800/600?random=5',
+      'https://picsum.photos/800/600?random=6'
+    ]
+  },
+  {
+    _id: '3',
+    name: 'Suite Presidential',
+    description: 'Suite Presidential - đỉnh cao của sự sang trọng với không gian riêng biệt, dịch vụ butler và view toàn cảnh thành phố.',
+    price: 5000000,
+    imageUrlList: [
+      'https://picsum.photos/800/600?random=7',
+      'https://picsum.photos/800/600?random=8',
+      'https://picsum.photos/800/600?random=9'
     ]
   }
 ])
@@ -135,44 +200,78 @@ const rooms = ref([
 
 <style lang="scss" scoped>
 .section-container {
-  @apply bg-system-background;
-  @include xl {
-    background-image: url('/img/bg.png');
-    background-position: center 150%;
-    background-repeat: no-repeat;
-    background-size: 100%;
-  }
-  .rooms-info-wrapper {
-    background-size: 100%;
-    background-image: url('/img/bg.png');
-    background-repeat: no-repeat;
-    @include xl {
-      background: none;
-    }
+  background: var(--color-bg-secondary);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(241, 122, 46, 0.02) 0%, rgba(212, 175, 55, 0.02) 100%);
+    pointer-events: none;
   }
 }
 
 :deep(.rooms-swiper) {
   .swiper-pagination {
-    @apply bottom-6 flex justify-center gap-2;
+    bottom: var(--spacing-6);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
   }
 
   .swiper-pagination-bullet {
-    @apply m-0 block h-1 w-8 rounded-full bg-system-primary-40 opacity-100 transition-colors hover:bg-system-primary-100;
+    margin: 0;
+    display: block;
+    height: 4px;
+    width: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-200);
+    opacity: 1;
+    transition: all var(--transition-normal);
+    
+    &:hover {
+      background: var(--color-primary-400);
+    }
 
     &.swiper-pagination-bullet-active {
-      @apply w-[3.75rem]  bg-system-primary-100;
+      width: 60px;
+      background: var(--color-primary-500);
     }
   }
 
   img {
-    @apply scale-[1.1] transition-all duration-[8000ms] ease-linear;
+    transform: scale(1.1);
+    transition: transform 8s ease-linear;
   }
 
   .swiper-slide-active,
   .swiper-slide-prev {
     img {
-      @apply scale-100;
+      transform: scale(1);
+    }
+  }
+}
+
+// Smooth animations
+.rooms-swiper {
+  transition: all var(--transition-normal);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .section-container {
+    &::before {
+      background: linear-gradient(135deg, rgba(241, 122, 46, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
     }
   }
 }

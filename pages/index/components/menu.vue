@@ -56,8 +56,8 @@
 // import type { MenuResponse } from '@/types'
 import UITitle from './UI/UITitle.vue'
 
-/* 輪播 */
-// RWD 顯示數量
+/* Carousel */
+// Số lượng hiển thị theo RWD
 const { width } = useWindowSize()
 const view = computed(() => {
   if (width.value > 992) return 3
@@ -69,7 +69,7 @@ const view = computed(() => {
 /* api */
 // const { getDelicaciesApi } = useApi()
 
-// api: 取得所有房型
+// api: Lấy tất cả các món ăn
 // const { data: menu }: { data: Ref<MenuResponse[] | null> } = await getDelicaciesApi({
 //   transform(res: any): MenuResponse[] {
 //     return res.result

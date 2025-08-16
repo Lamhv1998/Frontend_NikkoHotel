@@ -1,6 +1,6 @@
 <template>
   <button
-    class="group flex w-full items-center justify-end gap-[.625rem] text-nowrap rounded-lg bg-white p-5 text-title text-black transition-colors hover:bg-system-primary-100 hover:text-white xl:p-10 xl:text-h5"
+    class="group flex w-full items-center justify-end gap-[.625rem] text-nowrap rounded-lg bg-white p-5 text-h5 text-black transition-colors hover:bg-system-primary-100 hover:text-white xl:p-10 xl:text-h5"
     type="button"
   >
     {{ props.text }}

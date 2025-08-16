@@ -1,67 +1,214 @@
 <template>
-  <footer class="section-container bg-system-background text-white xl:pb-[7.5rem]">
-    <div class="container space-y-20">
-      <div class="flex flex-col justify-between gap-10 xl:flex-row">
-        <!-- Khu vực liên kết mạng xã hội -->
-        <div class="space-y-10">
-          <!-- Liên kết: Trang chủ -->
-          <NuxtLink to="/">
+  <footer class="bg-background-dark text-text-inverse">
+    <div class="container py-16 lg:py-20 pt-20 lg:pt-24">
+      <!-- Main Footer Content -->
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 xl:grid-cols-4 xl:gap-20 p-5">
+        <!-- Brand Section -->
+        <div class="space-y-8">
+          <NuxtLink to="/" class="inline-block">
             <PageLogo white />
           </NuxtLink>
-
-          <div class="space-x-4">
-            <!-- Liên kết: Line -->
-            <NuxtLink class="link-wrapper" target="_blank" to="https://line.me/ti/p/l7E02lIDG4">
-              <Icon class="shrink-0" name="bi:line" />
+          
+          <p class="text-body text-neutral-300 leading-relaxed">
+            Nikko Hotel - Nơi nghỉ dưỡng sang trọng bậc nhất tại Việt Nam. Chúng tôi cam kết mang đến trải nghiệm lưu trú đẳng cấp 5 sao.
+          </p>
+          
+          <!-- Social Links -->
+          <div class="flex gap-4">
+            <NuxtLink 
+              class="social-link" 
+              target="_blank" 
+              to="https://line.me/ti/p/l7E02lIDG4"
+              aria-label="Line"
+            >
+              <Icon name="bi:line" class="text-icon-lg" />
             </NuxtLink>
-
-            <!-- Liên kết: IG -->
-            <NuxtLink class="link-wrapper" target="_blank" to="https://instagram.com/cutecat8110">
-              <Icon class="shrink-0" name="bi:instagram" />
+            
+            <NuxtLink 
+              class="social-link" 
+              target="_blank" 
+              to="https://instagram.com/cutecat8110"
+              aria-label="Instagram"
+            >
+              <Icon name="bi:instagram" class="text-icon-lg" />
+            </NuxtLink>
+            
+            <NuxtLink 
+              class="social-link" 
+              target="_blank" 
+              to="https://facebook.com"
+              aria-label="Facebook"
+            >
+              <Icon name="bi:facebook" class="text-icon-lg" />
+            </NuxtLink>
+            
+            <NuxtLink 
+              class="social-link" 
+              target="_blank" 
+              to="https://youtube.com"
+              aria-label="YouTube"
+            >
+              <Icon name="bi:youtube" class="text-icon-lg" />
             </NuxtLink>
           </div>
         </div>
 
-        <!-- Khu vực thông tin liên hệ -->
-        <ul class="contact-info-wrapper">
-          <li v-for="(contact, index) in contactInfo" :key="index">
-            <h4 class="text-title">{{ contact.category }}</h4>
-            <p class="text-body-2 xl:text-body">{{ contact.details }}</p>
-          </li>
-        </ul>
+        <!-- Quick Links -->
+        <div class="space-y-8">
+          <h3 class="text-h5 font-display font-bold text-text-inverse">
+            Liên kết nhanh
+          </h3>
+          
+          <ul class="space-y-4">
+            <li>
+              <NuxtLink 
+                to="/rooms" 
+                class="text-body text-neutral-300 transition-colors hover:text-primary-400"
+              >
+                Phòng nghỉ
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink 
+                to="/services" 
+                class="text-body text-neutral-300 transition-colors hover:text-primary-400"
+              >
+                Dịch vụ
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink 
+                to="/blog" 
+                class="text-body text-neutral-300 transition-colors hover:text-primary-400"
+              >
+                Blog
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink 
+                to="/about" 
+                class="text-body text-neutral-300 transition-colors hover:text-primary-400"
+              >
+                Về chúng tôi
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink 
+                to="/contact" 
+                class="text-body text-neutral-300 transition-colors hover:text-primary-400"
+              >
+                Liên hệ
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div class="space-y-8">
+          <h3 class="text-h5 font-display font-bold text-text-inverse">
+            Dịch vụ
+          </h3>
+          
+          <ul class="space-y-4">
+            <li>
+              <span class="text-body text-neutral-300">
+                Đặt phòng trực tuyến
+              </span>
+            </li>
+            <li>
+              <span class="text-body text-neutral-300">
+                Dịch vụ spa & massage
+              </span>
+            </li>
+            <li>
+              <span class="text-body text-neutral-300">
+                Nhà hàng cao cấp
+              </span>
+            </li>
+            <li>
+              <span class="text-body text-neutral-300">
+                Hội nghị & sự kiện
+              </span>
+            </li>
+            <li>
+              <span class="text-body text-neutral-300">
+                Dịch vụ vận chuyển
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="space-y-8">
+          <h3 class="text-h5 font-display font-bold text-text-inverse">
+            Thông tin liên hệ
+          </h3>
+          
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500/20 text-primary-400">
+                <Icon name="ic:outline-phone" class="text-icon-md" />
+              </div>
+              <div>
+                <p class="text-body-sm font-medium text-neutral-300">Điện thoại</p>
+                <p class="text-body text-text-inverse">+84 28 1234 5678</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500/20 text-primary-400">
+                <Icon name="ic:outline-email" class="text-icon-md" />
+              </div>
+              <div>
+                <p class="text-body-sm font-medium text-neutral-300">Email</p>
+                <p class="text-body text-text-inverse">info@nikkohotel.com</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500/20 text-primary-400">
+                <Icon name="ic:outline-location-on" class="text-icon-md" />
+              </div>
+              <div>
+                <p class="text-body-sm font-medium text-neutral-300">Địa chỉ</p>
+                <p class="text-body text-text-inverse">123 Nguyễn Huệ, Quận 1, TP.HCM</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div
-        class="flex flex-col gap-4 text-body-2 xl:flex-row xl:items-center xl:justify-between xl:text-body"
-      >
-        <!-- Địa chỉ -->
-        <address class="not-italic">Quận 1, Thành phố Hồ Chí Minh, Việt Nam</address>
-
-        <!-- Bản quyền và liên kết liên quan -->
-        <div class="flex flex-wrap items-center gap-4 xl:flex-row-reverse">
-          <!-- Bản quyền -->
-
-          <!-- <div class="space-x-1">
-            <NuxtLink class="hot-link-wrapper" target="_blank" to="/_guideline">
-              <Icon class="shrink-0" name="bi:palette2" />
-            </NuxtLink>
-
-            <NuxtLink
-              class="hot-link-wrapper"
-              target="_blank"
-              to="https:// Nikko-luxury-hotel-back.onrender.com/swagger/"
+      <!-- Footer Bottom -->
+      <div class="mt-16 border-t border-neutral-700 pt-8">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <!-- Copyright -->
+          <div class="text-center lg:text-left">
+            <p class="text-body-sm text-neutral-400">
+              © {{ new Date().getFullYear() }} Nikko Hotel. Tất cả quyền được bảo lưu.
+            </p>
+          </div>
+          
+          <!-- Legal Links -->
+          <div class="flex flex-wrap items-center justify-center gap-6 lg:justify-end">
+            <NuxtLink 
+              to="/privacy" 
+              class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
             >
-              <Icon class="shrink-0" name="mdi:api" />
+              Chính sách bảo mật
             </NuxtLink>
-
-            <NuxtLink
-              class="hot-link-wrapper"
-              target="_blank"
-              to="https://github.com/cutecat8110/ Nikko-luxury-hotel"
+            <NuxtLink 
+              to="/terms" 
+              class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
             >
-              <Icon class="shrink-0" name="bi:github" />
+              Điều khoản sử dụng
             </NuxtLink>
-          </div> -->
+            <NuxtLink 
+              to="/sitemap" 
+              class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
+            >
+              Sitemap
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
@@ -69,42 +216,54 @@
 </template>
 
 <script lang="ts" setup>
-/* Khu vực thông tin liên hệ */
-const contactInfo = ref([
-  {
-    category: 'Điện thoại',
-    details: '+886 9803-530-64'
-  },
-  {
-    category: 'Email',
-    details: 'fpoly@gmail.com'
-  },
-  {
-    category: 'Fax',
-    details: '+886 9803-530-64'
-  },
-  {
-    category: 'Website',
-    details: 'ssasas.fpl'
-  }
-])
+// No additional logic needed for this component
 </script>
 
 <style lang="scss" scoped>
-.link-wrapper {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-white text-icon-24 text-white transition-colors hover:border-system-primary-100 hover:text-system-primary-100;
+.social-link {
+  display: inline-flex;
+  height: 48px;
+  width: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-neutral-600);
+  color: var(--color-neutral-300);
+  transition: all var(--transition-normal);
+  
+  &:hover {
+    border-color: var(--color-primary-500);
+    color: var(--color-primary-400);
+    background: var(--color-primary-500/10);
+    transform: translateY(-2px);
+  }
+  
+  &:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
 }
 
-.hot-link-wrapper {
-  @apply inline-flex h-8 w-8 items-center justify-center rounded-full  text-icon-20 text-system-gray-80 transition-colors hover:border-system-primary-100 hover:text-system-primary-100;
+// Smooth animations
+footer {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-primary-500), transparent);
+  }
 }
 
-.contact-info-wrapper {
-  @apply grid gap-4;
-
-  @include xl {
-    @apply gap-x-20 gap-y-10;
-    grid-template-columns: auto auto;
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .social-link {
+    height: 40px;
+    width: 40px;
   }
 }
 </style>

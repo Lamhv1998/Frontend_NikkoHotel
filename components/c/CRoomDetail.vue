@@ -28,11 +28,11 @@ defineProps({
     grid-template-columns: repeat(auto-fit, minmax(96px, auto));
 
     li {
-      @apply flex gap-2 text-nowrap text-sub-title text-system-gray-80 xl:text-title;
+      @apply flex gap-2 text-nowrap text-h6 text-system-gray-80 xl:text-h5;
     }
 
     svg {
-      @apply text-icon-24 text-system-primary-100;
+      @apply text-icon-md text-system-primary-100;
     }
   }
 }

@@ -1,32 +1,36 @@
 <template>
   <ClientOnly>
     <Transition name="scroll-top">
-      <div
+      <button
         v-if="scrollTopIsShow"
-        :class="['ui-scroll-top', isWithBase ? 'bottom-24' : 'bottom-4']"
+        :class="[
+          'ui-scroll-top',
+          isWithBase ? 'bottom-6' : 'bottom-4'
+        ]"
         @click="scrollTop()"
+        aria-label="Scroll to top"
       >
-        <Icon name="ic:baseline-keyboard-arrow-up" />
-      </div>
+        <Icon name="ic:baseline-keyboard-arrow-up" class="text-icon-lg lg:text-icon-xl" />
+      </button>
     </Transition>
   </ClientOnly>
 </template>
 
 <script lang="ts" setup>
-/* Thuộc tính toàn cục */
+/* Global properties */
 const route = useRoute()
 
-/* Cuộn lên đầu trang */
+/* Scroll to top functionality */
 const { height } = useWindowSize()
 const { y } = useWindowScroll({ behavior: 'smooth' })
 const scrollTop = () => {
   y.value = 0
 }
 
-// Hiển thị nút cuộn lên đầu trang
+// Show scroll to top button
 const scrollTopIsShow = computed(() => y.value > height.value / 4)
 
-/* Điều chỉnh chiều cao cho giao diện mobile */
+/* Adjust height for mobile interface */
 const isWithBase = computed(() => {
   return route.name === 'room-id'
 })
@@ -34,15 +38,46 @@ const isWithBase = computed(() => {
 
 <style lang="scss" scoped>
 .ui-scroll-top {
-  @apply fixed right-4 z-30 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-black/20 text-icon-24 text-white transition-all hover:bg-black/40 hover:shadow xl:bottom-10 xl:right-10 xl:h-14 xl:w-14 xl:text-icon-40;
+  position: fixed;
+  right: var(--spacing-lg);
+  z-index: var(--z-fixed);
+  display: flex;
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--color-text-inverse);
+  transition: all var(--transition-normal);
+  border: none;
+  outline: none;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+  
+  &:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+  
+  @include responsive(xl) {
+    right: var(--spacing-xl);
+    height: 56px;
+    width: 56px;
+  }
 }
 
 .scroll-top-enter-active {
-  transition: all 0.2s ease-out;
+  transition: all var(--transition-fast);
 }
 
 .scroll-top-leave-active {
-  transition: all 0.15s ease-in;
+  transition: all var(--transition-fast);
 }
 
 .scroll-top-enter-from {

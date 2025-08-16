@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="relative">
     <ClientOnly>
       <Swiper
         v-if="isMounted"
@@ -15,69 +15,98 @@
           clickable: true
         }"
       >
-      <SwiperSlide v-for="(banner, index) in bannerUrlList" :key="index" class="!h-screen">
-        <!-- Ảnh nền -->
-        <NuxtImg class="h-full w-full object-cover" :src="banner" width="100vw" />
+        <SwiperSlide v-for="(banner, index) in bannerUrlList" :key="index" class="!h-screen">
+          <!-- Background Image -->
+          <NuxtImg 
+            class="h-full w-full object-cover" 
+            :src="banner" 
+            width="100vw"
+            loading="eager"
+            alt="Nikko Hotel Banner"
+          />
 
-        <!-- Lớp phủ đen -->
-        <div class="absolute inset-0 bg-black/30" />
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40" />
 
-        <!-- Định vị/Trên nền -->
-        <div class="absolute inset-0 py-[4.5rem] xl:py-[7.5rem]">
-          <!-- rwd container -->
-          <div
-            :class="[
-              props.rooms
-                ? 'justify-center gap-10 xl:!max-w-[52rem] xl:gap-20'
-                : 'xl:gap-[12.5rem] xl:px-20 xl:pt-[7.5rem]',
-              'container flex h-full flex-col items-center gap-10 px-5 pt-10 xl:max-w-full xl:flex-row xl:items-stretch'
-            ]"
-          >
-            <div
-              :class="[
-                props.rooms ? 'h-2/5 xl:h-auto xl:flex-1' : 'flex-1',
-                'flex  flex-col items-center justify-normal text-system-primary-100 xl:items-start xl:justify-center'
-              ]"
-            >
-              <h1 class="select-none text-h4 xl:text-h2">Nikko Hotel</h1>
-              <div class="mt-2 select-none text-title xl:text-h5">Nikkoment Luxury Hotel</div>
-
+          <!-- Content Container -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="container relative z-10">
               <div
-                class="mt-5 w-[0.125rem] flex-1 rounded-full bg-gradient-to-b from-system-primary-100 to-white xl:mt-10 xl:h-[0.125rem] xl:w-full xl:flex-initial xl:bg-gradient-to-r"
-              />
-            </div>
+                :class="[
+                  props.rooms
+                    ? 'justify-center gap-8 lg:gap-12 xl:gap-16'
+                    : 'gap-8 lg:gap-12 xl:gap-20',
+                  'flex h-full flex-col items-center lg:flex-row lg:items-center'
+                ]"
+              >
+                <!-- Left Content -->
+                <div
+                  :class="[
+                    props.rooms ? 'h-2/5 lg:h-auto lg:flex-1' : 'flex-1',
+                    'flex flex-col items-center text-center lg:items-start lg:text-left'
+                  ]"
+                >
+                  <div class="space-y-4">
+                    <h1 class="text-h2 font-display font-bold text-text-inverse lg:text-h1 xl:text-display-2">
+                      Nikko Hotel
+                    </h1>
+                    <p class="text-body-lg font-medium text-primary-200 lg:text-h5">
+                      Nikkoment Luxury Hotel
+                    </p>
+                  </div>
 
-            <div
-              v-if="!props.rooms"
-              class="ml-12 flex h-2/3 items-center rounded-[2.5rem] border-r border-t bg-gradient-to-t from-white/30 backdrop-blur-[1.25rem] xl:h-auto xl:w-1/2 xl:rounded-[5rem]"
-            >
-              <div class="-ml-10 pr-10 text-white xl:-ml-12 xl:pr-12">
-                <div class="select-none text-h1 xl:text-display">Nikko</div>
-                <div class="s:text-display mt-2 select-none text-h1">
-                  Lựa chọn lưu trú sang trọng
+                  <!-- Decorative Line -->
+                  <div
+                    class="mt-8 h-px w-16 rounded-full bg-gradient-to-r from-primary-400 to-primary-200 lg:mt-12 lg:w-24 xl:w-32"
+                  />
                 </div>
-                <div class="mt-6 select-none text-title xl:text-h3">
-                  Chúng tôi cam kết mang đến cho bạn trải nghiệm sang trọng và dịch vụ chất lượng
-                  nhất
+
+                <!-- Right Content -->
+                <div
+                  v-if="!props.rooms"
+                  class="glass-effect flex h-2/3 w-full items-center rounded-3xl border border-white/20 p-8 lg:h-auto lg:w-1/2 lg:p-12 xl:rounded-[3rem] xl:p-16"
+                >
+                  <div class="space-y-6 text-text-inverse">
+                    <div class="space-y-2">
+                      <h2 class="text-h1 font-display font-bold lg:text-display-1">
+                        Nikko
+                      </h2>
+                      <h3 class="text-h3 font-display font-semibold lg:text-h2">
+                        Lựa chọn lưu trú sang trọng
+                      </h3>
+                    </div>
+                    
+                    <p class="text-body-lg leading-relaxed text-neutral-100 lg:text-h5">
+                      Chúng tôi cam kết mang đến cho bạn trải nghiệm sang trọng và dịch vụ chất lượng nhất
+                    </p>
+                    
+                    <NuxtLink to="/rooms" class="inline-block">
+                      <button class="group relative overflow-hidden rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-4 text-body-lg font-semibold text-text-inverse transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-primary">
+                        <span class="relative z-10">Đặt phòng ngay</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
+                      </button>
+                    </NuxtLink>
+                  </div>
                 </div>
-                <NuxtLink to="/rooms">
-                  <UIHeroButton class="mt-[3.75rem] xl:mt-10" text="Đặt phòng ngay" />
-                </NuxtLink>
+                
+                <h2 v-else class="text-h2 font-display font-bold text-text-inverse lg:text-h1 xl:text-display-2">
+                  Phòng nghỉ
+                </h2>
               </div>
             </div>
-            <h2 v-else class="flex items-center text-h3 text-white xl:flex-initial xl:text-h1">
-              Phòng nghỉ
-            </h2>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+      
+      <template #fallback>
+        <div class="flex h-screen items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+          <div class="text-center">
+            <div class="mb-4 h-16 w-16 animate-spin rounded-full border-4 border-primary-200 border-t-primary-500 mx-auto"></div>
+            <p class="text-body text-neutral-600">Đang tải...</p>
           </div>
         </div>
-      </SwiperSlide>
-    </Swiper>
-    <template #fallback>
-      <div class="h-screen bg-gray-200 animate-pulse flex items-center justify-center">
-        <span class="text-gray-500">Loading banner...</span>
-      </div>
-    </template>
-  </ClientOnly>
+      </template>
+    </ClientOnly>
   </section>
 </template>
 
@@ -95,7 +124,7 @@ const isMounted = ref(false)
 // Define modules
 const modules = [Pagination, EffectFade, Autoplay]
 
-/* Danh sách banner */
+/* Banner list */
 const bannerUrlList = ref([
   'imgur/SAbetYU.jpg',
   'imgur/eMl6NuV.png',
@@ -120,25 +149,73 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 :deep(.banner-swiper) {
   .swiper-pagination {
-    @apply bottom-6 flex justify-center gap-2 xl:bottom-8;
+    bottom: var(--spacing-6);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
+    
+    @include responsive(xl) {
+      bottom: var(--spacing-8);
+    }
   }
+  
   .swiper-pagination-bullet {
-    @apply m-0 block h-1 w-8 rounded-full bg-system-primary-40 opacity-100 transition-colors hover:bg-system-primary-100;
+    margin: 0;
+    display: block;
+    height: 4px;
+    width: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-200);
+    opacity: 1;
+    transition: all var(--transition-normal);
+    
+    &:hover {
+      background: var(--color-primary-400);
+    }
 
     &.swiper-pagination-bullet-active {
-      @apply w-[3.75rem]  bg-system-primary-100;
+      width: 60px;
+      background: var(--color-primary-500);
     }
   }
 
   img {
-    @apply scale-[1.1] transition-all duration-[8000ms] ease-linear;
+    transform: scale(1.1);
+    transition: transform 8s ease-linear;
   }
 
   .swiper-slide-active,
   .swiper-slide-prev {
     img {
-      @apply scale-100;
+      transform: scale(1);
     }
+  }
+}
+
+// Glass effect for the content card
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Smooth animations
+.banner-swiper {
+  .swiper-slide {
+    transition: all var(--transition-slow);
+  }
+}
+
+// Responsive text adjustments
+@media (max-width: 768px) {
+  .text-display-2 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+  
+  .text-display-1 {
+    font-size: 2rem;
+    line-height: 1.2;
   }
 }
 </style>

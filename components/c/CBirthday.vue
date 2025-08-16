@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-2">
-    <label :class="[blackhead ? 'text-black' : 'text-white', 'text-sub-title xl:text-title']"
+    <label :class="[blackhead ? 'text-black' : 'text-text-inverse', 'text-sub-title xl:text-title']"
       >Ngày sinh</label
     >
 
@@ -56,11 +56,11 @@ const formatBirthday = defineModel<string>({
 
 const birthday = ref<Record<string, string | number>>({
   YYYY: formatBirthday.value ? $dayjs(formatBirthday.value).year() : '',
-  MM: formatBirthday.value ? $dayjs(formatBirthday.value).month() + 1 : '', // 月份需要加 1，$dayjs 月份從 0 開始
+  MM: formatBirthday.value ? $dayjs(formatBirthday.value).month() + 1 : '', // Tháng cần cộng thêm 1, $dayjs tháng bắt đầu từ 0
   DD: formatBirthday.value ? $dayjs(formatBirthday.value).date() : ''
 })
 
-// 當前日期
+// Ngày hiện tại
 watch(
   birthday,
   () => {
@@ -71,7 +71,7 @@ watch(
   { immediate: true, deep: true }
 )
 
-// 選項計算
+// Tính toán các tùy chọn
 const YYYY = computed(() => {
   const currentYear = $dayjs().year()
   return Array.from({ length: 100 }, (_, i) => currentYear - i)

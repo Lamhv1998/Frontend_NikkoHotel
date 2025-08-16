@@ -19,7 +19,7 @@
     <Travel />
 
     <!-- Trang trí sọc -->
-    <CWave />
+    <!-- <CWave /> -->
   </div>
 </template>
 
