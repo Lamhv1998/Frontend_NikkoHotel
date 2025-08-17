@@ -4,7 +4,7 @@
     v-slot="{ errors }"
     class="container space-y-10 px-5 py-20 sm:max-w-[26rem] sm:px-0"
     :validation-schema="schema"
-    @submit="loginRefresh"
+    @submit="handleLogin"
   >
     <!-- Tiêu đề -->
     <CAuthTitle text="Bắt đầu hành trình ngay" />
@@ -54,7 +54,7 @@
       <p class="text-body-2 text-text-inverse xl:text-body">Chưa có tài khoản?</p>
       <!-- Liên kết: Đăng ký -->
       <NuxtLink class="hot-link-wrapper" to="/auth/signup">
-        <UIButton text="Đăng ký ngay" variant="text" />
+        <UIButton text="Đăng ký ngay" variant="ghost" />
       </NuxtLink>
     </div>
   </VForm>
@@ -66,7 +66,8 @@ import type { LoginPayload } from '@/types'
 
 /* Thuộc tính toàn cục */
 const authStore = useAuthStore()
-const useCommon = useCommonStore()
+const commonStore = useCommonStore()
+const styleStore = useStyleStore()
 
 /* PageMeta */
 definePageMeta({
@@ -84,44 +85,75 @@ const schema = { email: 'required|email', password: 'required' }
 // Ghi nhớ tài khoản
 const remember = ref(false)
 
+// Loading state
+const pending = ref(false)
+
 // Khởi tạo client
 onMounted(() => {
   formData.value.email = authStore.email
   remember.value = authStore.email !== ''
 })
 
-/* api */
-const { loginApi } = useApi()
-
-// api: Đăng nhập
-const { pending, refresh: loginRefresh } = await loginApi({
-  body: formData,
-  immediate: false,
-  watch: false,
-  async onResponse({ response }) {
-    if (response.status === 200) {
-      authStore.userName = response._data.result.name
-      authStore.token = response._data.token
-      authStore.email = remember.value ? formData.value.email : ''
-      await navigateTo(useCommon.routerGuide || '/')
+// Xử lý đăng nhập
+const handleLogin = async () => {
+  if (pending.value) return
+  
+  pending.value = true
+  
+  try {
+    // Sử dụng useAuth composable
+    const { login } = useAuth()
+    
+    console.log('Attempting login with:', formData.value)
+    
+    const result = await login(formData.value, remember.value)
+    
+    if (result.success) {
+      console.log('Login successful')
+      
+      // Hiển thị thông báo thành công
+      commonStore.sweetalertList.push({
+        title: 'Đăng nhập thành công',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+      
+      // Redirect sau khi đăng nhập thành công
+      setTimeout(() => {
+        navigateTo(commonStore.routerGuide || '/')
+      }, 1000)
     }
-  },
-  onResponseError({ response }) {
-    switch (response._data?.message) {
-      case 'Người dùng này không tồn tại':
-        formRefs.value?.setFieldError('email', 'Email không tồn tại')
-        break
-      case 'Mật khẩu sai':
-      case 'Mật khẩu phải có ít nhất 8 ký tự':
-      case 'Mật khẩu không được chỉ có chữ cái':
-      case 'Mật khẩu không được chỉ có số':
-      case 'Mật khẩu phải có ít nhất 8 ký tự, gồm cả chữ và số':
-        formRefs.value?.setFieldError('password', 'Mật khẩu không đúng')
-        break
-      default:
-        break
+    
+  } catch (error: any) {
+    console.error('Login error:', error)
+    
+    let errorMessage = 'Đăng nhập thất bại'
+    
+    // Xử lý các loại lỗi khác nhau
+    if (error?.data?.message) {
+      errorMessage = error.data.message
+    } else if (error?.message) {
+      errorMessage = error.message
     }
+    
+    // Xử lý lỗi cụ thể cho từng field
+    if (errorMessage.toLowerCase().includes('email') || errorMessage.toLowerCase().includes('user')) {
+      formRefs.value?.setFieldError('email', 'Email không tồn tại hoặc không đúng')
+    } else if (errorMessage.toLowerCase().includes('password') || errorMessage.toLowerCase().includes('mật khẩu')) {
+      formRefs.value?.setFieldError('password', 'Mật khẩu không đúng')
+    } else {
+      // Hiển thị thông báo lỗi chung
+      commonStore.sweetalertList.push({
+        title: 'Lỗi đăng nhập',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+    }
+  } finally {
+    pending.value = false
   }
-})
-pending.value = false
+}
 </script>

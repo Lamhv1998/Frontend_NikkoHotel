@@ -3,271 +3,298 @@
     <VForm
       ref="formRefs"
       v-slot="{ errors }"
-      class="card"
       :validation-schema="schema"
       @submit="refresh"
     >
-      <h2 class="text-h6 xl:text-h5">Thông tin cơ bản</h2>
-
-      <div class="space-y-6">
-        <!-- Loading state -->
-        <div v-if="loading" class="text-center py-8">
-          <p>Đang tải dữ liệu...</p>
+      <!-- Loading state -->
+      <div v-if="loading" class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
         </div>
+        <p class="text-gray-600">Đang tải dữ liệu...</p>
+      </div>
 
-        <!-- Thông tin cơ bản -->
-        <template v-else-if="!isFormShow && customerData">
-          <!-- Họ tên -->
-          <CUserData title="Họ tên" :text="customerData.name.fullName" />
+      <!-- Thông tin cơ bản -->
+      <template v-else-if="!isFormShow && customerData">
+        <div class="space-y-6">
+          <!-- User Avatar and Basic Info -->
+          <div class="flex items-center space-x-6 p-6 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl border border-amber-200">
+            <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+              {{ customerData.name.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-900">{{ customerData.name }}</h3>
+              <p class="text-gray-600">Thành viên từ {{ $dayjs(customerData.createdAt).format('MM/YYYY') }}</p>
+            </div>
+          </div>
 
-          <!-- Số điện thoại -->
-          <CUserData title="Số điện thoại" :text="formData.phone" />
+          <!-- Info Cards -->
+          <div class="grid gap-6 md:grid-cols-2">
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+              <div class="flex items-center mb-4">
+                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Số điện thoại</p>
+                  <p class="font-semibold text-gray-900">{{ formData.phone }}</p>
+                </div>
+              </div>
+            </div>
 
-          <!-- Ngày sinh -->
-          <CUserData title="Ngày sinh" :text="$dayjs(customerData.dateOfBirth).format('DD/MM/YYYY')" />
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+              <div class="flex items-center mb-4">
+                <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-3">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Ngày sinh</p>
+                  <p class="font-semibold text-gray-900">{{ $dayjs(customerData.birthday).format('DD/MM/YYYY') }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <!-- Địa chỉ -->
-          <CUserData title="Địa chỉ" :text="address" />
+          <!-- Address Card -->
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+            <div class="flex items-start mb-4">
+              <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mr-3 mt-1">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm text-gray-500 mb-1">Địa chỉ</p>
+                <p class="font-semibold text-gray-900">{{ address }}</p>
+              </div>
+            </div>
+          </div>
 
-          <!-- Nút: Chỉnh sửa thông tin -->
-          <UIButton text="Chỉnh sửa" variant="secondary" @click="toggleForm('show')" />
-        </template>
+          <!-- Edit Button -->
+          <div class="flex justify-center">
+            <UIButton 
+              text="Chỉnh sửa thông tin" 
+              variant="secondary" 
+              @click="toggleForm('show')"
+              class="bg-gradient-to-r from-amber-500 to-yellow-600 text-white hover:from-amber-600 hover:to-yellow-700 px-8 py-3 rounded-2xl"
+            />
+          </div>
+        </div>
+      </template>
 
-        <!-- Biểu mẫu: Chỉnh sửa thông tin -->
-        <template v-else-if="!loading">
-          <!-- Họ tên -->
-          <UIInput
-            v-model="formData.name"
-            name="name"
-            label="Họ tên"
-            placeholder="Vui lòng nhập họ tên"
-            :error="errors.name"
-            blackhead
-            :disabled="pending"
-          />
+      <!-- Biểu mẫu: Chỉnh sửa thông tin -->
+      <template v-else-if="!loading">
+        <div class="space-y-6">
+          <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-2xl border border-blue-200">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              Chỉnh sửa thông tin cá nhân
+            </h3>
+            <p class="text-gray-600">Cập nhật thông tin cá nhân của bạn</p>
+          </div>
 
-          <!-- Số điện thoại -->
-          <UIInput
-            v-model="formData.phone"
-            name="phone"
-            label="Số điện thoại"
-            type="tel"
-            placeholder="Vui lòng nhập số điện thoại"
-            :error="errors.phone"
-            blackhead
-            :disabled="pending"
-          />
+          <div class="grid gap-6 md:grid-cols-2">
+            <!-- Họ tên -->
+            <div class="md:col-span-2">
+              <UIInput
+                v-model="formData.name"
+                name="name"
+                label="Họ tên"
+                placeholder="Vui lòng nhập họ tên"
+                :error="errors.name"
+                blackhead
+                :disabled="pending"
+                class="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <!-- Ngày sinh -->
-          <CBirthday
-            v-model="formData.birthday"
-            :error="errors.birthday"
-            blackhead
-            :disabled="pending"
-          />
+            <!-- Số điện thoại -->
+            <div>
+              <UIInput
+                v-model="formData.phone"
+                name="phone"
+                label="Số điện thoại"
+                type="tel"
+                placeholder="Vui lòng nhập số điện thoại"
+                :error="errors.phone"
+                blackhead
+                :disabled="pending"
+                class="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <!-- Địa chỉ -->
-          <CAddress
-            v-model="formData.address"
-            :detail-error="errors.detail"
-            :zipcode-error="errors.zipcode"
-            blackhead
-            :disabled="pending"
-          />
+            <!-- Ngày sinh -->
+            <div>
+              <CBirthday
+                v-model="formData.birthday"
+                :error="errors.birthday"
+                blackhead
+                :disabled="pending"
+                class="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <!-- Nút: Hủy chỉnh sửa / Lưu -->
-          <div class="flex gap-2">
+            <!-- Địa chỉ -->
+            <div class="md:col-span-2">
+              <CAddress
+                v-model="formData.address"
+                :detail-error="errors.detail"
+                :zipcode-error="errors.zipcode"
+                blackhead
+                :disabled="pending"
+                class="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-4 pt-6">
             <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
               type="button"
               text="Hủy chỉnh sửa"
               variant="secondary"
               :disabled="pending"
               @click="cancelEdit()"
+              class="flex-1 md:flex-none bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-2xl"
             />
 
             <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
               type="submit"
               text="Lưu thay đổi"
               :disabled="pending"
               :loading="pending"
+              class="flex-1 md:flex-none bg-gradient-to-r from-blue-500 to-cyan-600 text-white hover:from-blue-600 hover:to-cyan-700 px-8 py-3 rounded-2xl"
             />
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
     </VForm>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import type { UserResponse } from '@/types'
 
-/* Toàn cục */
-const { $Swal, $dayjs } = useNuxtApp()
-const styleStore = useStyleStore()
+/* Props */
+interface Props {
+  user: UserResponse
+}
 
-/* State */
-const loading = ref(true)
-const customerData = ref(null)
-const address = ref('')
+const props = defineProps<Props>()
 
-/* Biểu mẫu */
-const formData = reactive({
+/* Emits */
+const emit = defineEmits<{
+  getUserRefresh: []
+}>()
+
+/* Thuộc tính toàn cục */
+const { $dayjs } = useNuxtApp()
+
+/* Form đăng nhập */
+const formRefs = ref<HTMLFormElement | null>(null)
+const formData = ref({
   name: '',
   phone: '',
   birthday: '',
   address: {
-    zipcode: 0,
-    detail: ''
+    detail: '',
+    zipcode: 0
   }
 })
-const formRefs = ref<HTMLFormElement | null>(null)
 
-// Helper function để extract zipcode từ địa chỉ
-const extractZipcodeFromAddress = (address: string): number => {
-  if (!address) return 0
-  
-  if (address.includes('TP. Hồ Chí Minh') || address.includes('Hồ Chí Minh')) {
-    return 70000 // Zipcode của TP.HCM
-  }
-  if (address.includes('Hà Nội')) {
-    return 10000 // Zipcode của Hà Nội
-  }
-  if (address.includes('Đà Nẵng')) {
-    return 50000 // Zipcode của Đà Nẵng
-  }
-  return 0
-}
-
-// Quy tắc biểu mẫu
+// Quy tắc form
 const schema = {
-  name: 'required|min:2',
-  phone: (val: string) => {
-    if (!val) return 'Số điện thoại là bắt buộc'
-    if (!/^09\d{8}$/.test(val)) return 'Vui lòng nhập số điện thoại hợp lệ gồm 10 số'
-    return {}
-  },
-  birthday: (val: string) => {
-    return $dayjs(val, 'YYYY-M-D', true).isValid() ? {} : 'Ngày sinh là bắt buộc'
-  },
-  zipcode: (val: number) => {
-    if (val === 0) return 'Tỉnh/Thành phố là bắt buộc'
-    return {}
-  },
-  detail: 'required'
+  name: 'required',
+  phone: 'required|phone',
+  birthday: 'required',
+  address: {
+    detail: 'required',
+    zipcode: 'required|numeric'
+  }
 }
 
-// Biểu mẫu: Hiện/ẩn
+// Loading state
+const loading = ref(false)
+const pending = ref(false)
 const isFormShow = ref(false)
-const toggleForm = (event: string) => {
-  if (event === 'show') {
-    isFormShow.value = true
-  } else if (event === 'close') {
-    isFormShow.value = false
+
+/* Dữ liệu khách hàng */
+const customerData = computed(() => props.user)
+
+/* Địa chỉ */
+const address = computed(() => {
+  if (!customerData.value?.address) return 'Chưa cập nhật'
+  const addr = customerData.value.address
+  return `${addr.detail}, ${addr.zipcode}`
+})
+
+/* API */
+const { updateUserApi } = useApi()
+
+// api: Cập nhật thông tin thành viên
+const { refresh } = await updateUserApi({
+  body: formData,
+  immediate: false,
+  watch: false,
+  async onResponse({ response }) {
+    if (response.status === 200) {
+      // Hiển thị thông báo thành công
+      const commonStore = useCommonStore()
+      const styleStore = useStyleStore()
+      
+      commonStore.sweetalertList.push({
+        title: 'Cập nhật thành công',
+        text: 'Thông tin cá nhân đã được cập nhật',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+      
+      // Ẩn form và refresh dữ liệu
+      isFormShow.value = false
+      emit('getUserRefresh')
+    }
+  },
+  onResponseError({ response }) {
+    // Hiển thị thông báo lỗi
+    const commonStore = useCommonStore()
+    const styleStore = useStyleStore()
+    
+    commonStore.sweetalertList.push({
+      title: 'Cập nhật thất bại',
+      text: response._data?.message || 'Có lỗi xảy ra khi cập nhật thông tin',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
+  }
+})
+
+/* Methods */
+const toggleForm = (action: 'show' | 'hide') => {
+  isFormShow.value = action === 'show'
+  
+  if (action === 'show' && customerData.value) {
+    // Điền dữ liệu vào form
+    formData.value.name = customerData.value.name
+    formData.value.phone = customerData.value.phone
+    formData.value.birthday = customerData.value.birthday
+    formData.value.address = customerData.value.address
   }
 }
 
 const cancelEdit = () => {
-  if (!customerData.value) return
-  
-  // Reset form về dữ liệu gốc
-  formData.name = customerData.value.name.fullName
-  formData.phone = formData.phone // Giữ nguyên phone vì BE chưa có
-  formData.birthday = customerData.value.dateOfBirth
-  formData.address.zipcode = extractZipcodeFromAddress(customerData.value.address.value) || 70000
-  formData.address.detail = customerData.value.address.value
-  toggleForm('close')
+  isFormShow.value = false
+  // Reset form
+  formRefs.value?.resetForm()
 }
-
-// Load dữ liệu từ BE khi component mount
-onMounted(async () => {
-  try {
-    loading.value = true
-    const res = await $fetch('http://localhost:8089/api/customers/find')
-    
-    console.log('BE Response:', res) // Debug log
-    
-    customerData.value = res
-    
-    // Fill dữ liệu vào form
-    formData.name = res.name.fullName
-    formData.phone = res.phone || '0912345678' // Fallback nếu BE chưa có phone
-    formData.birthday = res.dateOfBirth
-    formData.address.zipcode = extractZipcodeFromAddress(res.address.value) || 70000
-    formData.address.detail = res.address.value
-    
-    // Set địa chỉ hiển thị
-    address.value = res.address.value
-    
-    console.log('Customer data loaded:', customerData.value)
-    console.log('Form data filled:', formData)
-    
-  } catch (err) {
-    console.error('Không thể lấy dữ liệu customer:', err)
-    $Swal?.fire({
-      title: 'Lỗi',
-      text: 'Không thể tải dữ liệu khách hàng',
-      icon: 'error',
-      confirmButtonText: 'Đóng'
-    })
-  } finally {
-    loading.value = false
-  }
-})
-
-/* api */
-const { updateUserApi, getDistrictApi } = useApi()
-
-// api: Chỉnh sửa thông tin
-const { pending, refresh } = await updateUserApi({
-  body: computed(() => ({
-    userId: customerData.value?.id.value,
-    ...formData
-  })),
-  watch: false,
-  immediate: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
-      $Swal?.fire({
-        title: 'Chỉnh sửa thông tin thành công',
-        icon: 'success',
-        confirmButtonText: 'Xác nhận',
-        confirmButtonColor: styleStore.confirmButtonColor,
-        willClose: () => {
-          // Cập nhật lại customerData với dữ liệu mới
-          const result = response._data.result
-          customerData.value = {
-            ...customerData.value,
-            name: { fullName: result.name },
-            dateOfBirth: result.birthday,
-            address: { value: result.address.detail }
-          }
-          cancelEdit()
-        }
-      })
-    }
-  }
-})
-pending.value = false
-
-// api: Lấy địa chỉ khu vực
-watch(
-  () => formData.address.zipcode,
-  () => {
-    // zipcode 0 không xử lý
-    if (formData.address.zipcode === 0) return
-
-    getDistrictApi({
-      query: { zip_code: formData.address.zipcode },
-      onResponse({ response }) {
-        if (response.status === 200) {
-          const { city, district } = response._data.data[0]
-          address.value = `${city}${district}${formData.address.detail}`
-        }
-      }
-    })
-  },
-  { immediate: true }
-)
 </script>

@@ -4,12 +4,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore()
   const styleStore = useStyleStore()
   const commonStore = useCommonStore()
-  const { checkLoginApi } = useApi()
 
   const publicRoutes = [
     '/', // 👈 Thêm trang chủ
     '/auth/login',
     '/auth/register',
+    '/auth/signup',
     '/confirmation',
     '/room',
     '/reserve',
@@ -43,9 +43,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     try {
-      await checkLoginApi()
+      // Kiểm tra token với useAuth composable
+      const { checkToken } = useAuth()
+      const isValid = await checkToken()
+      
+      if (!isValid) {
+        throw new Error('Token không hợp lệ')
+      }
     } catch (error) {
       console.error('[auth middleware] Phiên hết hạn:', error)
+      
       commonStore.sweetalertList.push({
         title: 'Phiên đăng nhập đã hết hạn',
         text: 'Vui lòng đăng nhập lại',

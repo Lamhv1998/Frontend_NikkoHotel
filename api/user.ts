@@ -1,8 +1,11 @@
 import type { UseFetchOptions } from 'nuxt/app'
+import type { AuthenticationRequest, AuthenticationResponse, ApiResponse } from '@/types/auth'
 
 const userAPI = {
   loginApi: <T = any>(options: UseFetchOptions<T>) => {
-    return useHttp.post('/api/v1/user/login', options)
+    const { login } = useAuthService()
+    
+    return login(options.body as AuthenticationRequest)
   },
   signupApi: <T = any>(options: UseFetchOptions<T>) => {
     return useHttp.post('/api/v1/user/signup', options)

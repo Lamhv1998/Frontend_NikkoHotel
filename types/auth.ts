@@ -40,3 +40,20 @@ export type UserResponse = {
   createdAt: string
   updatedAt: string
 }
+
+// Backend Authentication API Types
+export type AuthenticationRequest = {
+  email: string
+  password: string
+}
+
+export type AuthenticationResponse = {
+  authenticated: boolean  
+  token: string
+}
+
+export type ApiResponse<T> = {
+  code?: number
+  message?: string
+  result: T
+}
