@@ -11,7 +11,7 @@
 
       <div class="space-y-6">
         <!-- Email -->
-        <CUserData title="Email" :text="props.user.email" />
+        <CUserData title="Email" :text="props.user.firstName + ' ' + props.user.lastName" />
 
         <!-- Mật khẩu -->
         <div v-if="!isFormShow" class="flex items-center justify-between">
@@ -93,12 +93,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
+import type { CustomerResponse } from '@/types/customer'
 
 /* props */
 const props = defineProps({
   user: {
-    type: Object as PropType<UserResponse>,
+    type: Object as PropType<CustomerResponse>,
     required: true
   }
 })
@@ -157,12 +157,11 @@ const cancelEdit = () => {
 }
 
 /* api */
-const { updateUserApi } = useApi()
+const { updateCurrentCustomerApi } = useApi()
 
-// api: Đổi mật khẩu
-const { pending, refresh } = await updateUserApi({
+// api: Đổi mật khẩu customer
+const { pending, refresh } = await updateCurrentCustomerApi({
   body: computed(() => ({
-    userId: props.user._id,
     oldPassword: formData.oldPassword,
     newPassword: formData.newPassword
   })),

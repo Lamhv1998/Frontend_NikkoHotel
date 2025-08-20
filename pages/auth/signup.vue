@@ -103,7 +103,7 @@
       <div class="flex gap-2">
         <p class="text-body-2 text-text-inverse xl:text-body">Đã có tài khoản?</p>
         <NuxtLink class="hot-link-wrapper" to="/auth/login">
-          <UIButton text="Đăng nhập ngay" variant="text" />
+          <UIButton text="Đăng nhập ngay" variant="ghost" />
         </NuxtLink>
       </div>
     </div>
@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { SignupPayload } from '@/types'
+import type { SignupPayload } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
 definePageMeta({})
@@ -147,10 +147,10 @@ const schema = [
     email: 'required|email',
     password: (val: string) => {
       if (!val) return 'Mật khẩu là bắt buộc'
-      if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu phải có ít nhất 8 ký tự'
-      if ($validator.isAlpha(val)) return 'Mật khẩu không được chỉ có chữ cái'
-      if ($validator.isNumeric(val)) return 'Mật khẩu không được chỉ có số'
-      if (!$validator.isAlphanumeric(val))
+      if (val.length < 8) return 'Mật khẩu phải có ít nhất 8 ký tự'
+      if (/^[a-zA-Z]+$/.test(val)) return 'Mật khẩu không được chỉ có chữ cái'
+      if (/^\d+$/.test(val)) return 'Mật khẩu không được chỉ có số'
+      if (!/^[a-zA-Z0-9]+$/.test(val))
         return 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
       return {}
     },
@@ -164,7 +164,10 @@ const schema = [
       return {}
     },
     birthday: (val: string) => {
-      return $dayjs(val, 'YYYY-M-D', true).isValid() ? {} : 'Ngày sinh là bắt buộc'
+      // Simple date validation
+      if (!val) return 'Ngày sinh là bắt buộc'
+      const date = new Date(val)
+      return !isNaN(date.getTime()) ? {} : 'Ngày sinh không hợp lệ'
     },
     zipcode: (val: number) => {
       if (val === 0) return 'Tỉnh/Thành phố là bắt buộc'
@@ -181,58 +184,91 @@ const schema = [
 const progress = ref(0)
 
 // Gửi biểu mẫu
-const submit = () => {
+const submit = async () => {
   if (progress.value === 0) {
-    ceRefresh()
+    progress.value = 1
     return
   }
-  sRefresh()
+  await submitRegistration()
 }
 
 /* api */
-const { signupApi, checkEmailApi } = useApi()
-const apiPending = computed(() => cePending.value || sPending.value)
+const { register } = useAuth()
+const apiPending = ref(false)
 
-// api: Kiểm tra email đã đăng ký chưa
-const { pending: cePending, refresh: ceRefresh } = await checkEmailApi({
-  body: computed(() => ({
-    email: formData.email
-  })),
-  immediate: false,
-  watch: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
-      if (response._data.result.isEmailExists) {
-        formRefs.value?.setFieldError('email', 'Email đã tồn tại')
-        return
+// Watch for authentication errors from store
+watch(() => authStore.authError, (error: string | null) => {
+  if (error) {
+    console.error('Auth store error:', error)
+    // Clear the error after displaying
+    authStore.clearError()
+  }
+})
+
+// Đăng ký
+const submitRegistration = async () => {
+  try {
+    apiPending.value = true
+    
+    console.log('Submitting registration with:', formData)
+    
+    const result = await register(formData)
+    
+    if (result.success) {
+      console.log('Registration successful:', result)
+      
+      if (result.autoLogin) {
+        // Auto-login successful
+        commonStore.sweetalertList.push({
+          title: 'Đăng ký thành công!',
+          text: 'Bạn đã được đăng nhập tự động',
+          icon: 'success',
+          confirmButtonText: 'Tiếp tục',
+          confirmButtonColor: styleStore.confirmButtonColor
+        })
+        
+        // Redirect after success
+        setTimeout(() => {
+          navigateTo(commonStore.routerGuide || '/')
+        }, 1000)
+      } else {
+        // Registration successful but no auto-login
+        commonStore.sweetalertList.push({
+          title: 'Đăng ký thành công!',
+          text: 'Vui lòng đăng nhập để tiếp tục',
+          icon: 'success',
+          confirmButtonText: 'Đăng nhập ngay',
+          confirmButtonColor: styleStore.confirmButtonColor
+        })
+        
+        // Redirect to login
+        setTimeout(() => {
+          navigateTo('/auth/login')
+        }, 1000)
       }
-      progress.value = 1
     }
-  }
-})
-cePending.value = false
-
-// api: Đăng ký
-const { pending: sPending, refresh: sRefresh } = await signupApi({
-  body: formData,
-  immediate: false,
-  watch: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
-      authStore.userName = response._data.result.name
-      authStore.token = response._data.token
-      $Swal?.fire({
-        title: 'Đăng ký thành công!',
-        text: 'Bắt đầu hành trình tận hưởng của bạn',
-        icon: 'success',
-        confirmButtonText: 'Tiếp tục',
-        confirmButtonColor: styleStore.confirmButtonColor,
-        willClose: async () => {
-          await navigateTo(commonStore.routerGuide || '/')
-        }
-      })
+  } catch (error: any) {
+    console.error('Registration error:', error)
+    
+    let errorMessage = 'Đăng ký thất bại'
+    
+    // Xử lý các loại lỗi khác nhau
+    if (error?.data?.message) {
+      errorMessage = error.data.message
+    } else if (error?.message) {
+      errorMessage = error.message
     }
+    
+    // Hiển thị thông báo lỗi
+    commonStore.sweetalertList.push({
+      title: 'Lỗi đăng ký',
+      text: errorMessage,
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
+  } finally {
+    apiPending.value = false
   }
-})
-sPending.value = false
+}
 </script>

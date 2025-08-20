@@ -15,7 +15,7 @@
         v-model="formData.email"
         name="email"
         label="Email"
-        placeholder="hello@exsample.com"
+        placeholder="Vui lòng nhập email"
         :error="errors.email"
         :disabled="pending"
       />
@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
 import Forgot from './components/forgot.vue'
-import type { LoginPayload } from '@/types'
+import type { LoginPayload } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
 const authStore = useAuthStore()
@@ -156,4 +156,13 @@ const handleLogin = async () => {
     pending.value = false
   }
 }
+
+// Watch for authentication errors from store
+watch(() => authStore.authError, (error: string | null) => {
+  if (error) {
+    console.error('Auth store error:', error)
+    // Clear the error after displaying
+    authStore.clearError()
+  }
+})
 </script>

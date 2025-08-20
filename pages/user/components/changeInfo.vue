@@ -22,11 +22,11 @@
           <!-- User Avatar and Basic Info -->
           <div class="flex items-center space-x-6 p-6 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl border border-amber-200">
             <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-              {{ customerData.name.charAt(0).toUpperCase() }}
+              {{ (customerData.firstName + ' ' + customerData.lastName).charAt(0).toUpperCase() }}
             </div>
             <div>
-              <h3 class="text-xl font-bold text-gray-900">{{ customerData.name }}</h3>
-              <p class="text-gray-600">Thành viên từ {{ $dayjs(customerData.createdAt).format('MM/YYYY') }}</p>
+              <h3 class="text-xl font-bold text-gray-900">{{ customerData.firstName + ' ' + customerData.lastName }}</h3>
+              <p class="text-gray-600">Thành viên từ {{ $dayjs(customerData.createdDate).format('MM/YYYY') }}</p>
             </div>
           </div>
 
@@ -40,8 +40,8 @@
                   </svg>
                 </div>
                 <div>
-                  <p class="text-sm text-gray-500">Số điện thoại</p>
-                  <p class="font-semibold text-gray-900">{{ formData.phone }}</p>
+                  <p class="text-sm text-gray-500">Họ và tên</p>
+                  <p class="font-semibold text-gray-900">{{ customerData.firstName + ' ' + customerData.lastName }}</p>
                 </div>
               </div>
             </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div>
                   <p class="text-sm text-gray-500">Ngày sinh</p>
-                  <p class="font-semibold text-gray-900">{{ $dayjs(customerData.birthday).format('DD/MM/YYYY') }}</p>
+                  <p class="font-semibold text-gray-900">{{ $dayjs(customerData.dateOfBirth).format('DD/MM/YYYY') }}</p>
                 </div>
               </div>
             </div>
@@ -182,11 +182,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
+import type { CustomerResponse } from '@/types/customer'
 
 /* Props */
 interface Props {
-  user: UserResponse
+  user: CustomerResponse
 }
 
 const props = defineProps<Props>()
@@ -233,15 +233,14 @@ const customerData = computed(() => props.user)
 /* Địa chỉ */
 const address = computed(() => {
   if (!customerData.value?.address) return 'Chưa cập nhật'
-  const addr = customerData.value.address
-  return `${addr.detail}, ${addr.zipcode}`
+  return customerData.value.address
 })
 
 /* API */
-const { updateUserApi } = useApi()
+const { updateCurrentCustomerApi } = useApi()
 
-// api: Cập nhật thông tin thành viên
-const { refresh } = await updateUserApi({
+// api: Cập nhật thông tin customer
+const { refresh } = await updateCurrentCustomerApi({
   body: formData,
   immediate: false,
   watch: false,
@@ -285,10 +284,13 @@ const toggleForm = (action: 'show' | 'hide') => {
   
   if (action === 'show' && customerData.value) {
     // Điền dữ liệu vào form
-    formData.value.name = customerData.value.name
-    formData.value.phone = customerData.value.phone
-    formData.value.birthday = customerData.value.birthday
-    formData.value.address = customerData.value.address
+    formData.value.name = customerData.value.firstName + ' ' + customerData.value.lastName
+    formData.value.phone = ''
+    formData.value.birthday = customerData.value.dateOfBirth
+    formData.value.address = {
+      detail: customerData.value.address,
+      zipcode: 0
+    }
   }
 }
 

@@ -1,41 +1,65 @@
 export default defineNuxtPlugin(async () => {
+  const { initializeAuth, autoRefreshToken } = useAuth()
   const authStore = useAuthStore()
-  
-  // Chỉ chạy trên client và khi có token
-  if (process.client && authStore.token) {
-    const { checkToken, refreshToken } = useAuth()
-    
-    // Kiểm tra token mỗi 5 phút
-    setInterval(async () => {
-      try {
-        const isValid = await checkToken()
-        if (!isValid) {
-          console.log('Token expired, attempting refresh...')
-          await refreshToken()
+
+  // Initialize authentication state on app start
+  await initializeAuth()
+
+  // Set up automatic token refresh
+  let refreshInterval: NodeJS.Timeout | null = null
+
+  const startAutoRefresh = () => {
+    if (refreshInterval) {
+      clearInterval(refreshInterval)
+    }
+
+    // Refresh token every 4 minutes (assuming 5-minute token expiry)
+    refreshInterval = setInterval(async () => {
+      if (authStore.isLoggedIn && !authStore.isRefreshing) {
+        try {
+          await autoRefreshToken()
+        } catch (error) {
+          console.error('Auto refresh failed:', error)
+          // If auto refresh fails, logout user
+          const { logout } = useAuth()
+          await logout()
         }
-      } catch (error) {
-        console.error('Token refresh failed:', error)
-        // Nếu refresh thất bại, redirect về login
-        const commonStore = useCommonStore()
-        commonStore.sweetalertList.push({
-          title: 'Phiên đăng nhập đã hết hạn',
-          text: 'Vui lòng đăng nhập lại',
-          icon: 'warning',
-          confirmButtonText: 'Xác nhận'
-        })
-        await navigateTo('/auth/login')
       }
-    }, 5 * 60 * 1000) // 5 phút
-    
-    // Kiểm tra token ngay khi load
-    try {
-      const isValid = await checkToken()
-      if (!isValid) {
-        console.log('Initial token check failed, attempting refresh...')
-        await refreshToken()
+    }, 4 * 60 * 1000) // 4 minutes
+  }
+
+  const stopAutoRefresh = () => {
+    if (refreshInterval) {
+      clearInterval(refreshInterval)
+      refreshInterval = null
+    }
+  }
+
+  // Watch authentication state changes
+  watch(
+    () => authStore.isLoggedIn,
+    (isLoggedIn) => {
+      if (isLoggedIn) {
+        startAutoRefresh()
+      } else {
+        stopAutoRefresh()
       }
-    } catch (error) {
-      console.error('Initial token check failed:', error)
+    },
+    { immediate: true }
+  )
+
+  // Clean up on app unmount
+  onUnmounted(() => {
+    stopAutoRefresh()
+  })
+
+  // Provide auth utilities to the app
+  return {
+    provide: {
+      auth: {
+        startAutoRefresh,
+        stopAutoRefresh
+      }
     }
   }
 })
