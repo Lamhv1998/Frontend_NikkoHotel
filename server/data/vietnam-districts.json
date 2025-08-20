@@ -1,0 +1,414 @@
+{
+  "data": {
+    "10000": [
+      {
+        "district": "Ba Đình",
+        "zip_code": "10001"
+      },
+      {
+        "district": "Hoàn Kiếm",
+        "zip_code": "10002"
+      },
+      {
+        "district": "Hai Bà Trưng",
+        "zip_code": "10003"
+      },
+      {
+        "district": "Đống Đa",
+        "zip_code": "10004"
+      },
+      {
+        "district": "Tây Hồ",
+        "zip_code": "10005"
+      },
+      {
+        "district": "Cầu Giấy",
+        "zip_code": "10006"
+      },
+      {
+        "district": "Thanh Xuân",
+        "zip_code": "10007"
+      },
+      {
+        "district": "Hoàng Mai",
+        "zip_code": "10008"
+      },
+      {
+        "district": "Long Biên",
+        "zip_code": "10009"
+      },
+      {
+        "district": "Nam Từ Liêm",
+        "zip_code": "10010"
+      },
+      {
+        "district": "Bắc Từ Liêm",
+        "zip_code": "10011"
+      },
+      {
+        "district": "Hà Đông",
+        "zip_code": "10012"
+      },
+      {
+        "district": "Sơn Tây",
+        "zip_code": "10013"
+      },
+      {
+        "district": "Ba Vì",
+        "zip_code": "10014"
+      },
+      {
+        "district": "Phúc Thọ",
+        "zip_code": "10015"
+      },
+      {
+        "district": "Đan Phượng",
+        "zip_code": "10016"
+      },
+      {
+        "district": "Hoài Đức",
+        "zip_code": "10017"
+      },
+      {
+        "district": "Quốc Oai",
+        "zip_code": "10018"
+      },
+      {
+        "district": "Thạch Thất",
+        "zip_code": "10019"
+      },
+      {
+        "district": "Chương Mỹ",
+        "zip_code": "10020"
+      },
+      {
+        "district": "Thanh Oai",
+        "zip_code": "10021"
+      },
+      {
+        "district": "Thường Tín",
+        "zip_code": "10022"
+      },
+      {
+        "district": "Phú Xuyên",
+        "zip_code": "10023"
+      },
+      {
+        "district": "Ứng Hòa",
+        "zip_code": "10024"
+      },
+      {
+        "district": "Mỹ Đức",
+        "zip_code": "10025"
+      }
+    ],
+    "70000": [
+      {
+        "district": "Quận 1",
+        "zip_code": "70001"
+      },
+      {
+        "district": "Quận 2",
+        "zip_code": "70002"
+      },
+      {
+        "district": "Quận 3",
+        "zip_code": "70003"
+      },
+      {
+        "district": "Quận 4",
+        "zip_code": "70004"
+      },
+      {
+        "district": "Quận 5",
+        "zip_code": "70005"
+      },
+      {
+        "district": "Quận 6",
+        "zip_code": "70006"
+      },
+      {
+        "district": "Quận 7",
+        "zip_code": "70007"
+      },
+      {
+        "district": "Quận 8",
+        "zip_code": "70008"
+      },
+      {
+        "district": "Quận 9",
+        "zip_code": "70009"
+      },
+      {
+        "district": "Quận 10",
+        "zip_code": "70010"
+      },
+      {
+        "district": "Quận 11",
+        "zip_code": "70011"
+      },
+      {
+        "district": "Quận 12",
+        "zip_code": "70012"
+      },
+      {
+        "district": "Tân Bình",
+        "zip_code": "70013"
+      },
+      {
+        "district": "Bình Tân",
+        "zip_code": "70014"
+      },
+      {
+        "district": "Tân Phú",
+        "zip_code": "70015"
+      },
+      {
+        "district": "Phú Nhuận",
+        "zip_code": "70016"
+      },
+      {
+        "district": "Gò Vấp",
+        "zip_code": "70017"
+      },
+      {
+        "district": "Bình Thạnh",
+        "zip_code": "70018"
+      },
+      {
+        "district": "Thủ Đức",
+        "zip_code": "70019"
+      },
+      {
+        "district": "Củ Chi",
+        "zip_code": "70020"
+      },
+      {
+        "district": "Hóc Môn",
+        "zip_code": "70021"
+      },
+      {
+        "district": "Bình Chánh",
+        "zip_code": "70022"
+      },
+      {
+        "district": "Nhà Bè",
+        "zip_code": "70023"
+      },
+      {
+        "district": "Cần Giờ",
+        "zip_code": "70024"
+      }
+    ],
+    "55000": [
+      {
+        "district": "Hải Châu",
+        "zip_code": "55001"
+      },
+      {
+        "district": "Thanh Khê",
+        "zip_code": "55002"
+      },
+      {
+        "district": "Sơn Trà",
+        "zip_code": "55003"
+      },
+      {
+        "district": "Ngũ Hành Sơn",
+        "zip_code": "55004"
+      },
+      {
+        "district": "Liên Chiểu",
+        "zip_code": "55005"
+      },
+      {
+        "district": "Cẩm Lệ",
+        "zip_code": "55006"
+      },
+      {
+        "district": "Hòa Vang",
+        "zip_code": "55007"
+      },
+      {
+        "district": "Hoàng Sa",
+        "zip_code": "55008"
+      }
+    ],
+    "31000": [
+      {
+        "district": "Hồng Bàng",
+        "zip_code": "31001"
+      },
+      {
+        "district": "Ngô Quyền",
+        "zip_code": "31002"
+      },
+      {
+        "district": "Lê Chân",
+        "zip_code": "31003"
+      },
+      {
+        "district": "Hải An",
+        "zip_code": "31004"
+      },
+      {
+        "district": "Kiến An",
+        "zip_code": "31005"
+      },
+      {
+        "district": "Đồ Sơn",
+        "zip_code": "31006"
+      },
+      {
+        "district": "Dương Kinh",
+        "zip_code": "31007"
+      },
+      {
+        "district": "Thủy Nguyên",
+        "zip_code": "31008"
+      },
+      {
+        "district": "An Dương",
+        "zip_code": "31009"
+      },
+      {
+        "district": "An Lão",
+        "zip_code": "31010"
+      },
+      {
+        "district": "Kiến Thụy",
+        "zip_code": "31011"
+      },
+      {
+        "district": "Tiên Lãng",
+        "zip_code": "31012"
+      },
+      {
+        "district": "Vĩnh Bảo",
+        "zip_code": "31013"
+      },
+      {
+        "district": "Cát Hải",
+        "zip_code": "31014"
+      },
+      {
+        "district": "Bạch Long Vĩ",
+        "zip_code": "31015"
+      }
+    ],
+    "90000": [
+      {
+        "district": "Ninh Kiều",
+        "zip_code": "90001"
+      },
+      {
+        "district": "Bình Thủy",
+        "zip_code": "90002"
+      },
+      {
+        "district": "Cái Răng",
+        "zip_code": "90003"
+      },
+      {
+        "district": "Ô Môn",
+        "zip_code": "90004"
+      },
+      {
+        "district": "Thốt Nốt",
+        "zip_code": "90005"
+      },
+      {
+        "district": "Vĩnh Thạnh",
+        "zip_code": "90006"
+      },
+      {
+        "district": "Cờ Đỏ",
+        "zip_code": "90007"
+      },
+      {
+        "district": "Phong Điền",
+        "zip_code": "90008"
+      },
+      {
+        "district": "Thới Lai",
+        "zip_code": "90009"
+      }
+    ],
+    "88000": [
+      {
+        "district": "Long Xuyên",
+        "zip_code": "88001"
+      },
+      {
+        "district": "Châu Đốc",
+        "zip_code": "88002"
+      },
+      {
+        "district": "Tân Châu",
+        "zip_code": "88003"
+      },
+      {
+        "district": "An Phú",
+        "zip_code": "88004"
+      },
+      {
+        "district": "Phú Tân",
+        "zip_code": "88005"
+      },
+      {
+        "district": "Châu Phú",
+        "zip_code": "88006"
+      },
+      {
+        "district": "Tịnh Biên",
+        "zip_code": "88007"
+      },
+      {
+        "district": "Tri Tôn",
+        "zip_code": "88008"
+      },
+      {
+        "district": "Chợ Mới",
+        "zip_code": "88009"
+      },
+      {
+        "district": "Thoại Sơn",
+        "zip_code": "88010"
+      }
+    ],
+    "78000": [
+      {
+        "district": "Vũng Tàu",
+        "zip_code": "78001"
+      },
+      {
+        "district": "Bà Rịa",
+        "zip_code": "78002"
+      },
+      {
+        "district": "Châu Đức",
+        "zip_code": "78003"
+      },
+      {
+        "district": "Xuyên Mộc",
+        "zip_code": "78004"
+      },
+      {
+        "district": "Long Điền",
+        "zip_code": "78005"
+      },
+      {
+        "district": "Đất Đỏ",
+        "zip_code": "78006"
+      },
+      {
+        "district": "Tân Thành",
+        "zip_code": "78007"
+      },
+      {
+        "district": "Côn Đảo",
+        "zip_code": "78008"
+      }
+    ]
+  }
+}

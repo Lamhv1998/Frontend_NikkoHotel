@@ -103,7 +103,7 @@
       <div class="flex gap-2">
         <p class="text-body-2 text-text-inverse xl:text-body">Đã có tài khoản?</p>
         <NuxtLink class="hot-link-wrapper" to="/auth/login">
-          <UIButton text="Đăng nhập ngay" variant="text" />
+          <UIButton text="Đăng nhập ngay" variant="ghost" />
         </NuxtLink>
       </div>
     </div>

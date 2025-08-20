@@ -151,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import type { CustomerResponse } from '@/types/customer'
 
 /* PageMeta */
 definePageMeta({
@@ -159,17 +159,56 @@ definePageMeta({
   middleware: 'auth'
 })
 
-const member = reactive({
-  level: 'Bạc',
-  points: 320,
-  nextLevelPoint: 500,
-  pointHistory: [
-    { date: '2025-05-20', point: 50, note: 'Đặt phòng thành công' },
-    { date: '2025-05-10', point: 30, note: 'Đánh giá khách sạn' },
-    { date: '2025-05-05', point: 25, note: 'Check-in đúng giờ' },
-    { date: '2025-04-28', point: 100, note: 'Đặt phòng premium' },
-    { date: '2025-04-20', point: 15, note: 'Chia sẻ trên mạng xã hội' }
-  ]
+/* API */
+const { getCurrentCustomerApi } = useApi()
+
+// Lấy thông tin customer từ database
+const { data: customer } = await getCurrentCustomerApi({
+  server: false,
+  transform(res: any): CustomerResponse {
+    return res.result
+  }
+})
+
+// Computed properties cho membership data
+const member = computed(() => {
+  if (!customer.value) {
+    return {
+      level: 'Bronze',
+      points: 0,
+      nextLevelPoint: 100,
+      pointHistory: []
+    }
+  }
+
+  // Tính toán hạng thành viên dựa trên điểm
+  const points = customer.value.accumulatedSpending || 0
+  let level = 'Bronze'
+  let nextLevelPoint = 100
+
+  if (points >= 1000) {
+    level = 'Gold'
+    nextLevelPoint = 2000
+  } else if (points >= 500) {
+    level = 'Silver'
+    nextLevelPoint = 1000
+  } else if (points >= 100) {
+    level = 'Bronze'
+    nextLevelPoint = 500
+  }
+
+  return {
+    level: customer.value.level || level,
+    points: points,
+    nextLevelPoint: nextLevelPoint,
+    pointHistory: [
+      { date: '2025-05-20', point: 50, note: 'Đặt phòng thành công' },
+      { date: '2025-05-10', point: 30, note: 'Đánh giá khách sạn' },
+      { date: '2025-05-05', point: 25, note: 'Check-in đúng giờ' },
+      { date: '2025-04-28', point: 100, note: 'Đặt phòng premium' },
+      { date: '2025-04-20', point: 15, note: 'Chia sẻ trên mạng xã hội' }
+    ]
+  }
 })
 
 // Format date function

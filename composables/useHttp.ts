@@ -34,8 +34,17 @@ const handleError = (response: FetchResponse<ResOptions>) => {
 
 const fetch = <T>(url: string, options: UseFetchOptions<T>) => {
   const runtimeConfig = useRuntimeConfig()
-  const { apiBase } = runtimeConfig.public
-  const reqUrl = url.startsWith('/api') ? apiBase + url : url
+  const { apiBase, customerServiceUrl } = runtimeConfig.public
+  
+  // Xử lý customer API riêng biệt
+  let reqUrl: string
+  if (url.startsWith('/customers')) {
+    reqUrl = customerServiceUrl + url
+  } else if (url.startsWith('/api')) {
+    reqUrl = apiBase + url
+  } else {
+    reqUrl = url
+  }
 
   const fetch = useFetch(reqUrl, {
     onRequest({ options }) {

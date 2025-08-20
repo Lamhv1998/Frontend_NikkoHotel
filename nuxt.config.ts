@@ -90,7 +90,8 @@ export default defineNuxtConfig({
       mapApiKey: process.env.MAP_API_KEY,
       apiGatewayUrl: process.env.API_GATEWAY_URL || 'http://localhost:8092',
       authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:8092',
-      userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8082'
+      userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8092',
+      customerServiceUrl: process.env.CUSTOMER_SERVICE_URL || 'http://localhost:8300'
     }
   },
 

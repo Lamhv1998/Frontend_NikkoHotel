@@ -1,0 +1,256 @@
+{
+  "data": [
+    {
+      "city": "Hà Nội",
+      "zip_code": "10000"
+    },
+    {
+      "city": "TP. Hồ Chí Minh",
+      "zip_code": "70000"
+    },
+    {
+      "city": "Hải Phòng",
+      "zip_code": "31000"
+    },
+    {
+      "city": "Đà Nẵng",
+      "zip_code": "55000"
+    },
+    {
+      "city": "Cần Thơ",
+      "zip_code": "90000"
+    },
+    {
+      "city": "An Giang",
+      "zip_code": "88000"
+    },
+    {
+      "city": "Bà Rịa - Vũng Tàu",
+      "zip_code": "78000"
+    },
+    {
+      "city": "Bắc Giang",
+      "zip_code": "22000"
+    },
+    {
+      "city": "Bắc Kạn",
+      "zip_code": "23000"
+    },
+    {
+      "city": "Bạc Liêu",
+      "zip_code": "96000"
+    },
+    {
+      "city": "Bắc Ninh",
+      "zip_code": "16000"
+    },
+    {
+      "city": "Bến Tre",
+      "zip_code": "86000"
+    },
+    {
+      "city": "Bình Định",
+      "zip_code": "59000"
+    },
+    {
+      "city": "Bình Dương",
+      "zip_code": "75000"
+    },
+    {
+      "city": "Bình Phước",
+      "zip_code": "77000"
+    },
+    {
+      "city": "Bình Thuận",
+      "zip_code": "77000"
+    },
+    {
+      "city": "Cà Mau",
+      "zip_code": "97000"
+    },
+    {
+      "city": "Cao Bằng",
+      "zip_code": "21000"
+    },
+    {
+      "city": "Đắk Lắk",
+      "zip_code": "63000"
+    },
+    {
+      "city": "Đắk Nông",
+      "zip_code": "64000"
+    },
+    {
+      "city": "Điện Biên",
+      "zip_code": "32000"
+    },
+    {
+      "city": "Đồng Nai",
+      "zip_code": "76000"
+    },
+    {
+      "city": "Đồng Tháp",
+      "zip_code": "87000"
+    },
+    {
+      "city": "Gia Lai",
+      "zip_code": "61000"
+    },
+    {
+      "city": "Hà Giang",
+      "zip_code": "20000"
+    },
+    {
+      "city": "Hà Nam",
+      "zip_code": "18000"
+    },
+    {
+      "city": "Hà Tĩnh",
+      "zip_code": "45000"
+    },
+    {
+      "city": "Hải Dương",
+      "zip_code": "17000"
+    },
+    {
+      "city": "Hậu Giang",
+      "zip_code": "91000"
+    },
+    {
+      "city": "Hòa Bình",
+      "zip_code": "35000"
+    },
+    {
+      "city": "Hưng Yên",
+      "zip_code": "16000"
+    },
+    {
+      "city": "Khánh Hòa",
+      "zip_code": "65000"
+    },
+    {
+      "city": "Kiên Giang",
+      "zip_code": "92000"
+    },
+    {
+      "city": "Kon Tum",
+      "zip_code": "60000"
+    },
+    {
+      "city": "Lai Châu",
+      "zip_code": "31000"
+    },
+    {
+      "city": "Lâm Đồng",
+      "zip_code": "67000"
+    },
+    {
+      "city": "Lạng Sơn",
+      "zip_code": "24000"
+    },
+    {
+      "city": "Lào Cai",
+      "zip_code": "33000"
+    },
+    {
+      "city": "Long An",
+      "zip_code": "82000"
+    },
+    {
+      "city": "Nam Định",
+      "zip_code": "42000"
+    },
+    {
+      "city": "Nghệ An",
+      "zip_code": "46000"
+    },
+    {
+      "city": "Ninh Bình",
+      "zip_code": "43000"
+    },
+    {
+      "city": "Ninh Thuận",
+      "zip_code": "66000"
+    },
+    {
+      "city": "Phú Thọ",
+      "zip_code": "29000"
+    },
+    {
+      "city": "Phú Yên",
+      "zip_code": "62000"
+    },
+    {
+      "city": "Quảng Bình",
+      "zip_code": "47000"
+    },
+    {
+      "city": "Quảng Nam",
+      "zip_code": "56000"
+    },
+    {
+      "city": "Quảng Ngãi",
+      "zip_code": "57000"
+    },
+    {
+      "city": "Quảng Ninh",
+      "zip_code": "20000"
+    },
+    {
+      "city": "Quảng Trị",
+      "zip_code": "48000"
+    },
+    {
+      "city": "Sóc Trăng",
+      "zip_code": "95000"
+    },
+    {
+      "city": "Sơn La",
+      "zip_code": "34000"
+    },
+    {
+      "city": "Tây Ninh",
+      "zip_code": "80000"
+    },
+    {
+      "city": "Thái Bình",
+      "zip_code": "41000"
+    },
+    {
+      "city": "Thái Nguyên",
+      "zip_code": "25000"
+    },
+    {
+      "city": "Thanh Hóa",
+      "zip_code": "44000"
+    },
+    {
+      "city": "Thừa Thiên Huế",
+      "zip_code": "53000"
+    },
+    {
+      "city": "Tiền Giang",
+      "zip_code": "84000"
+    },
+    {
+      "city": "Trà Vinh",
+      "zip_code": "94000"
+    },
+    {
+      "city": "Tuyên Quang",
+      "zip_code": "28000"
+    },
+    {
+      "city": "Vĩnh Long",
+      "zip_code": "89000"
+    },
+    {
+      "city": "Vĩnh Phúc",
+      "zip_code": "15000"
+    },
+    {
+      "city": "Yên Bái",
+      "zip_code": "26000"
+    }
+  ]
+}

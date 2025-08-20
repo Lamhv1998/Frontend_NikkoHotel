@@ -5,19 +5,19 @@
       <!-- User Welcome Section -->
       <div v-if="user" class="bg-gradient-to-r from-amber-500 to-yellow-600 rounded-3xl p-8 text-white shadow-2xl">
         <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-6">
-            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold backdrop-blur-sm">
-              {{ user.name.charAt(0).toUpperCase() }}
+                      <div class="flex items-center space-x-6">
+              <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold backdrop-blur-sm">
+                {{ (user.firstName + ' ' + user.lastName).charAt(0).toUpperCase() }}
+              </div>
+              <div>
+                <h1 class="text-3xl font-bold mb-2">Xin chào, {{ user.firstName + ' ' + user.lastName }}!</h1>
+                <p class="text-amber-100">Thành viên từ {{ $dayjs(user.createdDate).format('MM/YYYY') }}</p>
+              </div>
             </div>
-            <div>
-              <h1 class="text-3xl font-bold mb-2">Xin chào, {{ user.name }}!</h1>
-              <p class="text-amber-100">Thành viên từ {{ $dayjs(user.createdAt).format('MM/YYYY') }}</p>
+            <div class="text-right">
+              <div class="text-2xl font-bold">{{ user.level }}</div>
+              <div class="text-amber-100">{{ user.accumulatedSpending?.toLocaleString() || 0 }} VNĐ</div>
             </div>
-          </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold">{{ user.email }}</div>
-            <div class="text-amber-100">{{ user.phone }}</div>
-          </div>
         </div>
       </div>
 
@@ -66,7 +66,7 @@
                   </div>
                   <span class="font-semibold text-gray-900">Đơn đặt phòng</span>
                 </div>
-                <span class="text-2xl font-bold text-blue-600">12</span>
+                <span class="text-2xl font-bold text-blue-600">0</span>
               </div>
               
               <div class="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl">
@@ -78,7 +78,7 @@
                   </div>
                   <span class="font-semibold text-gray-900">Điểm tích lũy</span>
                 </div>
-                <span class="text-2xl font-bold text-amber-600">2,450</span>
+                <span class="text-2xl font-bold text-amber-600">{{ user?.accumulatedSpending?.toLocaleString() || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl">
@@ -88,9 +88,9 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                     </svg>
                   </div>
-                  <span class="font-semibold text-gray-900">Voucher</span>
+                  <span class="font-semibold text-gray-900">Hạng thành viên</span>
                 </div>
-                <span class="text-2xl font-bold text-green-600">8</span>
+                <span class="text-lg font-bold text-green-600">{{ user?.level || 'Bronze' }}</span>
               </div>
             </div>
           </div>
@@ -200,8 +200,8 @@
 <script lang="ts" setup>
 import ChangePwd from './components/changePwd.vue'
 import changeInfo from './components/changeInfo.vue'
-import type { UserResponse } from '@/types'
-import MemberStatus from './memberships.vue'
+import type { CustomerResponse } from '@/types/customer'
+import MemberStatus from './components/MemberStatus.vue'
 
 /* PageMeta */
 definePageMeta({
@@ -213,12 +213,12 @@ definePageMeta({
 const { $dayjs } = useNuxtApp()
 
 /* api */
-const { getUserApi } = useApi()
+const { getCurrentCustomerApi } = useApi()
 
-// api: Lấy thông tin thành viên
-const { data: user, refresh: getUserRefresh } = await getUserApi({
+// api: Lấy thông tin customer từ database
+const { data: user, refresh: getUserRefresh } = await getCurrentCustomerApi({
   server: false,
-  transform(res: any): UserResponse {
+  transform(res: any): CustomerResponse {
     return res.result
   }
 })
@@ -227,9 +227,9 @@ const { data: user, refresh: getUserRefresh } = await getUserApi({
 const authStore = useAuthStore()
 watchEffect(() => {
   if (user.value) {
-    authStore.userName = user.value.name
-    authStore.email = user.value.email
-    authStore.id = user.value._id
+    authStore.userName = user.value.firstName + ' ' + user.value.lastName
+    authStore.email = user.value.firstName + ' ' + user.value.lastName
+    authStore.id = user.value.customerId
   }
 })
 </script>
