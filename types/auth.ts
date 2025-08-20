@@ -28,6 +28,7 @@ export type UserInfo = {
   name: string
   phone: string
   email: string
+  _id?: string
 }
 
 export type UserResponse = {
