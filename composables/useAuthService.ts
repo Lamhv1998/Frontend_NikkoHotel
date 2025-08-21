@@ -1,16 +1,29 @@
-import type { AuthenticationRequest, AuthenticationResponse, ApiResponse } from '@/types/auth'
+import type { AuthenticationRequest, AuthenticationResponse, ApiResponse, UserCreationRequest, UserResponse } from '@/types/auth'
 
 export const useAuthService = () => {
   const runtimeConfig = useRuntimeConfig()
   const { authServiceUrl } = runtimeConfig.public
 
   const login = async (credentials: AuthenticationRequest): Promise<ApiResponse<AuthenticationResponse>> => {
-    return await $fetch<ApiResponse<AuthenticationResponse>>(`${authServiceUrl}/auth/token`, {
+    console.log('Calling login API with credentials:', credentials)
+    const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${authServiceUrl}/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: credentials
+    })
+    console.log('Login API response:', response)
+    return response
+  }
+
+  const signup = async (userData: UserCreationRequest): Promise<ApiResponse<UserResponse>> => {
+    return await $fetch<ApiResponse<UserResponse>>(`${authServiceUrl}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: userData
     })
   }
 
@@ -52,6 +65,7 @@ export const useAuthService = () => {
 
   return {
     login,
+    signup,
     introspect,
     logout,
     refreshToken

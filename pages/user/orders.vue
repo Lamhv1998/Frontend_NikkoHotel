@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#140F0A]">
+  <div class="min-h-screen">
     <div class="mx-auto max-w-7xl p-6 space-y-8">
       
       <!-- Header Section -->

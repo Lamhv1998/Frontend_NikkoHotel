@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
 import Forgot from './components/forgot.vue'
-import type { LoginPayload } from '@/types'
+import type { AuthenticationRequest } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
 const authStore = useAuthStore()
@@ -77,7 +77,7 @@ definePageMeta({
 
 /* Form đăng nhập */
 const formRefs = ref<HTMLFormElement | null>(null)
-const formData = ref<LoginPayload>({ email: '', password: '' })
+const formData = ref<AuthenticationRequest>({ email: '', password: '' })
 
 // Quy tắc form
 const schema = { email: 'required|email', password: 'required' }
@@ -102,11 +102,12 @@ const handleLogin = async () => {
   
   try {
     // Sử dụng useAuth composable
-    const { login } = useAuth()
+    const { loginUser } = useAuth()
     
     console.log('Attempting login with:', formData.value)
     
-    const result = await login(formData.value, remember.value)
+    const result = await loginUser(formData.value)
+    console.log('Login result:', result)
     
     if (result.success) {
       console.log('Login successful')
@@ -121,8 +122,18 @@ const handleLogin = async () => {
       
       // Redirect sau khi đăng nhập thành công
       setTimeout(() => {
-        navigateTo(commonStore.routerGuide || '/')
+        navigateTo(commonStore.routerGuide || '/user')
       }, 1000)
+    } else {
+      console.log('Login failed:', result.message)
+      // Hiển thị thông báo lỗi
+      commonStore.sweetalertList.push({
+        title: 'Lỗi đăng nhập',
+        text: result.message,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     }
     
   } catch (error: any) {

@@ -111,10 +111,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { SignupPayload } from '@/types'
+import type { UserCreationRequest } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
-definePageMeta({})
 const authStore = useAuthStore()
 const styleStore = useStyleStore()
 const commonStore = useCommonStore()
@@ -128,7 +127,7 @@ definePageMeta({
 
 /* Biểu mẫu đăng ký */
 const formRefs = ref<HTMLFormElement | null>(null)
-const formData = reactive<SignupPayload>({
+const formData = reactive<UserCreationRequest>({
   email: '',
   password: '',
   name: '',
@@ -190,7 +189,8 @@ const submit = () => {
 }
 
 /* api */
-const { signupApi, checkEmailApi } = useApi()
+const { checkEmailApi } = useApi()
+const { signupUser } = useAuth()
 const apiPending = computed(() => cePending.value || sPending.value)
 
 // api: Kiểm tra email đã đăng ký chưa
@@ -213,26 +213,46 @@ const { pending: cePending, refresh: ceRefresh } = await checkEmailApi({
 cePending.value = false
 
 // api: Đăng ký
-const { pending: sPending, refresh: sRefresh } = await signupApi({
-  body: formData,
-  immediate: false,
-  watch: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
-      authStore.userName = response._data.result.name
-      authStore.token = response._data.token
+const sPending = ref(false)
+const sRefresh = async () => {
+  if (sPending.value) return
+  
+  sPending.value = true
+  
+  try {
+    const result = await signupUser(formData)
+    
+    if (result.success) {
       $Swal?.fire({
         title: 'Đăng ký thành công!',
-        text: 'Bắt đầu hành trình tận hưởng của bạn',
+        text: result.message,
         icon: 'success',
         confirmButtonText: 'Tiếp tục',
         confirmButtonColor: styleStore.confirmButtonColor,
         willClose: async () => {
-          await navigateTo(commonStore.routerGuide || '/')
+          await navigateTo('/auth/login')
         }
       })
+    } else {
+      $Swal?.fire({
+        title: 'Đăng ký thất bại!',
+        text: result.message,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     }
+  } catch (error: any) {
+    console.error('Signup error:', error)
+    $Swal?.fire({
+      title: 'Lỗi!',
+      text: 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
+  } finally {
+    sPending.value = false
   }
-})
-sPending.value = false
+}
 </script>

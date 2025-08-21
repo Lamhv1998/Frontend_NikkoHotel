@@ -1,5 +1,5 @@
 import type { UseFetchOptions } from 'nuxt/app'
-import type { AuthenticationRequest, AuthenticationResponse, ApiResponse } from '@/types/auth'
+import type { AuthenticationRequest, AuthenticationResponse, ApiResponse, UserResponse } from '@/types/auth'
 
 const userAPI = {
   loginApi: <T = any>(options: UseFetchOptions<T>) => {
@@ -7,12 +7,17 @@ const userAPI = {
     
     return login(options.body as AuthenticationRequest)
   },
+
   signupApi: <T = any>(options: UseFetchOptions<T>) => {
-    return useHttp.post('/api/v1/user/signup', options)
+    const { signup } = useAuthService()
+    
+    return signup(options.body as any)
   },
+
   forgotPwdApi: <T = any>(options: UseFetchOptions<T>) => {
     return useHttp.post('/api/v1/user/forgot', options)
   },
+
   checkLoginApi: () => {
     const runtimeConfig = useRuntimeConfig()
     const { apiBase } = runtimeConfig.public
@@ -27,9 +32,21 @@ const userAPI = {
       })
     })
   },
+
   getUserApi: <T = any>(options: UseFetchOptions<T>) => {
-    return useHttp.get('/api/v1/user', options)
+    const runtimeConfig = useRuntimeConfig()
+    const { authServiceUrl } = runtimeConfig.public
+    const authStore = useAuthStore()
+
+    return $fetch<ApiResponse<UserResponse>>(`${authServiceUrl}/users/myInfo`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.token}`
+      }
+    })
   },
+
   updateUserApi: <T = any>(options: UseFetchOptions<T>) => {
     return useHttp.put('/api/v1/user', options)
   }
