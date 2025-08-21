@@ -80,10 +80,7 @@
               <div class="flex-1 space-y-6">
                 <!-- Basic Info Header -->
                 <div class="border-b border-amber-200 pb-4">
-                  <h3 class="mb-2 text-3xl font-bold text-gray-900">{{ getFullName() }}</h3>
-                  <p class="text-lg text-gray-600">
-                    Thành viên từ {{ $dayjs(customerData.createdDate || customerData.createdAt).format('MM/YYYY') }}
-                  </p>
+                  <h3 class="mb-2 text-3xl font-bold text-gray-900">Họ tên: {{ getFullName() }}</h3>
                 </div>
 
                 <!-- Customer Profile Info Grid -->
@@ -128,9 +125,9 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Địa chỉ</p>
-                      <p class="text-base font-semibold text-gray-900">
-                        {{ customerData.address || 'Chưa cập nhật' }}
-                      </p>
+                                             <p class="text-base font-semibold text-gray-900">
+                         {{ formatAddress(customerData.address) || 'Chưa cập nhật' }}
+                       </p>
                     </div>
                   </div>
                   
@@ -148,7 +145,7 @@
                   </div>
                   
                   <!-- Customer ID -->
-                  <div class="flex items-start space-x-4 p-4 rounded-xl bg-white shadow-sm border border-amber-100">
+                  <!-- <div class="flex items-start space-x-4 p-4 rounded-xl bg-white shadow-sm border border-amber-100">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 flex-shrink-0">
                       <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 12a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M13 12a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2"></path>
@@ -160,7 +157,7 @@
                         {{ customerData.customerId?.slice(0, 8) }}...
                       </p>
                     </div>
-                  </div>
+                  </div> -->
 
                   <!-- Số điện thoại (Chỉ đọc) -->
                   <div class="flex items-start space-x-4 p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200">
@@ -172,7 +169,7 @@
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Số điện thoại</p>
                       <p class="text-base font-semibold text-gray-900">
-                        {{ customerData.phone || 'Chưa cập nhật' }}
+                        {{ user.phone || 'Chưa cập nhật' }}
                       </p>
                       <p class="text-xs text-gray-500 mt-1">Không thể thay đổi</p>
                     </div>
@@ -188,7 +185,7 @@
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Email</p>
                       <p class="text-base font-semibold text-gray-900 break-all">
-                        {{ customerData.email || 'Chưa cập nhật' }}
+                        {{ user.email || 'Chưa cập nhật' }}
                       </p>
                       <p class="text-xs text-gray-500 mt-1">Không thể thay đổi</p>
                     </div>
@@ -223,9 +220,21 @@
             </h3>
             <p class="text-gray-600">Cập nhật thông tin cá nhân của bạn (Số điện thoại và Email không thể thay đổi)</p>
           </div>
-
+            
           <!-- Form Fields -->
           <div class="grid gap-6 md:grid-cols-2">
+            <div class="space-y-2 md:col-span-2">
+              <UIInput
+                v-model="user.phone"
+                name="phone"
+                label="Số điện thoại *"
+                placeholder="Vui nhập số điện thoại"
+                :error="errors.phone"
+                blackhead
+                :disabled="pending"
+                class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
             <!-- Họ -->
             <div class="space-y-2">
               <UIInput
@@ -258,18 +267,22 @@
             <div class="space-y-2">
               <CBirthday
                 v-model="formData.dateOfBirth"
+                name="dateOfBirth"
                 :error="errors.dateOfBirth"
                 blackhead
                 :disabled="pending"
                 class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
               />
+              <VErrorMessage name="dateOfBirth" class="text-sm text-red-600" />
             </div>
 
             <!-- Giới tính -->
             <div class="space-y-2">
               <label class="block text-sm font-medium text-gray-700">Giới tính *</label>
-              <select 
+              <VField
                 v-model="formData.sex"
+                name="sex"
+                as="select"
                 :disabled="pending"
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
               >
@@ -277,23 +290,20 @@
                 <option value="MALE">Nam</option>
                 <option value="FEMALE">Nữ</option>
                 <option value="OTHER">Khác</option>
-              </select>
-              <span v-if="errors.sex" class="text-sm text-red-600">{{ errors.sex }}</span>
+              </VField>
+              <VErrorMessage name="sex" class="text-sm text-red-600" />
             </div>
 
-            <!-- Địa chỉ -->
-            <div class="md:col-span-2 space-y-2">
-              <UIInput
-                v-model="formData.address"
-                name="address"
-                label="Địa chỉ *"
-                placeholder="Vui lòng nhập địa chỉ đầy đủ"
-                :error="errors.address"
-                blackhead
-                :disabled="pending"
-                class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
+                         <!-- Địa chỉ -->
+             <div class="md:col-span-2 space-y-2">
+               <CAddress
+                 v-model="formData.address"
+                 :detail-error="errors['address.detail']"
+                 blackhead
+                 :disabled="pending"
+                 class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+               />
+             </div>
           </div>
 
           <!-- Action Buttons -->
@@ -402,7 +412,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
+import type { UserResponse, UserUpdatedRequest } from '@/types/auth'
 
 /* Props */
 interface Props {
@@ -426,16 +436,19 @@ const formData = ref({
   firstName: '',
   lastName: '',
   dateOfBirth: '',
-  address: '',
+  address: {
+    city: '',
+    district: '',
+    detail: ''
+  },
   sex: ''
 })
 
-// Quy tắc form - Đã loại bỏ phone vì không thể thay đổi
+
 const schema = {
   firstName: 'required',
   lastName: 'required',
   dateOfBirth: 'required',
-  address: 'required',
   sex: 'required'
 }
 
@@ -455,30 +468,51 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const customerData = computed(() => props.customerProfile || props.user)
 
 /* API */
-const { updateCustomerApi } = useApi()
+const { updateCustomerApi, updateUserApi } = useApi()
 
 // Function để cập nhật thông tin
 const updateCustomerInfo = async () => {
   try {
     pending.value = true
     
-    console.log('Updating customer info with data:', formData.value)
-    console.log('Customer ID:', customerData.value?.customerId)
+         // Đảm bảo dateOfBirth có format "yyyy-MM-dd" trước khi gửi
+     let formattedDateOfBirth = formData.value.dateOfBirth
+     if (formData.value.dateOfBirth) {
+       // Kiểm tra nếu đã đúng format "yyyy-MM-dd"
+       if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.value.dateOfBirth)) {
+         // Chuyển đổi sang format "yyyy-MM-dd"
+         formattedDateOfBirth = $dayjs(formData.value.dateOfBirth).format('YYYY-MM-DD')
+       }
+     }
     
-    const response = await updateCustomerApi({
+    console.log('Sending dateOfBirth with format:', formattedDateOfBirth)
+    
+    // Gọi API update customer
+    const customerResponse = await updateCustomerApi({
       body: {
         customerId: customerData.value?.customerId,
         firstName: formData.value.firstName,
         lastName: formData.value.lastName,
         address: formData.value.address,
-        dateOfBirth: formData.value.dateOfBirth,
+        dateOfBirth: formattedDateOfBirth,
         sex: formData.value.sex
       }
-    })
+    });
     
-    console.log('Update response:', response)
+    // Gọi API update user (để cập nhật phone và các thông tin khác nếu cần)
+    const userUpdateRequest: UserUpdatedRequest = {
+      userId: props.user?.userId || props.user?.id,
+      phone: props.user?.phone,
+    }
     
-    if (response) {
+    const userResponse = await updateUserApi({
+      body: userUpdateRequest
+    });
+    
+    console.log('Customer update response:', customerResponse)
+    console.log('User update response:', userResponse)
+    
+    if (customerResponse && userResponse) {
       // Hiển thị thông báo thành công
       const commonStore = useCommonStore()
       const styleStore = useStyleStore()
@@ -502,9 +536,23 @@ const updateCustomerInfo = async () => {
     const commonStore = useCommonStore()
     const styleStore = useStyleStore()
     
+    let errorMessage = 'Có lỗi xảy ra khi cập nhật thông tin'
+    
+    if (error?.data?.message) {
+      errorMessage = error.data.message
+    } else if (error?.message) {
+      errorMessage = error.message
+    } else if (error?.status === 400) {
+      errorMessage = 'Dữ liệu không hợp lệ'
+    } else if (error?.status === 401) {
+      errorMessage = 'Phiên đăng nhập đã hết hạn'
+    } else if (error?.status === 500) {
+      errorMessage = 'Lỗi máy chủ'
+    }
+    
     commonStore.sweetalertList.push({
       title: 'Cập nhật thất bại',
-      text: error?.data?.message || error?.message || 'Có lỗi xảy ra khi cập nhật thông tin',
+      text: errorMessage,
       icon: 'error',
       confirmButtonText: 'Xác nhận',
       confirmButtonColor: styleStore.confirmButtonColor
@@ -519,14 +567,34 @@ const toggleForm = (action: 'show' | 'hide') => {
   isFormShow.value = action === 'show'
   
   if (action === 'show' && customerData.value) {
-    // Điền dữ liệu vào form - Đã loại bỏ phone
+    // Điền dữ liệu vào form
     formData.value.firstName = customerData.value.firstName || ''
     formData.value.lastName = customerData.value.lastName || ''
-    formData.value.dateOfBirth = customerData.value.dateOfBirth || ''
-    formData.value.address = customerData.value.address || ''
+    
+    // Đảm bảo dateOfBirth có format "yyyy-MM-dd"
+    if (customerData.value.dateOfBirth) {
+      // Nếu dateOfBirth đã có format "yyyy-MM-dd" thì giữ nguyên
+      if (/^\d{4}-\d{2}-\d{2}$/.test(customerData.value.dateOfBirth)) {
+        formData.value.dateOfBirth = customerData.value.dateOfBirth
+      } else {
+        // Nếu là format khác, chuyển đổi sang "yyyy-MM-dd"
+        formData.value.dateOfBirth = $dayjs(customerData.value.dateOfBirth).format('YYYY-MM-DD')
+      }
+    } else {
+      formData.value.dateOfBirth = ''
+    }
+    
+    formData.value.address = customerData.value.address || { city: '', district: '', detail: '' }
     formData.value.sex = customerData.value.sex || ''
     
     console.log('Form data populated:', formData.value)
+    
+    // Đảm bảo form được validate sau khi dữ liệu được load
+    nextTick(() => {
+      if (formRefs.value) {
+        formRefs.value.validate()
+      }
+    })
   }
 }
 
@@ -580,6 +648,26 @@ const getSexText = (sex: string) => {
     default:
       return 'Chưa cập nhật'
   }
+}
+
+const formatAddress = (address: any) => {
+  if (!address) return ''
+  
+  // Nếu address là string (từ API cũ)
+  if (typeof address === 'string') {
+    return address
+  }
+  
+  // Nếu address là object (từ API mới)
+  if (address.city || address.district || address.detail) {
+    const parts = []
+    if (address.city) parts.push(address.city)
+    if (address.district) parts.push(address.district)
+    if (address.detail) parts.push(address.detail)
+    return parts.join(', ')
+  }
+  
+  return ''
 }
 
 const formatFileSize = (bytes: number) => {

@@ -5,7 +5,7 @@
       v-slot="{ errors }"
       class="card"
       :validation-schema="schema"
-      @submit="refresh"
+      @submit="changePassword"
     >
       <h2 class="text-h6 xl:text-h5">Đổi mật khẩu</h2>
 
@@ -159,17 +159,28 @@ const cancelEdit = () => {
 /* api */
 const { updateUserApi } = useApi()
 
-// api: Đổi mật khẩu
-const { pending, refresh } = await updateUserApi({
-  body: computed(() => ({
-    userId: props.user._id,
-    oldPassword: formData.oldPassword,
-    newPassword: formData.newPassword
-  })),
-  watch: false,
-  immediate: false,
-  onResponse({ response }) {
-    if (response.status === 200) {
+// State cho API call
+const pending = ref(false)
+
+// Function để đổi mật khẩu
+const changePassword = async () => {
+  if (!props.user?._id && !props.user?.id) {
+    console.error('User ID not found')
+    return
+  }
+
+  try {
+    pending.value = true
+    
+    const response = await updateUserApi({
+      body: {
+        userId: props.user._id || props.user.id,
+        oldPassword: formData.oldPassword,
+        newPassword: formData.newPassword
+      }
+    })
+
+    if (response) {
       $Swal?.fire({
         title: 'Đổi mật khẩu thành công',
         icon: 'success',
@@ -180,12 +191,22 @@ const { pending, refresh } = await updateUserApi({
         }
       })
     }
-  },
-  onResponseError({ response }) {
-    if (response._data?.message === '密碼錯誤') {
+  } catch (error: any) {
+    console.error('Error changing password:', error)
+    
+    if (error?.data?.message === '密碼錯誤') {
       formRefs.value?.setFieldError('oldPassword', 'Mật khẩu cũ không đúng')
+    } else {
+      $Swal?.fire({
+        title: 'Đổi mật khẩu thất bại',
+        text: error?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu',
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     }
+  } finally {
+    pending.value = false
   }
-})
-pending.value = false
+}
 </script>

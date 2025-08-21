@@ -27,15 +27,17 @@
         :disabled="props.disabled"
       />
     </div>
-    <VField v-model.trim="formatBirthday" class="hidden" name="birthday" />
+    <VField v-model.trim="formatBirthday" class="hidden" name="dateOfBirth" />
     <VErrorMessage
       class="block text-sub-title text-system-error-120 xl:text-title"
-      name="birthday"
+      name="dateOfBirth"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue'
+
 const props = defineProps({
   error: {
     type: String,
@@ -55,20 +57,52 @@ const formatBirthday = defineModel<string>({
 })
 
 const birthday = ref<Record<string, string | number>>({
-  YYYY: formatBirthday.value ? $dayjs(formatBirthday.value).year() : '',
-  MM: formatBirthday.value ? $dayjs(formatBirthday.value).month() + 1 : '', // Tháng cần cộng thêm 1, $dayjs tháng bắt đầu từ 0
-  DD: formatBirthday.value ? $dayjs(formatBirthday.value).date() : ''
+  YYYY: '',
+  MM: '',
+  DD: ''
 })
 
-// Ngày hiện tại
+// Khởi tạo birthday từ formatBirthday nếu có
+const initializeBirthday = () => {
+  if (formatBirthday.value && $dayjs(formatBirthday.value).isValid()) {
+    birthday.value.YYYY = $dayjs(formatBirthday.value).year()
+    birthday.value.MM = $dayjs(formatBirthday.value).month() + 1 // Tháng cần cộng thêm 1, $dayjs tháng bắt đầu từ 0
+    birthday.value.DD = $dayjs(formatBirthday.value).date()
+  }
+}
+
+// Khởi tạo khi component mount
+onMounted(() => {
+  initializeBirthday()
+})
+
+// Watch birthday để cập nhật formatBirthday
 watch(
   birthday,
   () => {
     const { YYYY, MM, DD } = birthday.value
-    const formattedDate = `${YYYY}-${MM}-${DD}`
-    formatBirthday.value = $dayjs(formattedDate, 'YYYY-M-D', true).isValid() ? formattedDate : ''
+    if (YYYY && MM && DD) {
+      const formattedDate = `${YYYY}-${MM.toString().padStart(2, '0')}-${DD.toString().padStart(2, '0')}`
+      if ($dayjs(formattedDate, 'YYYY-MM-DD', true).isValid()) {
+        formatBirthday.value = formattedDate
+      } else {
+        formatBirthday.value = ''
+      }
+    } else {
+      formatBirthday.value = ''
+    }
   },
-  { immediate: true, deep: true }
+  { deep: true }
+)
+
+// Watch formatBirthday để cập nhật birthday khi có thay đổi từ bên ngoài
+watch(
+  formatBirthday,
+  (newValue) => {
+    if (newValue && newValue !== formatBirthday.value) {
+      initializeBirthday()
+    }
+  }
 )
 
 // Tính toán các tùy chọn
