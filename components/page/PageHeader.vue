@@ -61,37 +61,94 @@
         <!-- User Menu -->
         <ClientOnly>
           <Transition name="dropdown" mode="out-in">
-            <UIDropdown v-if="authStore.userName && authStore.token" v-model="userDropdown">
+            <!-- Avatar Box khi đã đăng nhập -->
+            <div v-if="authStore.isAuthenticated" class="relative">
               <button
-                class="flex items-center gap-2 rounded-lg px-4 py-2 text-body font-medium transition-all hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                @click="toggleUserDropdown"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-body font-medium transition-all hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
               >
-                <Icon name="ic:outline-account-circle" class="text-icon-md" />
-                <span>{{ authStore.userName }}</span>
-                <Icon name="ic:baseline-keyboard-arrow-down" class="text-icon-sm transition-transform" :class="{ 'rotate-180': userDropdown }" />
+                                 <!-- Avatar -->
+                 <div class="relative">
+                   <div
+                     v-if="getUserImageUrl()"
+                     class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-200"
+                   >
+                     <img
+                       :src="getUserImageUrl()"
+                       :alt="getUserFullName()"
+                       class="h-full w-full object-cover"
+                       @error="handleImageError"
+                     />
+                   </div>
+                   <div
+                     v-else
+                     class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white font-semibold text-lg border-2 border-primary-200"
+                   >
+                     {{ getUserInitials() }}
+                   </div>
+                   <!-- Online indicator -->
+                   <div class="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></div>
+                 </div>
+                
+                <!-- User name -->
+                <span class="hidden md:block">{{ getUserFullName() }}</span>
+                
+                <!-- Dropdown arrow -->
+                <Icon 
+                  name="ic:baseline-keyboard-arrow-down" 
+                  class="text-icon-sm transition-transform" 
+                  :class="{ 'rotate-180': isUserDropdownOpen }" 
+                />
               </button>
-              
-              <template #item>
-                <div class="min-w-[200px] rounded-xl bg-background-primary p-2 shadow-xl border border-border-light">
+
+              <!-- Dropdown Menu -->
+              <div
+                v-if="isUserDropdownOpen"
+                class="absolute right-0 top-full mt-2 min-w-[200px] rounded-xl bg-white p-2 shadow-xl border border-gray-200 z-50"
+              >
+                <!-- Menu Items -->
+                <div class="py-1">
                   <NuxtLink 
                     to="/user" 
-                    @click="userDropdown = false"
-                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-body transition-colors hover:bg-neutral-100"
+                    @click="closeUserDropdown"
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                   >
                     <Icon name="ic:outline-person" class="text-icon-sm" />
                     Tài khoản của tôi
                   </NuxtLink>
 
-                  <button 
-                    @click="logout"
-                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-body text-error-600 transition-colors hover:bg-error-50"
+                  <NuxtLink 
+                    to="/user/orders" 
+                    @click="closeUserDropdown"
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                   >
-                    <Icon name="ic:outline-logout" class="text-icon-sm" />
-                    Đăng xuất
-                  </button>
+                    <Icon name="ic:outline-receipt" class="text-icon-sm" />
+                    Đơn đặt phòng
+                  </NuxtLink>
                 </div>
-              </template>
-            </UIDropdown>
 
+                <!-- Divider -->
+                <div class="border-t border-gray-100 my-1"></div>
+
+                <!-- Logout -->
+                <button 
+                  @click="handleUserLogout"
+                  class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50"
+                >
+                  <Icon name="ic:outline-logout" class="text-icon-sm" />
+                  Đăng xuất
+                </button>
+              </div>
+
+              <!-- Backdrop to close dropdown -->
+              <div
+                v-if="isUserDropdownOpen"
+                class="fixed inset-0 z-40"
+                @click="closeUserDropdown"
+              ></div>
+            </div>
+
+            <!-- Login Button khi chưa đăng nhập -->
             <NuxtLink 
               v-else 
               to="/auth/login"
@@ -162,7 +219,7 @@
           </NuxtLink>
           
           <NuxtLink
-            v-if="authStore.userName && authStore.token"
+            v-if="authStore.isAuthenticated"
             class="block rounded-lg px-4 py-3 text-h5 font-medium text-text-inverse transition-colors hover:bg-background-primary/10"
             to="/user"
             @click="toggleModal('close')"
@@ -188,7 +245,7 @@
           </NuxtLink>
           
           <button
-            v-if="authStore.userName && authStore.token"
+            v-if="authStore.isAuthenticated"
             class="block w-full rounded-lg px-4 py-3 text-h5 font-medium text-error-400 transition-colors hover:bg-error-500/10"
             @click="logout"
           >
@@ -222,6 +279,58 @@ const toggleModal = (event: string) => {
   }
 }
 
+/* User dropdown */
+const isUserDropdownOpen = ref(false)
+const toggleUserDropdown = () => {
+  isUserDropdownOpen.value = !isUserDropdownOpen.value
+}
+
+const closeUserDropdown = () => {
+  isUserDropdownOpen.value = false
+}
+
+/* User methods */
+const getUserFullName = () => {
+  if (authStore.customerProfile) {
+    return `${authStore.customerProfile.firstName || ''} ${authStore.customerProfile.lastName || ''}`.trim()
+  }
+  return authStore.userName || 'User'
+}
+
+const getUserInitials = () => {
+  const fullName = getUserFullName()
+  if (!fullName) return 'U'
+  
+  const names = fullName.split(' ')
+  if (names.length === 1) {
+    return names[0].charAt(0).toUpperCase()
+  }
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase()
+}
+
+const getUserImageUrl = () => {
+  // Debug: log ra dữ liệu để kiểm tra
+  console.log('Debug - customerProfile:', authStore.customerProfile)
+  console.log('Debug - imageUrl:', authStore.customerProfile?.imageUrl)
+  
+  // Kiểm tra customerProfile.imageUrl trước
+  if (authStore.customerProfile?.imageUrl) {
+    return authStore.customerProfile.imageUrl
+  }
+  return undefined
+}
+
+const handleImageError = (event: Event) => {
+  console.log('Image failed to load:', event)
+  // Có thể thêm logic fallback ở đây
+}
+
+const handleUserLogout = async () => {
+  closeUserDropdown()
+  authStore.clearAuth()
+  await navigateTo('/')
+}
+
 /* Header background change on scroll */
 const { y } = useWindowScroll()
 const scrolled = ref(false)
@@ -230,16 +339,19 @@ onMounted(() => {
   watch(y, () => {
     scrolled.value = y.value > 50
   })
+  
+  // Close user dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if (!target.closest('.relative')) {
+      closeUserDropdown()
+    }
+  })
 })
-
-/* User dropdown */
-const userDropdown = ref(false)
 
 // Logout function
 const logout = async () => {
-  userDropdown.value = false
-  authStore.token = ''
-  authStore.userName = ''
+  authStore.clearAuth()
   if (useAuth.includes(route.name as string)) {
     toggleModal('close')
     await navigateTo('/')

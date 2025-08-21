@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="mx-auto max-w-7xl space-y-8 p-6">
+    <div class="mx-auto w-4/6 space-y-8 p-6">
       
       <!-- User Welcome Section -->
       <div 
