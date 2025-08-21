@@ -65,8 +65,11 @@ watch(
   birthday,
   () => {
     const { YYYY, MM, DD } = birthday.value
-    const formattedDate = `${YYYY}-${MM}-${DD}`
-    formatBirthday.value = $dayjs(formattedDate, 'YYYY-M-D', true).isValid() ? formattedDate : ''
+    // Đảm bảo format đúng chuẩn ISO: YYYY-MM-DD
+    const formattedMonth = String(MM).padStart(2, '0')
+    const formattedDay = String(DD).padStart(2, '0')
+    const formattedDate = `${YYYY}-${formattedMonth}-${formattedDay}`
+    formatBirthday.value = $dayjs(formattedDate, 'YYYY-MM-DD', true).isValid() ? formattedDate : ''
   },
   { immediate: true, deep: true }
 )

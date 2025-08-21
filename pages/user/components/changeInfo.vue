@@ -129,7 +129,7 @@
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Địa chỉ</p>
                       <p class="text-base font-semibold text-gray-900">
-                        {{ customerData.address || 'Chưa cập nhật' }}
+                        {{ getFullAddress() }}
                       </p>
                     </div>
                   </div>
@@ -258,7 +258,7 @@
             <div class="space-y-2">
               <CBirthday
                 v-model="formData.dateOfBirth"
-                :error="errors.dateOfBirth"
+               
                 blackhead
                 :disabled="pending"
                 class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
@@ -278,21 +278,69 @@
                 <option value="FEMALE">Nữ</option>
                 <option value="OTHER">Khác</option>
               </select>
-              <span v-if="errors.sex" class="text-sm text-red-600">{{ errors.sex }}</span>
+             
             </div>
 
             <!-- Địa chỉ -->
-            <div class="md:col-span-2 space-y-2">
-              <UIInput
-                v-model="formData.address"
-                name="address"
-                label="Địa chỉ *"
-                placeholder="Vui lòng nhập địa chỉ đầy đủ"
-                :error="errors.address"
-                blackhead
-                :disabled="pending"
-                class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-              />
+            <div class="md:col-span-2 space-y-4">
+              <label class="block text-sm font-medium text-gray-700">Địa chỉ *</label>
+              
+              <!-- Đường -->
+              <div class="space-y-2">
+                <UIInput
+                  v-model="formData.address.street"
+                  name="address.street"
+                  label="Đường *"
+                  placeholder="Vui lòng nhập đường"
+                  :error="errors['address.street']"
+                  blackhead
+                  :disabled="pending"
+                  class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              
+              <!-- Phường/Xã và Quận/Huyện -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <UIInput
+                    v-model="formData.address.ward"
+                    name="address.ward"
+                    label="Phường/Xã *"
+                    placeholder="Vui lòng nhập phường/xã"
+                    :error="errors['address.ward']"
+                    blackhead
+                    :disabled="pending"
+                    class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div class="space-y-2">
+                  <UIInput
+                    v-model="formData.address.district"
+                    name="address.district"
+                    label="Quận/Huyện *"
+                    placeholder="Vui lòng nhập quận/huyện"
+                    :error="errors['address.district']"
+                    blackhead
+                    :disabled="pending"
+                    class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <!-- Tỉnh/Thành phố -->
+              <div class="space-y-2">
+                <UIInput
+                  v-model="formData.address.city"
+                  name="address.city"
+                  label="Tỉnh/Thành phố *"
+                  placeholder="Vui lòng nhập tỉnh/thành phố"
+                  :error="errors['address.city']"
+                  blackhead
+                  :disabled="pending"
+                  class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
             </div>
           </div>
 
@@ -312,6 +360,7 @@
               text="Lưu thay đổi"
               :disabled="pending"
               :loading="pending"
+              @click="updateCustomerInfo()"
               class="flex-1 sm:flex-none rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-600 px-8 py-3 text-white hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             />
           </div>
@@ -426,7 +475,12 @@ const formData = ref({
   firstName: '',
   lastName: '',
   dateOfBirth: '',
-  address: '',
+  address: {
+    street: '',
+    ward: '',
+    district: '',
+    city: ''
+  },
   sex: ''
 })
 
@@ -435,7 +489,10 @@ const schema = {
   firstName: 'required',
   lastName: 'required',
   dateOfBirth: 'required',
-  address: 'required',
+  'address.street': 'required',
+  'address.ward': 'required',
+  'address.district': 'required',
+  'address.city': 'required',
   sex: 'required'
 }
 
@@ -465,14 +522,18 @@ const updateCustomerInfo = async () => {
     console.log('Updating customer info with data:', formData.value)
     console.log('Customer ID:', customerData.value?.customerId)
     
+    // Format ngày tháng để đảm bảo đúng chuẩn ISO
+    const formattedDateOfBirth = formatDateToISO(formData.value.dateOfBirth)
+    
     const response = await updateCustomerApi({
       body: {
         customerId: customerData.value?.customerId,
         firstName: formData.value.firstName,
         lastName: formData.value.lastName,
         address: formData.value.address,
-        dateOfBirth: formData.value.dateOfBirth,
-        sex: formData.value.sex
+        dateOfBirth: formattedDateOfBirth,
+        sex: formData.value.sex,
+        active: true
       }
     })
     
@@ -522,8 +583,73 @@ const toggleForm = (action: 'show' | 'hide') => {
     // Điền dữ liệu vào form - Đã loại bỏ phone
     formData.value.firstName = customerData.value.firstName || ''
     formData.value.lastName = customerData.value.lastName || ''
-    formData.value.dateOfBirth = customerData.value.dateOfBirth || ''
-    formData.value.address = customerData.value.address || ''
+    
+    // Format ngày tháng để đảm bảo đúng chuẩn ISO
+    if (customerData.value.dateOfBirth) {
+      try {
+        const date = $dayjs(customerData.value.dateOfBirth)
+        if (date.isValid()) {
+          formData.value.dateOfBirth = date.format('YYYY-MM-DD')
+        } else {
+          formData.value.dateOfBirth = customerData.value.dateOfBirth
+        }
+      } catch (error) {
+        console.error('Error formatting dateOfBirth:', error)
+        formData.value.dateOfBirth = customerData.value.dateOfBirth || ''
+      }
+    } else {
+      formData.value.dateOfBirth = ''
+    }
+    
+    // Xử lý địa chỉ từ string sang object
+    if (customerData.value.address) {
+      try {
+        // Nếu address là string, cố gắng parse hoặc tách thành các phần
+        if (typeof customerData.value.address === 'string') {
+          const addressParts = customerData.value.address.split(',')
+          if (addressParts.length >= 4) {
+            formData.value.address = {
+              street: addressParts[0]?.trim() || '',
+              ward: addressParts[1]?.trim() || '',
+              district: addressParts[2]?.trim() || '',
+              city: addressParts[3]?.trim() || ''
+            }
+          } else {
+            // Nếu không đủ phần, gán vào street
+            formData.value.address = {
+              street: customerData.value.address,
+              ward: '',
+              district: '',
+              city: ''
+            }
+          }
+        } else if (typeof customerData.value.address === 'object') {
+          // Nếu address đã là object
+          formData.value.address = {
+            street: customerData.value.address.street || '',
+            ward: customerData.value.address.ward || '',
+            district: customerData.value.address.district || '',
+            city: customerData.value.address.city || ''
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing address:', error)
+        formData.value.address = {
+          street: customerData.value.address || '',
+          ward: '',
+          district: '',
+          city: ''
+        }
+      }
+    } else {
+      formData.value.address = {
+        street: '',
+        ward: '',
+        district: '',
+        city: ''
+      }
+    }
+    
     formData.value.sex = customerData.value.sex || ''
     
     console.log('Form data populated:', formData.value)
@@ -693,6 +819,45 @@ const uploadImage = async () => {
     })
   } finally {
     imageUploading.value = false
+  }
+}
+
+const getFullAddress = () => {
+  if (!customerData.value?.address) return 'Chưa cập nhật'
+  
+  if (typeof customerData.value.address === 'string') {
+    return customerData.value.address
+  }
+  
+  if (typeof customerData.value.address === 'object') {
+    const { street, ward, district, city } = customerData.value.address
+    return [street, ward, district, city].filter(Boolean).join(', ')
+  }
+  
+  return 'Chưa cập nhật'
+}
+
+// Hàm format ngày tháng thành chuẩn ISO
+const formatDateToISO = (dateString: string): string => {
+  if (!dateString) return ''
+  
+  try {
+    // Nếu dateString đã đúng format ISO (YYYY-MM-DD), trả về nguyên
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      return dateString
+    }
+    
+    // Nếu dateString có format khác, parse và format lại
+    const date = $dayjs(dateString)
+    if (date.isValid()) {
+      return date.format('YYYY-MM-DD')
+    }
+    
+    // Fallback: trả về dateString gốc
+    return dateString
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return dateString
   }
 }
 </script>

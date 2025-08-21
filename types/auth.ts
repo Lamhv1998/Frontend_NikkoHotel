@@ -77,6 +77,13 @@ export type UserResponse = {
 }
 
 // Customer API Types
+export type AddressDto = {
+  street: string
+  ward: string
+  district: string
+  city: string
+}
+
 export type CustomerDto = {
   customerId: string
   firstName: string
@@ -117,8 +124,10 @@ export type CreateCustomerCommand = {
 
 export type UpdateCustomerCommand = {
   customerId: string
-  name?: string
-  phone?: string
-  birthday?: string
-  address?: Address
+  firstName: string
+  lastName: string
+  address: AddressDto
+  dateOfBirth: string
+  sex: string
+  active: boolean
 }
