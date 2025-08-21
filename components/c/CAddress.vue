@@ -5,40 +5,47 @@
     >
 
     <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <!-- Tỉnh/Thành phố -->
       <UISelect
-        v-model="city"
+        v-model="selectedProvince"
         placeholder="--Tỉnh/Thành phố--"
         :error="props.zipcodeError"
-        :options="citys"
+        :options="provinces"
+        value="code"
+        label="name"
         :disabled="props.disabled"
+        @update:model-value="onProvinceChange"
       />
+      
+      <!-- Quận/Huyện -->
       <UISelect
-        id="zipcode"
-        v-model="address.zipcode"
-        label="district"
-        value="zip_code"
+        v-model="selectedDistrict"
         placeholder="--Quận/Huyện--"
         :error="props.zipcodeError"
         :options="districts"
-        :placeholder-value="0"
-        :disabled="props.disabled"
+        value="code"
+        label="name"
+        :disabled="props.disabled || !selectedProvince"
+        @update:model-value="onDistrictChange"
       />
     </div>
+    
     <VField
-      v-model.trim="address.zipcode"
+      v-model="addressCity"
       class="hidden"
-      name="zipcode"
-      label="Tỉnh/Thành phố, Quận/Huyện"
+      name="city"
+      label="Tỉnh/Thành phố"
     />
     <VErrorMessage
       class="block text-sub-title text-system-error-120 xl:text-title"
-      name="zipcode"
+      name="city"
     />
+    
     <UIInput
-      v-model="address.detail"
+      v-model="addressDetail"
       name="detail"
       label="Địa chỉ chi tiết"
-      placeholder="Vui lòng nhập địa chỉ chi tiết"
+      placeholder="Vui lòng nhập địa chỉ chi tiết (số nhà, tên đường, ...)"
       :error="props.detailError"
       headless
       :disabled="props.disabled"
@@ -48,6 +55,8 @@
 
 <script lang="ts" setup>
 import type { Address } from '@/types'
+import type { Province, District } from '@/api/address'
+import { vietnamProvinces, vietnamDistricts } from '@/data/vietnam-provinces'
 
 /* props */
 const props = defineProps({
@@ -68,58 +77,144 @@ const props = defineProps({
 
 /* Địa chỉ */
 const address = defineModel<Address>({
-  default: { zipcode: 0, detail: '' }
+  default: { city: '', district: '', detail: '' }
 })
 
-/* Tỉnh/Thành phố */
-const city = ref('')
-
-/* api */
-const { getCitysApi, getDistrictApi } = useApi()
-
-// api: Lấy danh sách tỉnh/thành phố
-const { data: citys } = await getCitysApi({
-  transform(input) {
-    return input.data
+// Đảm bảo address luôn là object
+const ensureAddressObject = (value: any): Address => {
+  if (typeof value === 'string') {
+    // Nếu là string, tách thành các phần và gán vào object
+    const parts = value.split(',').map(part => part.trim())
+    return {
+      city: parts[2] || '', // TP.HCM
+      district: parts[1] || '', // Q1
+      detail: parts[0] || '' // 123A Lê Lợi
+    }
   }
-})
+  return value || { city: '', district: '', detail: '' }
+}
 
-// api: Lấy danh sách quận/huyện
-const { data: districts } = await getDistrictApi({
-  query: { city },
-  immediate: false,
-  transform(input) {
-    return input.data
+/* Selected values */
+const selectedProvince = ref('')
+const selectedDistrict = ref('')
+
+/* API - Không cần thiết khi sử dụng dữ liệu tĩnh */
+// const { getProvincesApi, getDistrictsApi } = useApi()
+
+// Lấy danh sách tỉnh/thành phố
+const provinces = ref<Province[]>([])
+const districts = ref<District[]>([])
+
+// Load provinces
+const loadProvinces = async () => {
+  // Sử dụng dữ liệu tĩnh hoàn toàn
+  provinces.value = vietnamProvinces
+}
+
+// Load districts
+const loadDistricts = async (provinceCode: string) => {
+  // Sử dụng dữ liệu tĩnh hoàn toàn
+  districts.value = (vietnamDistricts as any)[provinceCode] || []
+}
+
+// Load provinces on mount
+await loadProvinces()
+
+// Khi chọn tỉnh/thành phố
+const onProvinceChange = (value: string | number | undefined) => {
+  if (typeof value === 'string' && value) {
+    selectedDistrict.value = ''
+    // Đảm bảo address là object trước khi gán
+    if (typeof address.value === 'string') {
+      address.value = ensureAddressObject(address.value)
+    }
+    address.value.city = provinces.value?.find((p: Province) => p.code === value)?.name || ''
+    address.value.district = ''
+    loadDistricts(value)
+  }
+}
+
+// Khi chọn quận/huyện
+const onDistrictChange = (value: string | number | undefined) => {
+  if (typeof value === 'string' && value) {
+    // Đảm bảo address là object trước khi gán
+    if (typeof address.value === 'string') {
+      address.value = ensureAddressObject(address.value)
+    }
+    address.value.district = districts.value?.find((d: District) => d.code === value)?.name || ''
+  }
+}
+
+// Computed properties
+const addressCity = computed({
+  get: () => {
+    if (typeof address.value === 'string') {
+      return ''
+    }
+    return address.value?.city || ''
   },
-  onResponse({ response }) {
-    // Khi zipcode không có trong danh sách quận/huyện, đặt lại zipcode về 0
-    if (
-      response.status === 200 &&
-      response._data.data.every((item: any) => {
-        return item.zip_code !== address.value.zipcode.toString()
-      })
-    ) {
-      address.value.zipcode = 0
+  set: (value: string) => {
+    if (typeof address.value === 'string') {
+      // Nếu address là string, chuyển thành object
+      const parts = (address.value as string).split(',').map((part: string) => part.trim())
+      address.value = {
+        city: value,
+        district: parts[1] || '',
+        detail: parts[0] || ''
+      }
+    } else {
+      if (address.value && typeof address.value === 'object') {
+        address.value.city = value
+      }
     }
   }
 })
 
-// Khi zipcode thay đổi, lấy thông tin tỉnh/thành phố và quận/huyện
-watch(
-  () => address.value.zipcode,
-  () => {
-    // Không xử lý khi zipcode là 0
-    if (address.value.zipcode === 0) return
-
-    getDistrictApi({
-      query: { zip_code: address.value.zipcode },
-      onResponse({ response }) {
-        if (response.status === 200) {
-          city.value = response._data.data[0].city
-        }
-      }
-    })
+const addressDetail = computed({
+  get: () => {
+    if (typeof address.value === 'string') {
+      return address.value
+    }
+    return address.value?.detail || ''
   },
-  { immediate: true }
-)
+  set: (value: string) => {
+    if (typeof address.value === 'string') {
+      // Nếu address là string, chuyển thành object
+      const parts = (address.value as string).split(',').map((part: string) => part.trim())
+      address.value = {
+        city: parts[2] || '',
+        district: parts[1] || '',
+        detail: value
+      }
+    } else {
+      if (address.value && typeof address.value === 'object') {
+        address.value.detail = value
+      }
+    }
+  }
+})
+
+// Watch để cập nhật address khi có dữ liệu từ props
+watch(() => address.value, (newAddress) => {
+  // Đảm bảo address là object
+  if (typeof newAddress === 'string') {
+    address.value = ensureAddressObject(newAddress)
+    return
+  }
+  
+  if (newAddress?.city && provinces.value) {
+    const province = provinces.value.find((p: Province) => p.name === newAddress.city)
+    if (province) {
+      selectedProvince.value = province.code
+      loadDistricts(province.code)
+    }
+  }
+  
+  if (newAddress?.district && districts.value) {
+    const district = districts.value.find((d: District) => d.name === newAddress.district)
+    if (district) {
+      selectedDistrict.value = district.code
+    }
+  }
+}, { deep: true, immediate: true })
 </script>

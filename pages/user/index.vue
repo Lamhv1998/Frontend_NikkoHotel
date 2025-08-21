@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="mx-auto w-4/6 space-y-8 p-6">
+    <div class="space-y-8 p-6">
       
       <!-- User Welcome Section -->
       <div 
@@ -54,42 +54,31 @@
               
               <!-- Customer Profile Info -->
               <div v-if="customerProfile" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-amber-100">
-                <div class="flex items-center space-x-2">
+                <!-- <div class="flex items-center space-x-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                   </svg>
                   <span>ID: {{ customerProfile.customerId?.slice(0, 8) }}...</span>
-                </div>
+                </div> -->
                 <div class="flex items-center space-x-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   <span>Hạng: {{ getLevelText(customerProfile.level) }}</span>
                 </div>
-                <div class="flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
-                  <span>Ngày sinh: {{ formatDate(customerProfile.dateOfBirth) }}</span>
-                </div>
-                <div class="flex items-center space-x-2">
+                <!-- <div class="flex items-center space-x-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
                   <span>Địa chỉ: {{ customerProfile.address }}</span>
-                </div>
+                </div> -->
               </div>
-              
               <!-- No Customer Profile Message -->
               <div v-else class="mt-4 p-3 bg-yellow-500/20 rounded-lg">
                 <p class="text-yellow-200 text-sm">Chưa có thông tin customer profile</p>
               </div>
             </div>
-          </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold">{{ user.email }}</div>
-            <div class="text-amber-100">{{ user.phone || 'Chưa cập nhật' }}</div>
           </div>
         </div>
       </div>
