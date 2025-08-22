@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-system-gray-10">
+  <div class="min-h-screen bg-system-gray-10 pt-20">
     <!-- Header Section -->
     <div class="bg-white shadow-sm">
       <div class="container mx-auto px-4 py-6">
@@ -91,7 +91,7 @@
       </div>
 
       <!-- Grid Layout -->
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div
           v-for="roomType in sortedRoomTypes"
           :key="roomType.id"
