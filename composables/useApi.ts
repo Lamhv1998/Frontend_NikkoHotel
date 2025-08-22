@@ -5,6 +5,7 @@ import roomAPI from '../api/room.ts'
 import userAPI from '../api/user.ts'
 import verifyAPI from '../api/verify.ts'
 import customerAPI from '../api/customer.ts'
+import notificationAPI from '../api/notification.ts'
 
 export default function () {
   return {
@@ -14,6 +15,7 @@ export default function () {
     ...homeAPI,
     ...roomAPI,
     ...orderAPI,
-    ...customerAPI
+    ...customerAPI,
+    ...notificationAPI
   }
 }

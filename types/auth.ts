@@ -48,11 +48,18 @@ export type ApiResponse<T> = {
   result: T
 }
 
-// User API Types
+// User API Types - Cập nhật để khớp với backend
 export type UserCreationRequest = {
-  name: string
   email: string
   password: string
+  phone?: string
+}
+
+// Type mở rộng cho frontend (bao gồm thông tin bổ sung)
+export type ExtendedUserCreationRequest = {
+  email: string
+  password: string
+  name: string
   phone: string
   birthday: string
   address: Address
@@ -131,4 +138,34 @@ export type UpdateCustomerCommand = {
   dateOfBirth?: string
   address?: Address
   sex?: string
+}
+
+// OTP Types for Password Change
+export type SendOtpRequest = {
+  userEmail: string
+}
+
+export type SendOtpResponse = {
+  message: string
+  otp?: string // Chỉ có trong dev/test environment
+}
+
+export type VerifyOtpRequest = {
+  userEmail: string
+  otp: string
+}
+
+export type VerifyOtpResponse = {
+  message: string
+}
+
+// Password Change Types
+export type ChangePasswordRequest = {
+  userId: string
+  oldPassword: string
+  newPassword: string
+}
+
+export type ChangePasswordResponse = {
+  message: string
 }

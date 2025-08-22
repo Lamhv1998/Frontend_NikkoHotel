@@ -1,38 +1,44 @@
-import type { UseFetchOptions } from 'nuxt/app'
-import type { CustomerDto, CreateCustomerCommand, UpdateCustomerCommand, ApiResponse } from '@/types/auth'
-
-const customerAPI = {
-  getCustomerProfileApi: <T = any>(options: UseFetchOptions<T>) => {
-    const { getCustomerProfile } = useCustomerService()
-    const userId = options.params?.userId || options.body?.userId
-    
-    if (!userId) {
-      throw new Error('User ID is required')
-    }
-    
-    return getCustomerProfile(userId as string)
+export default {
+  // Get customer profile
+  getCustomerProfileApi: (userId: string) => {
+    return useHttp().get(`/customers/profile/${userId}`)
   },
-
-  createCustomerApi: <T = any>(options: UseFetchOptions<T>) => {
-    const { createCustomer } = useCustomerService()
-    return createCustomer(options.body as CreateCustomerCommand)
+  
+  // Update customer profile
+  updateCustomerApi: (options: { body: any }) => {
+    return useHttp().put('/customers/update', options.body)
   },
-
-  updateCustomerApi: <T = any>(options: UseFetchOptions<T>) => {
-    const { updateCustomer } = useCustomerService()
-    return updateCustomer(options.body as UpdateCustomerCommand)
+  
+  // Create customer
+  createCustomerApi: (options: { body: any }) => {
+    return useHttp().post('/customers/create', options.body)
   },
-
-  updateCustomerAvatarApi: <T = any>(options: UseFetchOptions<T>) => {
-    const { updateCustomerAvatar } = useCustomerService()
-    const { customerId, imageFile } = options.body as { customerId: string; imageFile: File }
+  
+  // Update customer avatar
+  updateCustomerAvatarApi: (options: { body: { customerId: string, imageFile: File } }) => {
+    const formData = new FormData()
+    formData.append('customerId', options.body.customerId)
+    formData.append('imageFile', options.body.imageFile)
     
-    if (!customerId || !imageFile) {
-      throw new Error('Customer ID and image file are required')
-    }
-    
-    return updateCustomerAvatar(customerId, imageFile)
+    return useHttp().put('/customers/update-avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+  
+  // Get customer by ID
+  getCustomerByIdApi: (customerId: string) => {
+    return useHttp().get(`/customers/${customerId}`)
+  },
+  
+  // Get customer orders
+  getCustomerOrdersApi: (customerId: string) => {
+    return useHttp().get(`/customers/${customerId}/orders`)
+  },
+  
+  // Get customer membership info
+  getCustomerMembershipApi: (customerId: string) => {
+    return useHttp().get(`/customers/${customerId}/membership`)
   }
 }
-
-export default customerAPI
