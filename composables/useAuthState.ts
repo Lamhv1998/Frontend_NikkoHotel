@@ -1,5 +1,3 @@
-import { useAuthStore } from '@/stores/auth'
-
 export const useAuthState = () => {
   const authStore = useAuthStore()
 
@@ -10,43 +8,45 @@ export const useAuthState = () => {
   const userName = computed(() => authStore.userName)
   const userEmail = computed(() => authStore.email)
 
-  // Methods
+  // Helper functions
   const getFullName = () => {
-    if (customerProfile.value) {
-      return `${customerProfile.value.firstName || ''} ${customerProfile.value.lastName || ''}`.trim()
-    }
-    return user.value?.name || userName.value || 'User'
+    if (!authStore.customerProfile) return 'User'
+    const firstName = authStore.customerProfile.firstName || ''
+    const lastName = authStore.customerProfile.lastName || ''
+    if (!firstName && !lastName) return 'User'
+    return `${firstName} ${lastName}`.trim()
   }
 
   const getInitials = () => {
-    const fullName = getFullName()
-    if (!fullName) return 'U'
-    
-    const names = fullName.split(' ')
-    if (names.length === 1) {
-      return names[0].charAt(0).toUpperCase()
-    }
-    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase()
+    if (!authStore.customerProfile) return 'U'
+    const firstName = authStore.customerProfile.firstName || ''
+    const lastName = authStore.customerProfile.lastName || ''
+    if (!firstName && !lastName) return 'U'
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase()
   }
 
   const getUserAvatar = () => {
-    return customerProfile.value?.imageUrl || null
+    return authStore.customerProfile?.imageUrl || null
   }
 
+  // Logout function
   const logout = async () => {
-    authStore.clearAuth()
-    // Có thể thêm logic redirect hoặc cleanup khác ở đây
+    try {
+      authStore.clearAuth()
+      await navigateTo('/')
+      return { success: true, message: 'Đăng xuất thành công!' }
+    } catch (error) {
+      console.error('Logout error:', error)
+      return { success: false, message: 'Có lỗi xảy ra khi đăng xuất' }
+    }
   }
 
   return {
-    // State
     isAuthenticated,
     user,
     customerProfile,
     userName,
     userEmail,
-    
-    // Methods
     getFullName,
     getInitials,
     getUserAvatar,

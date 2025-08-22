@@ -89,10 +89,11 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
       mapApiKey: process.env.MAP_API_KEY,
       apiGatewayUrl: process.env.API_GATEWAY_URL || 'http://localhost:8092',
-      authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:8092',
+      authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:8092',//giu lai
       userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8092',
-      customerServiceUrl: process.env.CUSTOMER_SERVICE_URL || 'http://localhost:8099',
-      roomServiceUrl: process.env.ROOM_SERVICE_URL || 'http://localhost:8087'
+      customerServiceUrl: process.env.CUSTOMER_SERVICE_URL || 'http://localhost:8099',//giu lai
+      roomServiceUrl: process.env.ROOM_SERVICE_URL || 'http://localhost:8087',//giu lai
+      notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:8190' // Fallback URL
     }
   },
 
