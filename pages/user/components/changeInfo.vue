@@ -467,6 +467,9 @@ const fileInput = ref<HTMLInputElement | null>(null)
 /* Dữ liệu khách hàng */
 const customerData = computed(() => props.customerProfile || props.user)
 
+// Lưu trữ số điện thoại ban đầu để so sánh
+const originalPhone = ref('')
+
 /* API */
 const { updateCustomerApi, updateUserApi } = useApi()
 
@@ -499,27 +502,46 @@ const updateCustomerInfo = async () => {
       }
     });
     
-    // Gọi API update user (để cập nhật phone và các thông tin khác nếu cần)
-    const userUpdateRequest: UserUpdatedRequest = {
-      userId: props.user?.userId || props.user?.id,
-      phone: props.user?.phone,
-    }
+    // Kiểm tra xem số điện thoại có thay đổi hay không
+    const currentPhone = props.user?.phone || ''
+    const hasPhoneChanged = currentPhone !== originalPhone.value
     
-    const userResponse = await updateUserApi({
-      body: userUpdateRequest
-    });
+    let userResponse = null
+    
+    // Chỉ gọi API update user nếu số điện thoại đã thay đổi
+    if (hasPhoneChanged) {
+      console.log('Phone number changed, calling update user API')
+      const userUpdateRequest: UserUpdatedRequest = {
+        userId: props.user?.userId || props.user?.id,
+        phone: currentPhone,
+      }
+      
+      userResponse = await updateUserApi({
+        body: userUpdateRequest
+      });
+    } else {
+      console.log('Phone number unchanged, skipping user update API call')
+    }
     
     console.log('Customer update response:', customerResponse)
     console.log('User update response:', userResponse)
     
-    if (customerResponse && userResponse) {
+    // Kiểm tra thành công: customerResponse phải thành công và userResponse chỉ cần thành công nếu có gọi API
+    const isCustomerUpdateSuccess = customerResponse
+    const isUserUpdateSuccess = hasPhoneChanged ? userResponse : true // Nếu không thay đổi phone thì coi như thành công
+    
+    if (isCustomerUpdateSuccess && isUserUpdateSuccess) {
       // Hiển thị thông báo thành công
       const commonStore = useCommonStore()
       const styleStore = useStyleStore()
       
+      const successMessage = hasPhoneChanged 
+        ? 'Thông tin cá nhân và số điện thoại đã được cập nhật'
+        : 'Thông tin cá nhân đã được cập nhật'
+      
       commonStore.sweetalertList.push({
         title: 'Cập nhật thành công',
-        text: 'Thông tin cá nhân đã được cập nhật',
+        text: successMessage,
         icon: 'success',
         confirmButtonText: 'Xác nhận',
         confirmButtonColor: styleStore.confirmButtonColor
@@ -527,6 +549,7 @@ const updateCustomerInfo = async () => {
       
       // Ẩn form và refresh dữ liệu
       isFormShow.value = false
+      originalPhone.value = '' // Reset original phone sau khi cập nhật thành công
       emit('getUserRefresh')
     }
   } catch (error: any) {
@@ -567,6 +590,9 @@ const toggleForm = (action: 'show' | 'hide') => {
   isFormShow.value = action === 'show'
   
   if (action === 'show' && customerData.value) {
+    // Lưu số điện thoại ban đầu để so sánh
+    originalPhone.value = props.user?.phone || ''
+    
     // Điền dữ liệu vào form
     formData.value.firstName = customerData.value.firstName || ''
     formData.value.lastName = customerData.value.lastName || ''
@@ -602,6 +628,8 @@ const cancelEdit = () => {
   isFormShow.value = false
   // Reset form
   formRefs.value?.resetForm()
+  // Reset original phone
+  originalPhone.value = ''
 }
 
 const getInitials = () => {
