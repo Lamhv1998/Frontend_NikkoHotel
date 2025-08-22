@@ -50,6 +50,19 @@
       :loading="pending"
     />
 
+    <!-- Phân cách -->
+    <div class="relative">
+      <div class="absolute inset-0 flex items-center">
+        <span class="w-full border-t border-gray-300" />
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="bg-white px-2 text-gray-500">Hoặc</span>
+      </div>
+    </div>
+
+    <!-- Nút đăng nhập Google -->
+    <UIGoogleButton :disabled="googlePending" :loading="googlePending" @click="handleGoogleLogin" />
+
     <div class="flex gap-2">
       <p class="text-body-2 text-text-inverse xl:text-body">Chưa có tài khoản?</p>
       <!-- Liên kết: Đăng ký -->
@@ -61,13 +74,16 @@
 </template>
 
 <script lang="ts" setup>
-import Forgot from './components/forgot.vue'
 import type { AuthenticationRequest } from '@/types/auth'
+import Forgot from './components/forgot.vue'
 
 /* Thuộc tính toàn cục */
 const authStore = useAuthStore()
 const commonStore = useCommonStore()
 const styleStore = useStyleStore()
+
+/* Google Auth */
+const { googleSignIn, checkGoogleCallback } = useGoogleAuth()
 
 /* PageMeta */
 definePageMeta({
@@ -87,11 +103,16 @@ const remember = ref(false)
 
 // Loading state
 const pending = ref(false)
+const googlePending = ref(false)
 
 // Khởi tạo client
 onMounted(() => {
   formData.value.email = authStore.email
   remember.value = authStore.email !== ''
+  
+  // Kiểm tra Google OAuth callback
+  console.log('Checking for Google OAuth callback...')
+  checkGoogleCallback()
 })
 
 // Xử lý đăng nhập
@@ -165,6 +186,31 @@ const handleLogin = async () => {
     }
   } finally {
     pending.value = false
+  }
+}
+
+// Xử lý đăng nhập Google
+const handleGoogleLogin = async () => {
+  if (googlePending.value) return
+  
+  googlePending.value = true
+  
+  try {
+    console.log('Initiating Google login...')
+    await googleSignIn()
+  } catch (error) {
+    console.error('Google login error:', error)
+    
+    // Hiển thị thông báo lỗi
+    commonStore.sweetalertList.push({
+      title: 'Lỗi đăng nhập Google',
+      text: 'Không thể khởi tạo đăng nhập Google. Vui lòng thử lại.',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+      })
+  } finally {
+    googlePending.value = false
   }
 }
 </script>

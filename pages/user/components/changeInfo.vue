@@ -322,6 +322,7 @@
               text="Lưu thay đổi"
               :disabled="pending"
               :loading="pending"
+              @click="updateCustomerInfo()"
               class="flex-1 sm:flex-none rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-600 px-8 py-3 text-white hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             />
           </div>
@@ -392,7 +393,7 @@
             Hủy
           </button>
           <button
-            @click="uploadImage"
+            @click="uploadImage()"
             :disabled="!previewImage || imageUploading"
             class="flex-1 rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-700 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
