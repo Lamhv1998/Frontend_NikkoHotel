@@ -1,5 +1,6 @@
 export type Address = {
-  zipcode: number
+  city: string
+  district: string
   detail: string
 }
 
@@ -58,6 +59,7 @@ export type UserCreationRequest = {
 }
 
 export type UserUpdatedRequest = {
+  userId?: string
   name?: string
   phone?: string
   birthday?: string
@@ -124,10 +126,9 @@ export type CreateCustomerCommand = {
 
 export type UpdateCustomerCommand = {
   customerId: string
-  firstName: string
-  lastName: string
-  address: AddressDto
-  dateOfBirth: string
-  sex: string
-  active: boolean
+  firstName?: string
+  lastName?: string
+  dateOfBirth?: string
+  address?: Address
+  sex?: string
 }

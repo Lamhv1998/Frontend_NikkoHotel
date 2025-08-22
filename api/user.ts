@@ -48,7 +48,25 @@ const userAPI = {
   },
 
   updateUserApi: <T = any>(options: UseFetchOptions<T>) => {
-    return useHttp.put('/api/v1/user', options)
+    const runtimeConfig = useRuntimeConfig()
+    const { authServiceUrl } = runtimeConfig.public
+    const authStore = useAuthStore()
+
+    // Đảm bảo body là object và có userId
+    const requestBody = options.body && typeof options.body === 'object' && !Array.isArray(options.body) 
+      ? options.body as Record<string, any>
+      : {}
+    
+    const userId = requestBody.userId || 'me'
+
+    return $fetch<ApiResponse<UserResponse>>(`${authServiceUrl}/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.token}`
+      },
+      body: requestBody
+    })
   }
 }
 

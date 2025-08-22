@@ -80,10 +80,7 @@
               <div class="flex-1 space-y-6">
                 <!-- Basic Info Header -->
                 <div class="border-b border-amber-200 pb-4">
-                  <h3 class="mb-2 text-3xl font-bold text-gray-900">{{ getFullName() }}</h3>
-                  <p class="text-lg text-gray-600">
-                    Thành viên từ {{ $dayjs(customerData.createdDate || customerData.createdAt).format('MM/YYYY') }}
-                  </p>
+                  <h3 class="mb-2 text-3xl font-bold text-gray-900">Họ tên: {{ getFullName() }}</h3>
                 </div>
 
                 <!-- Customer Profile Info Grid -->
@@ -128,9 +125,9 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Địa chỉ</p>
-                      <p class="text-base font-semibold text-gray-900">
-                        {{ getFullAddress() }}
-                      </p>
+                                             <p class="text-base font-semibold text-gray-900">
+                         {{ formatAddress(customerData.address) || 'Chưa cập nhật' }}
+                       </p>
                     </div>
                   </div>
                   
@@ -148,7 +145,7 @@
                   </div>
                   
                   <!-- Customer ID -->
-                  <div class="flex items-start space-x-4 p-4 rounded-xl bg-white shadow-sm border border-amber-100">
+                  <!-- <div class="flex items-start space-x-4 p-4 rounded-xl bg-white shadow-sm border border-amber-100">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 flex-shrink-0">
                       <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 12a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M13 12a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2"></path>
@@ -160,7 +157,7 @@
                         {{ customerData.customerId?.slice(0, 8) }}...
                       </p>
                     </div>
-                  </div>
+                  </div> -->
 
                   <!-- Số điện thoại (Chỉ đọc) -->
                   <div class="flex items-start space-x-4 p-4 rounded-xl bg-gray-50 shadow-sm border border-gray-200">
@@ -172,7 +169,7 @@
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Số điện thoại</p>
                       <p class="text-base font-semibold text-gray-900">
-                        {{ customerData.phone || 'Chưa cập nhật' }}
+                        {{ user.phone || 'Chưa cập nhật' }}
                       </p>
                       <p class="text-xs text-gray-500 mt-1">Không thể thay đổi</p>
                     </div>
@@ -188,7 +185,7 @@
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-medium text-gray-500 mb-1">Email</p>
                       <p class="text-base font-semibold text-gray-900 break-all">
-                        {{ customerData.email || 'Chưa cập nhật' }}
+                        {{ user.email || 'Chưa cập nhật' }}
                       </p>
                       <p class="text-xs text-gray-500 mt-1">Không thể thay đổi</p>
                     </div>
@@ -223,9 +220,21 @@
             </h3>
             <p class="text-gray-600">Cập nhật thông tin cá nhân của bạn (Số điện thoại và Email không thể thay đổi)</p>
           </div>
-
+            
           <!-- Form Fields -->
           <div class="grid gap-6 md:grid-cols-2">
+            <div class="space-y-2 md:col-span-2">
+              <UIInput
+                v-model="user.phone"
+                name="phone"
+                label="Số điện thoại *"
+                placeholder="Vui nhập số điện thoại"
+                :error="errors.phone"
+                blackhead
+                :disabled="pending"
+                class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
             <!-- Họ -->
             <div class="space-y-2">
               <UIInput
@@ -258,18 +267,22 @@
             <div class="space-y-2">
               <CBirthday
                 v-model="formData.dateOfBirth"
-               
+                name="dateOfBirth"
+                :error="errors.dateOfBirth"
                 blackhead
                 :disabled="pending"
                 class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
               />
+              <VErrorMessage name="dateOfBirth" class="text-sm text-red-600" />
             </div>
 
             <!-- Giới tính -->
             <div class="space-y-2">
               <label class="block text-sm font-medium text-gray-700">Giới tính *</label>
-              <select 
+              <VField
                 v-model="formData.sex"
+                name="sex"
+                as="select"
                 :disabled="pending"
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
               >
@@ -277,71 +290,20 @@
                 <option value="MALE">Nam</option>
                 <option value="FEMALE">Nữ</option>
                 <option value="OTHER">Khác</option>
-              </select>
-             
+              </VField>
+              <VErrorMessage name="sex" class="text-sm text-red-600" />
             </div>
 
-            <!-- Địa chỉ -->
-            <div class="md:col-span-2 space-y-4">
-              <label class="block text-sm font-medium text-gray-700">Địa chỉ *</label>
-              
-              <!-- Đường -->
-              <div class="space-y-2">
-                <UIInput
-                  v-model="formData.address.street"
-                  name="address.street"
-                  label="Đường *"
-                  placeholder="Vui lòng nhập đường"
-                  :error="errors['address.street']"
-                  blackhead
-                  :disabled="pending"
-                  class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              
-              <!-- Phường/Xã và Quận/Huyện -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                  <UIInput
-                    v-model="formData.address.ward"
-                    name="address.ward"
-                    label="Phường/Xã *"
-                    placeholder="Vui lòng nhập phường/xã"
-                    :error="errors['address.ward']"
-                    blackhead
-                    :disabled="pending"
-                    class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-                
-                <div class="space-y-2">
-                  <UIInput
-                    v-model="formData.address.district"
-                    name="address.district"
-                    label="Quận/Huyện *"
-                    placeholder="Vui lòng nhập quận/huyện"
-                    :error="errors['address.district']"
-                    blackhead
-                    :disabled="pending"
-                    class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-              
-              <!-- Tỉnh/Thành phố -->
-              <div class="space-y-2">
-                <UIInput
-                  v-model="formData.address.city"
-                  name="address.city"
-                  label="Tỉnh/Thành phố *"
-                  placeholder="Vui lòng nhập tỉnh/thành phố"
-                  :error="errors['address.city']"
-                  blackhead
-                  :disabled="pending"
-                  class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-            </div>
+                         <!-- Địa chỉ -->
+             <div class="md:col-span-2 space-y-2">
+               <CAddress
+                 v-model="formData.address"
+                 :detail-error="errors['address.detail']"
+                 blackhead
+                 :disabled="pending"
+                 class="border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500"
+               />
+             </div>
           </div>
 
           <!-- Action Buttons -->
@@ -360,7 +322,6 @@
               text="Lưu thay đổi"
               :disabled="pending"
               :loading="pending"
-              @click="updateCustomerInfo()"
               class="flex-1 sm:flex-none rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-600 px-8 py-3 text-white hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             />
           </div>
@@ -451,7 +412,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
+import type { UserResponse, UserUpdatedRequest } from '@/types/auth'
 
 /* Props */
 interface Props {
@@ -476,23 +437,18 @@ const formData = ref({
   lastName: '',
   dateOfBirth: '',
   address: {
-    street: '',
-    ward: '',
+    city: '',
     district: '',
-    city: ''
+    detail: ''
   },
   sex: ''
 })
 
-// Quy tắc form - Đã loại bỏ phone vì không thể thay đổi
+
 const schema = {
   firstName: 'required',
   lastName: 'required',
   dateOfBirth: 'required',
-  'address.street': 'required',
-  'address.ward': 'required',
-  'address.district': 'required',
-  'address.city': 'required',
   sex: 'required'
 }
 
@@ -512,34 +468,51 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const customerData = computed(() => props.customerProfile || props.user)
 
 /* API */
-const { updateCustomerApi } = useApi()
+const { updateCustomerApi, updateUserApi } = useApi()
 
 // Function để cập nhật thông tin
 const updateCustomerInfo = async () => {
   try {
     pending.value = true
     
-    console.log('Updating customer info with data:', formData.value)
-    console.log('Customer ID:', customerData.value?.customerId)
+         // Đảm bảo dateOfBirth có format "yyyy-MM-dd" trước khi gửi
+     let formattedDateOfBirth = formData.value.dateOfBirth
+     if (formData.value.dateOfBirth) {
+       // Kiểm tra nếu đã đúng format "yyyy-MM-dd"
+       if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.value.dateOfBirth)) {
+         // Chuyển đổi sang format "yyyy-MM-dd"
+         formattedDateOfBirth = $dayjs(formData.value.dateOfBirth).format('YYYY-MM-DD')
+       }
+     }
     
-    // Format ngày tháng để đảm bảo đúng chuẩn ISO
-    const formattedDateOfBirth = formatDateToISO(formData.value.dateOfBirth)
+    console.log('Sending dateOfBirth with format:', formattedDateOfBirth)
     
-    const response = await updateCustomerApi({
+    // Gọi API update customer
+    const customerResponse = await updateCustomerApi({
       body: {
         customerId: customerData.value?.customerId,
         firstName: formData.value.firstName,
         lastName: formData.value.lastName,
         address: formData.value.address,
         dateOfBirth: formattedDateOfBirth,
-        sex: formData.value.sex,
-        active: true
+        sex: formData.value.sex
       }
-    })
+    });
     
-    console.log('Update response:', response)
+    // Gọi API update user (để cập nhật phone và các thông tin khác nếu cần)
+    const userUpdateRequest: UserUpdatedRequest = {
+      userId: props.user?.userId || props.user?.id,
+      phone: props.user?.phone,
+    }
     
-    if (response) {
+    const userResponse = await updateUserApi({
+      body: userUpdateRequest
+    });
+    
+    console.log('Customer update response:', customerResponse)
+    console.log('User update response:', userResponse)
+    
+    if (customerResponse && userResponse) {
       // Hiển thị thông báo thành công
       const commonStore = useCommonStore()
       const styleStore = useStyleStore()
@@ -563,9 +536,23 @@ const updateCustomerInfo = async () => {
     const commonStore = useCommonStore()
     const styleStore = useStyleStore()
     
+    let errorMessage = 'Có lỗi xảy ra khi cập nhật thông tin'
+    
+    if (error?.data?.message) {
+      errorMessage = error.data.message
+    } else if (error?.message) {
+      errorMessage = error.message
+    } else if (error?.status === 400) {
+      errorMessage = 'Dữ liệu không hợp lệ'
+    } else if (error?.status === 401) {
+      errorMessage = 'Phiên đăng nhập đã hết hạn'
+    } else if (error?.status === 500) {
+      errorMessage = 'Lỗi máy chủ'
+    }
+    
     commonStore.sweetalertList.push({
       title: 'Cập nhật thất bại',
-      text: error?.data?.message || error?.message || 'Có lỗi xảy ra khi cập nhật thông tin',
+      text: errorMessage,
       icon: 'error',
       confirmButtonText: 'Xác nhận',
       confirmButtonColor: styleStore.confirmButtonColor
@@ -580,79 +567,34 @@ const toggleForm = (action: 'show' | 'hide') => {
   isFormShow.value = action === 'show'
   
   if (action === 'show' && customerData.value) {
-    // Điền dữ liệu vào form - Đã loại bỏ phone
+    // Điền dữ liệu vào form
     formData.value.firstName = customerData.value.firstName || ''
     formData.value.lastName = customerData.value.lastName || ''
     
-    // Format ngày tháng để đảm bảo đúng chuẩn ISO
+    // Đảm bảo dateOfBirth có format "yyyy-MM-dd"
     if (customerData.value.dateOfBirth) {
-      try {
-        const date = $dayjs(customerData.value.dateOfBirth)
-        if (date.isValid()) {
-          formData.value.dateOfBirth = date.format('YYYY-MM-DD')
-        } else {
-          formData.value.dateOfBirth = customerData.value.dateOfBirth
-        }
-      } catch (error) {
-        console.error('Error formatting dateOfBirth:', error)
-        formData.value.dateOfBirth = customerData.value.dateOfBirth || ''
+      // Nếu dateOfBirth đã có format "yyyy-MM-dd" thì giữ nguyên
+      if (/^\d{4}-\d{2}-\d{2}$/.test(customerData.value.dateOfBirth)) {
+        formData.value.dateOfBirth = customerData.value.dateOfBirth
+      } else {
+        // Nếu là format khác, chuyển đổi sang "yyyy-MM-dd"
+        formData.value.dateOfBirth = $dayjs(customerData.value.dateOfBirth).format('YYYY-MM-DD')
       }
     } else {
       formData.value.dateOfBirth = ''
     }
     
-    // Xử lý địa chỉ từ string sang object
-    if (customerData.value.address) {
-      try {
-        // Nếu address là string, cố gắng parse hoặc tách thành các phần
-        if (typeof customerData.value.address === 'string') {
-          const addressParts = customerData.value.address.split(',')
-          if (addressParts.length >= 4) {
-            formData.value.address = {
-              street: addressParts[0]?.trim() || '',
-              ward: addressParts[1]?.trim() || '',
-              district: addressParts[2]?.trim() || '',
-              city: addressParts[3]?.trim() || ''
-            }
-          } else {
-            // Nếu không đủ phần, gán vào street
-            formData.value.address = {
-              street: customerData.value.address,
-              ward: '',
-              district: '',
-              city: ''
-            }
-          }
-        } else if (typeof customerData.value.address === 'object') {
-          // Nếu address đã là object
-          formData.value.address = {
-            street: customerData.value.address.street || '',
-            ward: customerData.value.address.ward || '',
-            district: customerData.value.address.district || '',
-            city: customerData.value.address.city || ''
-          }
-        }
-      } catch (error) {
-        console.error('Error parsing address:', error)
-        formData.value.address = {
-          street: customerData.value.address || '',
-          ward: '',
-          district: '',
-          city: ''
-        }
-      }
-    } else {
-      formData.value.address = {
-        street: '',
-        ward: '',
-        district: '',
-        city: ''
-      }
-    }
-    
+    formData.value.address = customerData.value.address || { city: '', district: '', detail: '' }
     formData.value.sex = customerData.value.sex || ''
     
     console.log('Form data populated:', formData.value)
+    
+    // Đảm bảo form được validate sau khi dữ liệu được load
+    nextTick(() => {
+      if (formRefs.value) {
+        formRefs.value.validate()
+      }
+    })
   }
 }
 
@@ -706,6 +648,26 @@ const getSexText = (sex: string) => {
     default:
       return 'Chưa cập nhật'
   }
+}
+
+const formatAddress = (address: any) => {
+  if (!address) return ''
+  
+  // Nếu address là string (từ API cũ)
+  if (typeof address === 'string') {
+    return address
+  }
+  
+  // Nếu address là object (từ API mới)
+  if (address.city || address.district || address.detail) {
+    const parts = []
+    if (address.city) parts.push(address.city)
+    if (address.district) parts.push(address.district)
+    if (address.detail) parts.push(address.detail)
+    return parts.join(', ')
+  }
+  
+  return ''
 }
 
 const formatFileSize = (bytes: number) => {
@@ -819,45 +781,6 @@ const uploadImage = async () => {
     })
   } finally {
     imageUploading.value = false
-  }
-}
-
-const getFullAddress = () => {
-  if (!customerData.value?.address) return 'Chưa cập nhật'
-  
-  if (typeof customerData.value.address === 'string') {
-    return customerData.value.address
-  }
-  
-  if (typeof customerData.value.address === 'object') {
-    const { street, ward, district, city } = customerData.value.address
-    return [street, ward, district, city].filter(Boolean).join(', ')
-  }
-  
-  return 'Chưa cập nhật'
-}
-
-// Hàm format ngày tháng thành chuẩn ISO
-const formatDateToISO = (dateString: string): string => {
-  if (!dateString) return ''
-  
-  try {
-    // Nếu dateString đã đúng format ISO (YYYY-MM-DD), trả về nguyên
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      return dateString
-    }
-    
-    // Nếu dateString có format khác, parse và format lại
-    const date = $dayjs(dateString)
-    if (date.isValid()) {
-      return date.format('YYYY-MM-DD')
-    }
-    
-    // Fallback: trả về dateString gốc
-    return dateString
-  } catch (error) {
-    console.error('Error formatting date:', error)
-    return dateString
   }
 }
 </script>
