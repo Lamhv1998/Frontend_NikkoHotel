@@ -79,6 +79,13 @@ export type UserResponse = {
 }
 
 // Customer API Types
+export type AddressDto = {
+  street: string
+  ward: string
+  district: string
+  city: string
+}
+
 export type CustomerDto = {
   customerId: string
   firstName: string
