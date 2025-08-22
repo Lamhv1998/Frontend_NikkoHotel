@@ -322,7 +322,7 @@
               text="Lưu thay đổi"
               :disabled="pending"
               :loading="pending"
-              @click="updateCustomerInfo()"
+              
               class="flex-1 sm:flex-none rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-600 px-8 py-3 text-white hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             />
           </div>
