@@ -28,62 +28,6 @@
     </div>
 
     <div class="space-y-8 p-6">
-      
-      <!-- User Welcome Section -->
-      <div 
-        v-if="user" 
-        class="rounded-3xl bg-gradient-to-r from-amber-500 to-yellow-600 p-8 text-white shadow-2xl"
-      >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-6">
-            <div 
-              class="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-3xl font-bold backdrop-blur-sm"
-            >
-              {{ getInitials() }}
-            </div>
-            <div>
-              <h1 class="mb-2 text-3xl font-bold">
-                Xin chào, {{ getFullName() }}!
-              </h1>
-              <p v-if="customerProfile?.createdDate" class="text-amber-100">
-                Thành viên từ {{ $dayjs(customerProfile.createdDate).format('MM/YYYY') }}
-              </p>
-              <p v-else class="text-amber-100">
-                Thành viên mới
-              </p>
-              
-              <!-- Customer Profile Info -->
-              <div v-if="customerProfile" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-amber-100">
-                <!-- <div class="flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                  </svg>
-                  <span>ID: {{ customerProfile.customerId?.slice(0, 8) }}...</span>
-                </div> -->
-                <div class="flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <span>Hạng: {{ getLevelText(customerProfile.level) }}</span>
-                </div>
-                <!-- <div class="flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  <span>Địa chỉ: {{ customerProfile.address }}</span>
-                </div> -->
-              </div>
-              <!-- No Customer Profile Message -->
-              <div v-else class="mt-4 p-3 bg-yellow-500/20 rounded-lg">
-                <p class="text-yellow-200 text-sm">Chưa có thông tin customer profile</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-  
       <!-- User Info Grid -->
       <div class="grid gap-8 lg:grid-cols-12">
         

@@ -81,6 +81,12 @@
                 <!-- Basic Info Header -->
                 <div class="border-b border-amber-200 pb-4">
                   <h3 class="mb-2 text-3xl font-bold text-gray-900">Họ tên: {{ getFullName() }}</h3>
+                      <p v-if="customerProfile?.createdDate" class="text-">
+                        Thành viên từ {{ $dayjs(customerProfile.createdDate).format('MM/YYYY') }}
+                      </p>
+                      <p v-else class="text-amber-100">
+                        Thành viên mới
+                      </p>
                 </div>
 
                 <!-- Customer Profile Info Grid -->
@@ -171,7 +177,6 @@
                       <p class="text-base font-semibold text-gray-900">
                         {{ user.phone || 'Chưa cập nhật' }}
                       </p>
-                      <p class="text-xs text-gray-500 mt-1">Không thể thay đổi</p>
                     </div>
                   </div>
 
