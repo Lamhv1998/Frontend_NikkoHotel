@@ -1,90 +1,82 @@
-import type { CustomerDto, CreateCustomerCommand, UpdateCustomerCommand, ApiResponse } from '@/types/auth'
-
 export const useCustomerService = () => {
-  const runtimeConfig = useRuntimeConfig()
-  const { customerServiceUrl } = runtimeConfig.public
+  const config = useRuntimeConfig()
+  const customerServiceUrl = config.public.customerServiceUrl
+  const authStore = useAuthStore()
 
-  console.log('CustomerService initialized with URL:', customerServiceUrl)
-
-  const getCustomerProfile = async (userId: string): Promise<ApiResponse<CustomerDto>> => {
-    const url = `${customerServiceUrl}/customers/profile/${userId}`
-    console.log('Calling customer service at:', url)
-    console.log('User ID:', userId)
-    
+  const getCustomerProfile = async (userId: string) => {
     try {
-      const response = await $fetch(url, {
+      const token = authStore.token
+      
+      if (!token) {
+        throw new Error('No authentication token')
+      }
+
+      const response = await $fetch(`${customerServiceUrl}/customers/profile/${userId}`, {
         method: 'GET',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
-      console.log('Customer service response:', response)
       
-      // Xử lý cả hai loại response structure
-      if (response.success && response.data) {
-        // Customer service response: {success: true, data: {...}, message: '...', timestamp: '...'}
-        console.log('Customer service response structure detected')
-        console.log('Customer data:', response.data)
-        return {
-          code: 0,
-          result: response.data,
-          message: response.message
-        }
-      } else if (response.code === 0 && response.result) {
-        // API Gateway response: {code: 0, result: {...}, message: '...'}
-        console.log('API Gateway response structure detected')
-        return response
-      } else {
-        console.log('Unknown response structure:', response)
-        throw new Error('Unknown response structure from customer service')
-      }
+      return response
     } catch (error) {
-      console.error('Customer service error:', error)
-      console.error('Error details:', {
-        url,
-        userId,
-        error: error.message,
-        status: error.status,
-        data: error.data
-      })
+      console.error('Get customer profile error:', error)
       throw error
     }
   }
 
-  const createCustomer = async (customerData: CreateCustomerCommand): Promise<ApiResponse<CustomerDto>> => {
-    return await $fetch<ApiResponse<CustomerDto>>(`${customerServiceUrl}/customers`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: customerData
-    })
+  const updateCustomerProfile = async (customerData: any) => {
+    try {
+      const token = authStore.token
+      
+      if (!token) {
+        throw new Error('No authentication token')
+      }
+
+      const response = await $fetch(`${customerServiceUrl}/customers/update`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: customerData
+      })
+      
+      return response
+    } catch (error) {
+      console.error('Update customer profile error:', error)
+      throw error
+    }
   }
 
-  const updateCustomer = async (customerData: UpdateCustomerCommand): Promise<ApiResponse<CustomerDto>> => {
-    return await $fetch<ApiResponse<CustomerDto>>(`${customerServiceUrl}/customers/profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: customerData
-    })
-  }
+  const createCustomer = async (customerData: any) => {
+    try {
+      const token = authStore.token
+      
+      if (!token) {
+        throw new Error('No authentication token')
+      }
 
-  const updateCustomerAvatar = async (customerId: string, imageFile: File): Promise<ApiResponse<CustomerDto>> => {
-    const formData = new FormData()
-    formData.append('imageRaw', imageFile)
-
-    return await $fetch<ApiResponse<CustomerDto>>(`${customerServiceUrl}/customers/profile/${customerId}/avatar`, {
-      method: 'PUT',
-      body: formData
-    })
+      const response = await $fetch(`${customerServiceUrl}/customers/create`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: customerData
+      })
+      
+      return response
+    } catch (error) {
+      console.error('Create customer error:', error)
+      throw error
+    }
   }
 
   return {
     getCustomerProfile,
-    createCustomer,
-    updateCustomer,
-    updateCustomerAvatar
+    updateCustomerProfile,
+    createCustomer
   }
 }

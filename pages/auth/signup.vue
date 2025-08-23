@@ -74,7 +74,6 @@
         <CAddress
           v-model="formData.address"
           :detail-error="errors.detail"
-          :zipcode-error="errors.zipcode"
           :disabled="apiPending"
         />
 
@@ -103,7 +102,7 @@
       <div class="flex gap-2">
         <p class="text-body-2 text-text-inverse xl:text-body">Đã có tài khoản?</p>
         <NuxtLink class="hot-link-wrapper" to="/auth/login">
-          <UIButton text="Đăng nhập ngay" variant="text" />
+          <UIButton text="Đăng nhập ngay" variant="ghost" />
         </NuxtLink>
       </div>
     </div>
@@ -111,13 +110,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserCreationRequest } from '@/types/auth'
+import type { ExtendedUserCreationRequest } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
-const authStore = useAuthStore()
 const styleStore = useStyleStore()
-const commonStore = useCommonStore()
-const { $Swal, $dayjs, $validator } = useNuxtApp()
+const { $Swal, $dayjs, $validator } = useNuxtApp() as any
 
 /* PageMeta */
 definePageMeta({
@@ -127,14 +124,15 @@ definePageMeta({
 
 /* Biểu mẫu đăng ký */
 const formRefs = ref<HTMLFormElement | null>(null)
-const formData = reactive<UserCreationRequest>({
+const formData = reactive<ExtendedUserCreationRequest>({
   email: '',
   password: '',
   name: '',
   phone: '',
   birthday: '',
   address: {
-    zipcode: 0,
+    city: '',
+    district: '',
     detail: ''
   }
 })
@@ -165,8 +163,8 @@ const schema = [
     birthday: (val: string) => {
       return $dayjs(val, 'YYYY-M-D', true).isValid() ? {} : 'Ngày sinh là bắt buộc'
     },
-    zipcode: (val: number) => {
-      if (val === 0) return 'Tỉnh/Thành phố là bắt buộc'
+    city: (val: string) => {
+      if (!val) return 'Tỉnh/Thành phố là bắt buộc'
       return {}
     },
     detail: 'required',
@@ -195,12 +193,10 @@ const apiPending = computed(() => cePending.value || sPending.value)
 
 // api: Kiểm tra email đã đăng ký chưa
 const { pending: cePending, refresh: ceRefresh } = await checkEmailApi({
-  body: computed(() => ({
-    email: formData.email
-  })),
+  body: { email: formData.email },
   immediate: false,
   watch: false,
-  onResponse({ response }) {
+  onResponse({ response }: any) {
     if (response.status === 200) {
       if (response._data.result.isEmailExists) {
         formRefs.value?.setFieldError('email', 'Email đã tồn tại')
@@ -220,7 +216,14 @@ const sRefresh = async () => {
   sPending.value = true
   
   try {
-    const result = await signupUser(formData)
+    // Chuyển đổi dữ liệu để khớp với backend API
+    const signupData = {
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone
+    }
+    
+    const result = await signupUser(signupData)
     
     if (result.success) {
       $Swal?.fire({

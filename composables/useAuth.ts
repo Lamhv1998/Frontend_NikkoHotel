@@ -1,4 +1,15 @@
-import type { AuthenticationRequest, UserResponse, CustomerDto } from '@/types/auth'
+import type {
+  AuthenticationRequest,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  SendOtpRequest,
+  SendOtpResponse,
+  UserCreationRequest,
+  UserResponse,
+  VerifyOtpRequest,
+  VerifyOtpResponse,
+  ApiResponse
+} from '@/types/auth'
 
 export const useAuth = () => {
   const authStore = useAuthStore()
@@ -8,153 +19,191 @@ export const useAuth = () => {
 
   const loginUser = async (credentials: AuthenticationRequest) => {
     try {
-      const response = await login(credentials)
-      console.log('Login response:', response)
-      
-      // Kiểm tra response code và token
-      if (response.code === 0 && response.result && response.result.token) {
-        console.log('Token received, proceeding with login...')
-        console.log('Note: authenticated field is', response.result.authenticated)
-        
-        // Lưu token vào store
-        authStore.setToken(response.result.token)
-        
-        // Lấy thông tin user trước
-        const userInfo = await fetchUserInfo()
-        console.log('User info fetched:', userInfo)
-        
-        // Sau đó lấy customer profile với user ID
-        // Sử dụng cả id và _id để tương thích
-        const userId = userInfo?.id || userInfo?._id
-        if (userId) {
-          console.log('Using user ID for customer profile:', userId)
-          await fetchCustomerProfile(userId)
-        } else {
-          console.log('No user ID found in user info')
+      const config = useRuntimeConfig()
+      const authServiceUrl = config.public.authServiceUrl
+
+      const response = await $fetch<{ token: string; user: UserResponse }>(
+        `${authServiceUrl}/auth/token`,
+        {
+          method: 'POST',
+          body: credentials
         }
+      )
+
+      if (response?.token && response?.user) {
+        // Store auth data
+        authStore.setToken(response.token)
+        authStore.setUser(response.user)
         
-        // Chuyển hướng về trang user - sử dụng navigateTo thay vì router.push
-        console.log('Redirecting to /user...')
-        await navigateTo('/user')
-        
+        // Try to fetch customer profile
+        try {
+          const userId = response.user.id || response.user._id
+          if (userId) {
+            await fetchCustomerProfile(userId)
+          }
+        } catch (customerError) {
+          console.warn('Could not fetch customer profile during login:', customerError)
+        }
+
         return { success: true, message: 'Đăng nhập thành công!' }
       } else {
-        console.log('Login failed - no token or invalid response')
-        let errorMessage = 'Email hoặc mật khẩu không đúng!'
-        
-        // Kiểm tra nếu có message từ backend
-        if (response.message) {
-          errorMessage = response.message
-        }
-        
-        return { success: false, message: errorMessage }
+        return { success: false, message: 'Phản hồi không hợp lệ từ server' }
       }
     } catch (error: any) {
       console.error('Login error:', error)
-      return { 
-        success: false, 
-        message: error.data?.message || 'Có lỗi xảy ra khi đăng nhập!' 
+      let message = 'Có lỗi xảy ra khi đăng nhập'
+      
+      if (error?.data?.message) {
+        message = error.data.message
+      } else if (error?.message) {
+        message = error.message
+      } else if (error?.status === 401) {
+        message = 'Email hoặc mật khẩu không đúng'
+      } else if (error?.status === 500) {
+        message = 'Lỗi máy chủ'
       }
+
+      return { success: false, message }
     }
   }
 
-  const signupUser = async (userData: any) => {
+  // Signup function - Cập nhật để khớp với backend API
+  const signupUser = async (
+    userData: UserCreationRequest
+  ): Promise<{ success: boolean; message: string }> => {
     try {
-      const response = await signup(userData)
-      
-      if (response.result) {
-        // Tạo customer profile
-        if (response.result._id) {
-          await createCustomer({
-            userId: response.result._id,
-            name: response.result.name,
-            email: response.result.email,
-            phone: response.result.phone,
-            birthday: response.result.birthday,
-            address: response.result.address
-          })
-        }
-        
-        return { success: true, message: 'Đăng ký thành công! Vui lòng đăng nhập.' }
+      const config = useRuntimeConfig()
+      const authServiceUrl = config.public.authServiceUrl
+
+      // Sử dụng endpoint đúng từ backend: /users
+      const response = await $fetch<ApiResponse<UserResponse>>(`${authServiceUrl}/users`, {
+        method: 'POST',
+        body: userData
+      })
+
+      if (response?.result) {
+        return { success: true, message: 'Đăng ký thành công!' }
       } else {
-        return { success: false, message: 'Có lỗi xảy ra khi đăng ký!' }
+        return { success: false, message: response?.message || 'Đăng ký thất bại' }
       }
     } catch (error: any) {
       console.error('Signup error:', error)
-      return { 
-        success: false, 
-        message: error.data?.message || 'Có lỗi xảy ra khi đăng ký!' 
+      let message = 'Có lỗi xảy ra khi đăng ký'
+      
+      if (error?.data?.message) {
+        message = error.data.message
+      } else if (error?.message) {
+        message = error.message
+      } else if (error?.status === 400) {
+        message = 'Dữ liệu không hợp lệ'
+      } else if (error?.status === 409) {
+        message = 'Email đã được sử dụng'
       }
+
+      return { success: false, message }
     }
   }
 
-  const logoutUser = async () => {
+  // Logout function
+  const logoutUser = async (): Promise<{ success: boolean; message: string }> => {
     try {
-      if (authStore.token) {
-        await logout(authStore.token)
-      }
-      
-      // Xóa thông tin authentication
       authStore.clearAuth()
-      
-      // Chuyển hướng về trang chủ
-      await router.push('/')
-      
+      await navigateTo('/')
       return { success: true, message: 'Đăng xuất thành công!' }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Logout error:', error)
-      
-      // Vẫn xóa thông tin local nếu có lỗi
-      authStore.clearAuth()
-      await router.push('/')
-      
-      return { success: true, message: 'Đã đăng xuất!' }
+      return { success: false, message: 'Có lỗi xảy ra khi đăng xuất' }
     }
   }
 
-  const fetchUserInfo = async () => {
+  // Fetch user info
+  const fetchUserInfo = async (): Promise<UserResponse | null> => {
     try {
-      console.log('Fetching user info...')
-      const { getUserApi } = useApi()
-      const response = await getUserApi({})
-      
-      if (response.result) {
-        console.log('User info received:', response.result)
-        authStore.setUser(response.result)
-        return response.result
+      const config = useRuntimeConfig()
+      const authServiceUrl = config.public.authServiceUrl
+      const token = authStore.token
+
+      if (!token) {
+        throw new Error('No authentication token')
       }
+
+      const response = await $fetch<UserResponse>(`${authServiceUrl}/users/myInfo`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response) {
+        authStore.setUser(response)
+        return response
+      }
+
+      return null
     } catch (error) {
-      console.error('Fetch user info error:', error)
+      console.error('Error fetching user info:', error)
+      return null
+    }
+  }
+
+  // Fetch customer profile
+  const fetchCustomerProfile = async (userId: string): Promise<any> => {
+    try {
+      const config = useRuntimeConfig()
+      const customerServiceUrl = config.public.customerServiceUrl
+      const token = authStore.token
+
+      if (!token) {
+        throw new Error('No authentication token')
+      }
+
+      const response = await $fetch(`${customerServiceUrl}/customers/profile/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response) {
+        // Type assertion để tránh lỗi TypeScript
+        authStore.setCustomerProfile(response as any)
+        return response
+      }
+
+      return null
+    } catch (error) {
+      console.error('Error fetching customer profile:', error)
       throw error
     }
   }
 
-  const fetchCustomerProfile = async (userId?: string) => {
+  // Check authentication
+  const checkAuth = async (): Promise<void> => {
     try {
-      // Sử dụng cả id và _id để tương thích
-      const targetUserId = userId || authStore.user?.id || authStore.user?._id
-      
-      if (!targetUserId) {
-        console.log('No user ID available for customer profile')
+      const token = authStore.token
+
+      if (!token) {
+        console.log('No token found, redirecting to login')
         return
       }
-      
-      console.log('Fetching customer profile for user:', targetUserId)
-      console.log('Using customer service...')
-      
-      const response = await getCustomerProfile(targetUserId)
-      console.log('Customer profile response:', response)
-      
-      if (response.result) {
-        console.log('Customer profile received:', response.result)
-        console.log('Setting customer profile to store...')
-        authStore.setCustomerProfile(response.result)
-        console.log('Customer profile set to store. Current store state:', {
-          customerProfile: authStore.customerProfile,
-          user: authStore.user,
-          token: authStore.token
-        })
-        return response.result
+
+      // Fetch user info if not available
+      if (!authStore.user) {
+        console.log('Fetching user info...')
+        const userInfo = await fetchUserInfo()
+        
+        if (userInfo) {
+          // Try to fetch customer profile
+          const userId = userInfo.id || userInfo._id
+          if (userId) {
+            try {
+              await fetchCustomerProfile(userId)
+            } catch (customerError) {
+              console.warn('Could not fetch customer profile:', customerError)
+            }
+          }
+        }
       } else {
         console.log('No customer profile result in response')
         console.log('Response structure:', response)

@@ -4,10 +4,13 @@
     <NuxtPage />
   </NuxtLayout>
   <UIScrollTop />
+  <!-- AI Chat Button - Hiển thị toàn cục trên tất cả các trang -->
+  <AIChatButton />
 </template>
 
 <script lang="ts" setup>
 import AppLoading from './components/global/AppLoading.vue'
+import AIChatButton from './components/UI/AIChatButton.vue'
 import { useLoadingStore } from './stores/loading'
 /* Thuộc tính toàn cục */
 const commonStore = useCommonStore()
