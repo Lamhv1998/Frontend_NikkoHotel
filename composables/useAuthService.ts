@@ -1,4 +1,4 @@
-import type { AuthenticationRequest, UserResponse } from '@/types/auth'
+import type { AuthenticationRequest, UserResponse, UserCreationRequest, ApiResponse, AuthenticationResponse } from '@/types/auth'
 
 export const useAuthService = () => {
   const runtimeConfig = useRuntimeConfig()
@@ -64,8 +64,10 @@ export const useAuthService = () => {
   }
 
   return {
-    authenticate,
-    register,
-    getUserInfo
+    login,
+    signup,
+    introspect,
+    logout,
+    refreshToken
   }
 }

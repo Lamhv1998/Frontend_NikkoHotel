@@ -151,7 +151,6 @@ const props = defineProps({
 
 /* Toàn cục */
 const { $Swal } = useNuxtApp()
-const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
 /* Biểu mẫu */

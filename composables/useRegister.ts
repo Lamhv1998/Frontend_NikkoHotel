@@ -76,7 +76,7 @@ export const useRegister = () => {
       }
       console.log('Formatted data:', formattedData)
 
-      const apiUrl = `${config.public.authServiceUrl}/customers`
+      const apiUrl = `${config.public.customerServiceUrl}/customers`
       console.log('Calling API:', apiUrl)
 
       const { data: response, error } = await useFetch<ApiResponse<CustomerResponse>>(
@@ -128,10 +128,6 @@ export const useRegister = () => {
 
   const sendVerificationEmail = async (email: string): Promise<EmailVerificationResponse> => {
     try {
-      console.log('=== SEND VERIFICATION EMAIL STARTED ===')
-      console.log('Email:', email)
-      console.log('Config notificationServiceUrl:', config.public.notificationServiceUrl)
-
       const apiUrl = `${config.public.notificationServiceUrl}/notifications/send-otp?userEmail=${email}`
       console.log('Calling API:', apiUrl)
 
@@ -180,10 +176,7 @@ export const useRegister = () => {
 
   const verifyEmailCode = async (email: string, otp: string): Promise<EmailVerificationResponse> => {
     try {
-      console.log('=== VERIFY EMAIL CODE STARTED ===')
-      console.log('Email:', email)
-      console.log('OTP:', otp)
-      console.log('Config notificationServiceUrl:', config.public.notificationServiceUrl)
+     
 
       const apiUrl = `${config.public.notificationServiceUrl}/notifications/verify-otp?userEmail=${email}&otp=${otp}`
       console.log('Calling API:', apiUrl)
