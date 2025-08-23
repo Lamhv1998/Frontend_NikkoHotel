@@ -139,7 +139,7 @@
       <div class="flex gap-2">
         <p class="text-body-2 text-text-inverse xl:text-body">Đã có tài khoản?</p>
         <NuxtLink class="hot-link-wrapper" to="/auth/login">
-          <UIButton text="Đăng nhập ngay" variant="text" />
+          <UIButton text="Đăng nhập ngay" variant="ghost" />
         </NuxtLink>
       </div>
     </div>
@@ -147,7 +147,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserCreationRequest } from '@/types/auth'
+import type { ExtendedUserCreationRequest } from '@/types/auth'
 
 /* Thuộc tính toàn cục */
 const styleStore = useStyleStore()
@@ -161,13 +161,15 @@ definePageMeta({
 
 /* Biểu mẫu đăng ký */
 const formRefs = ref<HTMLFormElement | null>(null)
-const formData = reactive<UserCreationRequest>({
+const formData = reactive<ExtendedUserCreationRequest>({
   email: '',
   password: '',
   name: '',
   phone: '',
   birthday: '',
   address: {
+    city: '',
+    district: '',
     city: '',
     district: '',
     detail: ''

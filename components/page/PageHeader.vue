@@ -118,12 +118,12 @@
                   </NuxtLink>
 
                   <NuxtLink 
-                    to="/user/orders" 
+                    to="/user/bookings" 
                     @click="closeUserDropdown"
                     class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                   >
                     <Icon name="ic:outline-receipt" class="text-icon-sm" />
-                    Đơn đặt phòng
+                    Quản lý đặt phòng
                   </NuxtLink>
                 </div>
 
@@ -352,7 +352,9 @@ onMounted(() => {
 // Logout function
 const logout = async () => {
   authStore.clearAuth()
-  if (useAuth.includes(route.name as string)) {
+  // Check if current route is an auth route
+  const authRoutes = ['auth-login', 'auth-signup']
+  if (authRoutes.includes(route.name as string)) {
     toggleModal('close')
     await navigateTo('/')
   }

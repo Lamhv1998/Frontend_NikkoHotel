@@ -33,7 +33,7 @@
           <!-- Khối dẫn hướng -->
           <div class="space-y-6 xl:space-y-10">
             <p class="text-title xl:text-h5">Xem lịch sử đơn đặt phòng của bạn ngay</p>
-            <NuxtLink class="block xl:inline-block" to="/user/orders">
+            <NuxtLink class="block xl:inline-block" to="/user/bookings">
               <UIButton block text="Đến đơn đặt phòng của tôi" />
             </NuxtLink>
           </div>

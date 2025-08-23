@@ -44,11 +44,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     try {
       // Kiểm tra token với useAuth composable
-      const { checkToken } = useAuth()
+      const { checkToken, refreshToken } = useAuth()
       const isValid = await checkToken()
       
       if (!isValid) {
-        throw new Error('Token không hợp lệ')
+        console.log('[auth middleware] Token không hợp lệ, thử refresh...')
+        const refreshSuccess = await refreshToken()
+        
+        if (!refreshSuccess) {
+          throw new Error('Token không hợp lệ và không thể refresh')
+        }
       }
     } catch (error) {
       console.error('[auth middleware] Phiên hết hạn:', error)

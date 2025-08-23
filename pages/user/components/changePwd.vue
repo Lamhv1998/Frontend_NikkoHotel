@@ -138,7 +138,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserResponse } from '@/types'
+import type { UserResponse } from '@/types/auth'
+import type { PropType } from 'vue'
 
 /* props */
 const props = defineProps({
@@ -149,6 +150,7 @@ const props = defineProps({
 })
 
 /* Toàn cục */
+const { $Swal } = useNuxtApp()
 const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
@@ -164,7 +166,7 @@ const otpError = ref('')
 const newPasswordError = ref('')
 const confirmPasswordError = ref('')
 
-// Biểu mẫu: Hiện/ẩn
+// State cho form
 const isFormShow = ref(false)
 const otpSent = ref(false)
 const otpVerified = ref(false)
@@ -180,9 +182,19 @@ const canSubmit = computed(() => {
 const toggleForm = (event: string) => {
   if (event === 'show') {
     isFormShow.value = true
+    currentStep.value = 'sendOtp'
+    resetOtpForm()
   } else if (event === 'close') {
     isFormShow.value = false
+    currentStep.value = 'sendOtp'
+    resetOtpForm()
   }
+}
+
+const resetOtpForm = () => {
+  otpDigits.value = ['', '', '', '', '', '']
+  otpError.value = ''
+  resendCountdown.value = 0
 }
 
 const cancelEdit = () => {
@@ -364,6 +376,7 @@ const changePassword = async () => {
     if (response) {
       $Swal?.fire({
         title: 'Đổi mật khẩu thành công',
+        text: 'Mật khẩu đã được thay đổi thành công!',
         icon: 'success',
         confirmButtonText: 'Xác nhận',
         confirmButtonColor: styleStore.confirmButtonColor,
