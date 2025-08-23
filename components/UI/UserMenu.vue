@@ -87,7 +87,7 @@
           </NuxtLink>
 
           <NuxtLink 
-            to="/user/orders" 
+            to="/user/bookings" 
             @click="closeDropdown"
             class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
           >

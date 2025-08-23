@@ -4,13 +4,13 @@
     <div class="bg-white shadow-sm">
       <div class="container mx-auto px-4 py-6">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          <div class="mb-4 lg:mb-0">
+          <div class="mb-4 lg:mb-0 pt-10">
             <button
               @click="goBack"
-              class="flex items-center text-system-primary-100 hover:text-system-primary-120 mb-4 transition-colors"
+              class="flex items-center text-light-100 hover:text-system-primary-120 mb-4 transition-colors"
             >
               <Icon name="ic:baseline-arrow-back" class="w-5 h-5 mr-2" />
-              Quay lại danh sách loại phòng
+              <span class="text-lg text-primary-800">Quay lại danh sách loại phòng</span>
             </button>
             <h1 class="text-h2 text-system-gray-80 xl:text-h1 mb-2">
               🏨 {{ roomTypeInfo.typeName || 'Loại Phòng' }}
@@ -18,21 +18,6 @@
             <p class="text-body text-system-gray-60">
               Xem các phòng cụ thể thuộc loại này
             </p>
-          </div>
-          
-          <!-- Room Type Info Card -->
-          <div class="bg-gradient-to-r from-system-primary-100 to-system-primary-120 text-white p-6 rounded-xl shadow-lg">
-            <h3 class="text-h4 font-bold mb-2">{{ roomTypeInfo.typeName }}</h3>
-            <div class="space-y-2 text-body-sm">
-              <div class="flex items-center">
-                <Icon name="ic:baseline-person" class="w-4 h-4 mr-2" />
-                <span>Tối đa {{ roomTypeInfo.maxOccupancy }} người</span>
-              </div>
-              <div class="flex items-center">
-                <Icon name="ic:baseline-aspect-ratio" class="w-4 h-4 mr-2" />
-                <span>{{ roomTypeInfo.area }}m²</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -151,12 +136,12 @@
                 >
                   {{ getStatusText(room.status) }}
                 </button>
-                <button
+                <!-- <button
                   @click="viewRoomDetails(room)"
                   class="px-4 py-3 border border-system-primary-100 text-system-primary-100 rounded-lg text-body-sm font-medium hover:bg-system-primary-10 transition-colors"
                 >
                   Chi tiết
-                </button>
+                </button> -->
               </div>
             </div>
           </div>

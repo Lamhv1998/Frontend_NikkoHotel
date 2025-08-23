@@ -64,6 +64,34 @@
 
             <!-- Form thông tin khách hàng -->
             <form @submit.prevent="submitBooking" class="space-y-6">
+              <!-- Thông báo lỗi ngày quá khứ -->
+              <div v-if="showDateError" class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 mb-4 animate-bounce">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Icon name="ic:baseline-schedule" class="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-amber-800 mb-1 flex items-center gap-2">
+                      <Icon name="ic:baseline-warning" class="w-4 h-4" />
+                      Lưu ý về ngày đặt phòng
+                    </h4>
+                    <p class="text-sm text-amber-700 mb-2">
+                      {{ dateErrorMessage }}
+                    </p>
+                    <div class="flex items-center gap-2 text-xs text-amber-600">
+                      <Icon name="ic:baseline-calendar-today" class="w-3 h-3" />
+                      <span>Ngày hiện tại: {{ currentDate }}</span>
+                    </div>
+                  </div>
+                  <button 
+                    @click="showDateError = false"
+                    class="text-amber-400 hover:text-amber-600 transition-colors p-1 rounded-full hover:bg-amber-100"
+                  >
+                    <Icon name="ic:baseline-close" class="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
               <!-- Ngày nhận phòng -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -74,7 +102,12 @@
                     v-model="bookingForm.checkInDate"
                     type="date"
                     required
-                    class="w-full px-4 py-3 border border-system-gray-30 rounded-lg focus:ring-2 focus:ring-system-primary-100 focus:border-transparent"
+                    :min="minDate"
+                    @change="validateDates"
+                    class="w-full px-4 py-3 border border-system-gray-30 rounded-lg focus:ring-2 focus:ring-system-primary-100 focus:border-transparent transition-all duration-200"
+                    :class="{
+                      'border-red-300 focus:ring-red-200': showDateError && dateErrorType === 'checkin'
+                    }"
                   />
                 </div>
                 <div>
@@ -85,7 +118,12 @@
                     v-model="bookingForm.checkOutDate"
                     type="date"
                     required
-                    class="w-full px-4 py-3 border border-system-gray-30 rounded-lg focus:ring-2 focus:ring-system-primary-100 focus:border-transparent"
+                    :min="bookingForm.checkInDate || minDate"
+                    @change="validateDates"
+                    class="w-full px-4 py-3 border border-system-gray-30 rounded-lg focus:ring-2 focus:ring-system-primary-100 focus:border-transparent transition-all duration-200"
+                    :class="{
+                      'border-red-300 focus:ring-red-200': showDateError && dateErrorType === 'checkout'
+                    }"
                   />
                 </div>
               </div>
@@ -158,7 +196,29 @@
                   class="w-full px-4 py-3 border border-system-gray-30 rounded-lg focus:ring-2 focus:ring-system-primary-100 focus:border-transparent"
                 ></textarea>
               </div>
-
+              <div v-if="!authStore.isAuthenticated" class="text-body-2 text-system-gray-80">
+                <span>Đăng nhập để lưu thông tin của bạn (không bắt buộc)</span>
+                <p>Bạn sẽ không thể áp dụng khuyến mãi hoặc tích điểm thành viên</p>
+              </div>
+              
+              <div v-else class="text-body-2 text-system-primary-100 bg-system-primary-10 p-3 rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Thông tin đã được tự động điền từ tài khoản của bạn</span>
+                  </div>
+                  <button 
+                    @click="clearUserInfo"
+                    class="text-sm text-system-primary-120 hover:text-system-primary-100 underline"
+                    type="button"
+                  >
+                    Xóa thông tin
+                  </button>
+                </div>
+              </div>
+        
               <!-- Button đặt phòng -->
               <button
                 type="submit"
@@ -169,12 +229,12 @@
                   <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                   Đang xử lý...
                 </span>
-                <span v-else>Đặt phòng ngay</span>
+                <span v-else>Xác nhận đặt phòng</span>
               </button>
             </form>
           </div>
         </div>
-
+        
         <!-- Sidebar - Tóm tắt đơn hàng -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
@@ -218,12 +278,34 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from '#app'
 import { navigateTo } from '#app'
+import { createBookingApi } from '~/api/order'
+import type { CreateBookingRequest } from '~/types/order'
 
 // Route
 const route = useRoute()
-
+const authStore = useAuthStore()
+const { $Swal } = useNuxtApp()
 // Reactive state
 const loading = ref(false)
+
+// State cho validation ngày
+const showDateError = ref(false)
+const dateErrorMessage = ref('')
+const dateErrorType = ref<'checkin' | 'checkout' | 'both'>('both')
+
+// Ngày hiện tại
+const currentDate = computed(() => {
+  return new Date().toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  })
+})
+
+// Ngày tối thiểu (hôm nay)
+const minDate = computed(() => {
+  return new Date().toISOString().split('T')[0]
+})
 
 // Thông tin phòng từ query parameters
 const roomInfo = ref({
@@ -265,6 +347,14 @@ const totalPrice = computed(() => {
   return roomInfo.value.basePrice * numberOfNights.value
 })
 
+// Watch để tự động điền thông tin khi người dùng đăng nhập
+watch(() => authStore.isAuthenticated, (isAuthenticated) => {
+  if (isAuthenticated) {
+    console.log('👤 User authentication status changed to authenticated, populating form')
+    populateUserInfo()
+  }
+}, { immediate: false })
+
 // Methods
 const goBack = () => {
   navigateTo('/rooms')
@@ -277,37 +367,228 @@ const formatPrice = (price: number): string => {
   }).format(price)
 }
 
+// Function validation ngày
+const validateDates = () => {
+  showDateError.value = false
+  dateErrorMessage.value = ''
+  dateErrorType.value = 'both'
+  
+  if (!bookingForm.value.checkInDate || !bookingForm.value.checkOutDate) {
+    return
+  }
+  
+  const checkIn = new Date(bookingForm.value.checkInDate)
+  const checkOut = new Date(bookingForm.value.checkOutDate)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  // Kiểm tra ngày check-in
+  if (checkIn < today) {
+    showDateError.value = true
+    dateErrorType.value = 'checkin'
+    dateErrorMessage.value = 'Ngày nhận phòng không thể là ngày trong quá khứ. Vui lòng chọn ngày từ hôm nay trở đi.'
+    return
+  }
+  
+  // Kiểm tra ngày check-out
+  if (checkOut <= checkIn) {
+    showDateError.value = true
+    dateErrorType.value = 'checkout'
+    dateErrorMessage.value = 'Ngày trả phòng phải sau ngày nhận phòng ít nhất 1 ngày.'
+    return
+  }
+  
+  // Kiểm tra khoảng cách ngày (tối đa 30 ngày)
+  const diffTime = checkOut.getTime() - checkIn.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  
+  if (diffDays > 30) {
+    showDateError.value = true
+    dateErrorType.value = 'both'
+    dateErrorMessage.value = 'Khoảng thời gian đặt phòng không được vượt quá 30 ngày. Vui lòng chọn khoảng thời gian ngắn hơn.'
+    return
+  }
+}
+
+// Hàm tự động điền thông tin người dùng đã đăng nhập
+const populateUserInfo = () => {
+  if (authStore.isAuthenticated) {
+    console.log('👤 User is authenticated, populating form with user info')
+    
+    // Lấy thông tin từ user
+    if (authStore.user) {
+      // Điền tên khách hàng
+      if (authStore.user.name) {
+        bookingForm.value.customerName = authStore.user.name
+      }
+      
+      // Điền số điện thoại
+      if (authStore.user.phone) {
+        bookingForm.value.phone = authStore.user.phone
+      }
+      
+      // Điền email
+      if (authStore.user.email) {
+        bookingForm.value.email = authStore.user.email
+      }
+    }
+    
+    // Lấy thông tin từ customer profile (nếu có)
+    if (authStore.customerProfile) {
+      console.log('📋 Customer profile found:', authStore.customerProfile)
+      
+      // Điền tên khách hàng từ customer profile (ưu tiên hơn user)
+      if (authStore.customerProfile.firstName && authStore.customerProfile.lastName) {
+        const fullName = `${authStore.customerProfile.firstName} ${authStore.customerProfile.lastName}`.trim()
+        bookingForm.value.customerName = fullName
+      } else if (authStore.customerProfile.firstName) {
+        bookingForm.value.customerName = authStore.customerProfile.firstName
+      } else if (authStore.customerProfile.lastName) {
+        bookingForm.value.customerName = authStore.customerProfile.lastName
+      }
+    }
+    
+    console.log('✅ Form populated with user info:', {
+      customerName: bookingForm.value.customerName,
+      phone: bookingForm.value.phone,
+      email: bookingForm.value.email
+    })
+  } else {
+    console.log('👤 User is not authenticated, form will remain empty')
+  }
+}
+
+// Hàm xóa thông tin người dùng đã điền
+const clearUserInfo = () => {
+  bookingForm.value.customerName = ''
+  bookingForm.value.phone = ''
+  bookingForm.value.email = ''
+  console.log('🧹 User info cleared from form')
+}
+
 const submitBooking = async () => {
   try {
     loading.value = true
-    console.log('🚀 Submitting booking:', {
+    console.log('🚀 Submitting booking form:', {
       roomInfo: roomInfo.value,
       bookingForm: bookingForm.value,
       totalPrice: totalPrice.value
     })
     
-    // TODO: Gọi API để tạo đơn đặt phòng
-    // const response = await createBooking({
-    //   roomId: roomInfo.value.roomId,
-    //   checkInDate: bookingForm.value.checkInDate,
-    //   checkOutDate: bookingForm.value.checkOutDate,
-    //   guestCount: parseInt(bookingForm.value.guestCount),
-    //   customerName: bookingForm.value.customerName,
-    //   phone: bookingForm.value.phone,
-    //   email: bookingForm.value.email,
-    //   notes: bookingForm.value.notes,
-    //   totalPrice: totalPrice.value
-    // })
+    // Validation
+    if (!bookingForm.value.checkInDate || !bookingForm.value.checkOutDate) {
+      await $Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin',
+        text: 'Vui lòng chọn ngày nhận phòng và ngày trả phòng',
+        confirmButtonText: 'Đóng',
+        background: '#fef3c7',
+        color: '#92400e'
+      })
+      return
+    }
     
-    // Tạm thời hiển thị thông báo thành công
-    alert('Đặt phòng thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.')
+    if (!bookingForm.value.guestCount) {
+      await $Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin',
+        text: 'Vui lòng chọn số lượng khách',
+        confirmButtonText: 'Đóng',
+        background: '#fef3c7',
+        color: '#92400e'
+      })
+      return
+    }
     
-    // Chuyển về trang danh sách phòng
-    navigateTo('/rooms')
+    if (!bookingForm.value.customerName.trim()) {
+      await $Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin',
+        text: 'Vui lòng nhập họ tên khách hàng',
+        confirmButtonText: 'Đóng',
+        background: '#fef3c7',
+        color: '#92400e'
+      })
+      return
+    }
+    
+    if (!bookingForm.value.phone.trim()) {
+      await $Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin',
+        text: 'Vui lòng nhập số điện thoại',
+        confirmButtonText: 'Đóng',
+        background: '#fef3c7',
+        color: '#92400e'
+      })
+      return
+    }
+    
+    // Kiểm tra ngày hợp lệ
+    validateDates()
+    if (showDateError.value) {
+      return
+    }
+
+    // Tạo booking request
+    const createBookingRequest: CreateBookingRequest = {
+      customerId: authStore.user?.id || '00000000-0000-0000-0000-000000000000', // Fallback UUID nếu chưa đăng nhập
+      listRoomId: [roomInfo.value.roomId],
+      checkInDate: bookingForm.value.checkInDate,
+      checkOutDate: bookingForm.value.checkOutDate,
+      numberOfGuests: parseInt(bookingForm.value.guestCount),
+      specialRequests: bookingForm.value.notes || undefined,
+      customerEmail: bookingForm.value.email || undefined,
+      customerPhone: bookingForm.value.phone
+    }
+
+    console.log('📋 Creating booking with request:', createBookingRequest)
+
+    // Gọi API tạo booking
+    const createdBooking = await createBookingApi(createBookingRequest)
+    
+    console.log('✅ Booking created successfully:', createdBooking)
+    
+    // Chuyển đến trang payment với thông tin booking đã tạo
+    const query = {
+      // Thông tin booking đã tạo
+      bookingId: createdBooking.bookingId,
+      bookingStatus: createdBooking.status,
+      
+      // Thông tin phòng
+      roomId: roomInfo.value.roomId,
+      roomNumber: roomInfo.value.roomNumber,
+      roomTypeId: roomInfo.value.roomTypeId,
+      roomTypeName: roomInfo.value.roomTypeName,
+      floor: roomInfo.value.floor,
+      area: roomInfo.value.area.toString(),
+      maxOccupancy: roomInfo.value.maxOccupancy.toString(),
+      basePrice: roomInfo.value.basePrice.toString(),
+      status: roomInfo.value.status,
+      
+      // Thông tin đặt phòng
+      checkInDate: bookingForm.value.checkInDate,
+      checkOutDate: bookingForm.value.checkOutDate,
+      guestCount: bookingForm.value.guestCount,
+      customerName: bookingForm.value.customerName,
+      phone: bookingForm.value.phone,
+      email: bookingForm.value.email,
+      notes: bookingForm.value.notes
+    }
+    
+    // Chuyển đến trang payment để xác nhận và thanh toán
+    navigateTo({ path: '/order/payment', query })
     
   } catch (error) {
-    console.error('❌ Error submitting booking:', error)
-    alert('Có lỗi xảy ra khi đặt phòng. Vui lòng thử lại.')
+    console.error('❌ Error creating booking:', error)
+    await $Swal.fire({
+      icon: 'error',
+      title: 'Lỗi!',
+      text: 'Có lỗi xảy ra khi tạo đơn đặt phòng. Vui lòng thử lại.',
+      confirmButtonText: 'Đóng',
+      background: '#fef2f2',
+      color: '#dc2626'
+    })
   } finally {
     loading.value = false
   }
@@ -340,6 +621,14 @@ onMounted(() => {
   bookingForm.value.checkInDate = tomorrow.toISOString().split('T')[0]
   bookingForm.value.checkOutDate = dayAfterTomorrow.toISOString().split('T')[0]
   bookingForm.value.guestCount = '1'
+  
+  // Tự động điền thông tin người dùng nếu đã đăng nhập
+  populateUserInfo()
+  
+  // Validate ngày mặc định
+  setTimeout(() => {
+    validateDates()
+  }, 100)
 })
 </script>
 
