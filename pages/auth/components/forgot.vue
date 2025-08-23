@@ -52,6 +52,9 @@
 const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
+// Import userAPI
+import userAPI from '~/api/user'
+
 /* Trạng thái modal */
 const forgotIsOpen = ref(false)
 const isLoading = ref(false)
@@ -72,22 +75,45 @@ const schema = { email: 'required|email' }
 const submit = async () => {
   isLoading.value = true
   
-  // Giả lập gửi email (vì chưa có API)
-  setTimeout(() => {
-    isLoading.value = false
+  try {
+    console.log('=== FORGOT PASSWORD SUBMIT ===')
+    console.log('Email:', formData.email)
+    
+    const { sendOtpForPasswordChangeApi } = userAPI
+    console.log('Calling sendOtpForPasswordChangeApi...')
+    
+    const result = await sendOtpForPasswordChangeApi({ body: { userEmail: formData.email } })
+    console.log('API call successful:', result)
+    
+    // Đóng modal
     forgotIsOpen.value = false
     
-    // Hiển thị thông báo thành công
+    // Hiển thị thông báo thành công và chuyển hướng
     $Swal.fire({
       title: 'Gửi email thành công!',
-      text: 'Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.',
+      text: 'Mã xác nhận đã được gửi đến email của bạn. Vui lòng kiểm tra và làm theo hướng dẫn.',
       icon: 'success',
+      confirmButtonText: 'Tiếp tục',
+      confirmButtonColor: styleStore.confirmButtonColor
+    }).then(() => {
+      // Chuyển hướng đến trang quên mật khẩu để hoàn tất quy trình
+      navigateTo('/auth/forgot-password')
+    })
+  } catch (error: any) {
+    console.error('=== FORGOT PASSWORD ERROR ===')
+    console.error('Error details:', error)
+    console.error('Error message:', error.message)
+    console.error('Error data:', error.data)
+    
+    $Swal.fire({
+      title: 'Lỗi!',
+      text: error.data?.message || 'Không thể gửi mã xác nhận. Vui lòng thử lại.',
+      icon: 'error',
       confirmButtonText: 'Xác nhận',
       confirmButtonColor: styleStore.confirmButtonColor
     })
-  }, 1000)
+  } finally {
+    isLoading.value = false
+  }
 }
-
-// Export default để sửa lỗi import
-
 </script>

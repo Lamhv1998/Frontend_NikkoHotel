@@ -27,65 +27,116 @@
           </div>
 
           <!-- Nút: Đổi mật khẩu -->
-          <UIButton text="Đổi mật khẩu" variant="text" @click="toggleForm('show')" />
+          <UIButton text="Đổi mật khẩu" variant="outline" @click="toggleForm('show')" />
         </div>
 
         <!-- Biểu mẫu: Đổi mật khẩu -->
         <template v-else>
-          <!-- Mật khẩu cũ -->
-          <UIInput
-            v-model="formData.oldPassword"
-            name="oldPassword"
-            label="Mật khẩu cũ"
-            type="password"
-            placeholder="Vui lòng nhập mật khẩu cũ"
-            :error="errors.oldPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Mật khẩu mới -->
-          <UIInput
-            v-model="formData.newPassword"
-            name="newPassword"
-            label="Mật khẩu mới"
-            type="password"
-            placeholder="Vui lòng nhập mật khẩu mới"
-            :error="errors.newPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Xác nhận mật khẩu -->
-          <UIInput
-            v-model="formData.confirmPassword"
-            name="confirmPassword"
-            label="Xác nhận mật khẩu"
-            type="password"
-            placeholder="Vui lòng nhập lại mật khẩu mới"
-            :error="errors.confirmPassword"
-            blackhead
-            :disabled="pending"
-          />
-
-          <!-- Nút: Hủy chỉnh sửa / Lưu -->
-          <div class="flex gap-2">
-            <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
-              type="button"
-              text="Hủy chỉnh sửa"
-              variant="secondary"
-              :disabled="pending"
-              @click="cancelEdit"
-            />
-            <UIButton
-              class="flex w-full xl:inline-flex xl:w-auto"
-              type="submit"
-              text="Lưu thay đổi"
-              :disabled="pending"
-              :loading="pending"
-            />
+          <!-- Bước 1: Gửi OTP -->
+          <div v-if="!otpSent" class="space-y-4">
+            <div class="text-center">
+              <p class="text-body-2 mb-4 text-system-gray-80">
+                Chúng tôi sẽ gửi mã OTP đến email của bạn để xác minh việc đổi mật khẩu
+              </p>
+              <UIButton
+                text="Gửi mã OTP"
+                :disabled="sendingOtp"
+                :loading="sendingOtp"
+                @click="sendOtp"
+              />
+            </div>
           </div>
+
+          <!-- Bước 2: Nhập OTP -->
+          <div v-else-if="!otpVerified" class="space-y-4">
+            <div class="mb-4 text-center">
+              <p class="text-body-2 text-system-gray-80">
+                Mã OTP đã được gửi đến {{ props.user.email }}
+              </p>
+              <p class="mt-2 text-caption text-system-gray-60">
+                Vui lòng kiểm tra email và nhập mã OTP
+              </p>
+            </div>
+
+            <UIInput
+              v-model="formData.otp"
+              name="otp"
+              label="Mã OTP"
+              type="text"
+              placeholder="Nhập mã OTP 6 số"
+              :error="errors.otp"
+              blackhead
+              maxlength="6"
+              :disabled="verifyingOtp"
+            />
+
+            <div class="flex gap-2">
+              <UIButton
+                class="flex w-full xl:inline-flex xl:w-auto"
+                type="button"
+                text="Gửi lại OTP"
+                variant="secondary"
+                :disabled="sendingOtp"
+                :loading="sendingOtp"
+                @click="sendOtp"
+              />
+              <UIButton
+                class="flex w-full xl:inline-flex xl:w-auto"
+                type="button"
+                text="Xác nhận OTP"
+                :disabled="verifyingOtp || !formData.otp"
+                :loading="verifyingOtp"
+                @click="verifyOtp"
+              />
+            </div>
+          </div>
+
+          <!-- Bước 3: Đổi mật khẩu -->
+          <template v-else>
+            <!-- Mật khẩu mới -->
+            <UIInput
+              v-model="formData.newPassword"
+              name="newPassword"
+              label="Mật khẩu mới"
+              type="password"
+              placeholder="Vui lòng nhập mật khẩu mới"
+              :error="errors.newPassword"
+              blackhead
+              :disabled="pending"
+            />
+
+            <!-- Xác nhận mật khẩu -->
+            <UIInput
+              v-model="formData.confirmPassword"
+              name="confirmPassword"
+              label="Xác nhận mật khẩu"
+              type="password"
+              placeholder="Vui lòng nhập lại mật khẩu mới"
+              :error="errors.confirmPassword"
+              blackhead
+              :disabled="pending"
+            />
+
+            <!-- Nút: Hủy chỉnh sửa / Lưu -->
+            <div class="flex gap-2">
+              <UIButton
+                class="flex w-full xl:inline-flex xl:w-auto"
+                type="button"
+                text="Hủy chỉnh sửa"
+                variant="secondary"
+                :disabled="pending"
+                @click="cancelEdit"
+              />
+              <UIButton
+                class="flex w-full xl:inline-flex xl:w-auto"
+                type="submit"
+                text="Lưu thay đổi"
+                :disabled="pending"
+                :loading="pending"
+                @click="changePassword()"
+              />
+            </div>
+          </template>
         </template>
       </div>
     </VForm>
@@ -104,42 +155,47 @@ const props = defineProps({
 })
 
 /* Toàn cục */
-const { $Swal, $validator } = useNuxtApp()
+const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
 /* Biểu mẫu */
 const formData = reactive({
-  oldPassword: '',
   newPassword: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  otp: ''
 })
 const formRefs = ref<HTMLFormElement | null>(null)
 
 // Quy tắc biểu mẫu
 const schema = {
-  oldPassword: (val: string) => {
-    if (!val) return 'Mật khẩu cũ là bắt buộc'
-    if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu cũ phải có ít nhất 8 ký tự'
-    if ($validator.isAlpha(val)) return 'Mật khẩu cũ không được chỉ có chữ cái'
-    if ($validator.isNumeric(val)) return 'Mật khẩu cũ không được chỉ có số'
-    if (!$validator.isAlphanumeric(val))
-      return 'Mật khẩu cũ phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-    return {}
-  },
   newPassword: (val: string) => {
     if (!val) return 'Mật khẩu mới là bắt buộc'
-    if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu mới phải có ít nhất 8 ký tự'
-    if ($validator.isAlpha(val)) return 'Mật khẩu mới không được chỉ có chữ cái'
-    if ($validator.isNumeric(val)) return 'Mật khẩu mới không được chỉ có số'
-    if (!$validator.isAlphanumeric(val))
+    if (val.length < 8) return 'Mật khẩu mới phải có ít nhất 8 ký tự'
+    if (/^[a-zA-Z]+$/.test(val)) return 'Mật khẩu mới không được chỉ có chữ cái'
+    if (/^[0-9]+$/.test(val)) return 'Mật khẩu mới không được chỉ có số'
+    if (!/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(val)) {
       return 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-    return {}
+    }
+    return true
   },
-  confirmPassword: 'required|confirmed:@newPassword'
+  confirmPassword: (val: string) => {
+    if (!val) return 'Xác nhận mật khẩu là bắt buộc'
+    if (val !== formData.newPassword) return 'Xác nhận mật khẩu không khớp'
+    return true
+  },
+  otp: (val: string) => {
+    if (!val) return 'Mã OTP là bắt buộc'
+    if (val.length !== 6) return 'Mã OTP phải có đúng 6 số'
+    if (!/^[0-9]+$/.test(val)) return 'Mã OTP chỉ được chứa số'
+    return true
+  }
 }
 
 // Biểu mẫu: Hiện/ẩn
 const isFormShow = ref(false)
+const otpSent = ref(false)
+const otpVerified = ref(false)
+
 const toggleForm = (event: string) => {
   if (event === 'show') {
     isFormShow.value = true
@@ -149,36 +205,140 @@ const toggleForm = (event: string) => {
 }
 
 const cancelEdit = () => {
-  formData.oldPassword = ''
   formData.newPassword = ''
   formData.confirmPassword = ''
+  formData.otp = ''
+  otpSent.value = false
+  otpVerified.value = false
 
   toggleForm('close')
 }
 
 /* api */
-const { updateUserApi } = useApi()
+const { sendOtpForPasswordChangeApi, verifyOtpApi, changePasswordAfterOtpApi } = useApi()
 
 // State cho API call
 const pending = ref(false)
+const sendingOtp = ref(false)
+const verifyingOtp = ref(false)
+
+// Function để gửi OTP
+const sendOtp = async () => {
+  try {
+    sendingOtp.value = true
+    
+    const response = await sendOtpForPasswordChangeApi({
+      body: {
+        userEmail: props.user.email
+      }
+    })
+
+    if (response) {
+      otpSent.value = true
+      $Swal?.fire({
+        title: 'Gửi OTP thành công',
+        text: response.message,
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+    }
+  } catch (error: any) {
+    console.error('Error sending OTP:', error)
+    $Swal?.fire({
+      title: 'Gửi OTP thất bại',
+      text: error?.data?.message || 'Có lỗi xảy ra khi gửi OTP',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
+  } finally {
+    sendingOtp.value = false
+  }
+}
+
+// Function để xác nhận OTP
+const verifyOtp = async () => {
+  if (!formData.otp) {
+    formRefs.value?.setFieldError('otp', 'Vui lòng nhập mã OTP')
+    return
+  }
+
+  try {
+    verifyingOtp.value = true
+    
+    const response = await verifyOtpApi({
+      body: {
+        userEmail: props.user.email,
+        otp: formData.otp
+      }
+    })
+
+    if (response && response.message.includes('thành công')) {
+      otpVerified.value = true
+      $Swal?.fire({
+        title: 'Xác nhận OTP thành công',
+        text: 'Bạn có thể tiếp tục đổi mật khẩu',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+    } else {
+      formRefs.value?.setFieldError('otp', 'Mã OTP không đúng')
+    }
+  } catch (error: any) {
+    console.error('Error verifying OTP:', error)
+    formRefs.value?.setFieldError('otp', 'Mã OTP không đúng hoặc đã hết hạn')
+  } finally {
+    verifyingOtp.value = false
+  }
+}
 
 // Function để đổi mật khẩu
 const changePassword = async () => {
+  console.log('changePassword called', { otpVerified: otpVerified.value, formData })
+  
+  if (!otpVerified.value) {
+    $Swal?.fire({
+      title: 'Lỗi xác thực',
+      text: 'Vui lòng xác nhận OTP trước khi đổi mật khẩu',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
+    return
+  }
+
   if (!props.user?._id && !props.user?.id) {
     console.error('User ID not found')
     return
   }
 
+  if (!formData.newPassword || !formData.confirmPassword) {
+    console.error('Password fields are empty')
+    return
+  }
+
+  if (formData.newPassword !== formData.confirmPassword) {
+    console.error('Passwords do not match')
+    return
+  }
+
   try {
     pending.value = true
+    console.log('Calling changePasswordAfterOtpApi with:', {
+      userId: props.user._id || props.user.id,
+      newPassword: formData.newPassword
+    })
     
-    const response = await updateUserApi({
+    const response = await changePasswordAfterOtpApi({
       body: {
         userId: props.user._id || props.user.id,
-        oldPassword: formData.oldPassword,
         newPassword: formData.newPassword
       }
     })
+
+    console.log('API response:', response)
 
     if (response) {
       $Swal?.fire({
@@ -194,17 +354,13 @@ const changePassword = async () => {
   } catch (error: any) {
     console.error('Error changing password:', error)
     
-    if (error?.data?.message === '密碼錯誤') {
-      formRefs.value?.setFieldError('oldPassword', 'Mật khẩu cũ không đúng')
-    } else {
-      $Swal?.fire({
-        title: 'Đổi mật khẩu thất bại',
-        text: error?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu',
-        icon: 'error',
-        confirmButtonText: 'Xác nhận',
-        confirmButtonColor: styleStore.confirmButtonColor
-      })
-    }
+    $Swal?.fire({
+      title: 'Đổi mật khẩu thất bại',
+      text: error?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu',
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
   } finally {
     pending.value = false
   }

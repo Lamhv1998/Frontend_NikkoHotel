@@ -2,11 +2,11 @@ import type { AuthenticationRequest, AuthenticationResponse, ApiResponse, UserCr
 
 export const useAuthService = () => {
   const runtimeConfig = useRuntimeConfig()
-  const { authServiceUrl } = runtimeConfig.public
+  const { authServiceUrl, apiGatewayUrl } = runtimeConfig.public
 
   const login = async (credentials: AuthenticationRequest): Promise<ApiResponse<AuthenticationResponse>> => {
     console.log('Calling login API with credentials:', credentials)
-    const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${authServiceUrl}/auth/token`, {
+    const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ export const useAuthService = () => {
   }
 
   const introspect = async (token: string) => {
-    return await $fetch(`${authServiceUrl}/auth/introspect`, {
+    return await $fetch(`${apiGatewayUrl}/auth/introspect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ export const useAuthService = () => {
   }
 
   const logout = async (token: string) => {
-    return await $fetch(`${authServiceUrl}/auth/logout`, {
+    return await $fetch(`${apiGatewayUrl}/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export const useAuthService = () => {
   }
 
   const refreshToken = async (refreshToken: string) => {
-    return await $fetch<ApiResponse<AuthenticationResponse>>(`${authServiceUrl}/auth/refresh`, {
+    return await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
