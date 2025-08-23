@@ -151,7 +151,6 @@ const props = defineProps({
 
 /* Toàn cục */
 const { $Swal } = useNuxtApp()
-const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
 
 /* Biểu mẫu */
@@ -170,13 +169,18 @@ const confirmPasswordError = ref('')
 const isFormShow = ref(false)
 const otpSent = ref(false)
 const otpVerified = ref(false)
+const currentStep = ref('sendOtp')
+const otpDigits = ref(['', '', '', '', '', ''])
+const resendCountdown = ref(0)
 
 // Computed để kiểm tra có thể submit không
 const canSubmit = computed(() => {
-  return formData.newPassword && 
-         formData.confirmPassword && 
-         formData.newPassword === formData.confirmPassword &&
-         validateNewPassword(formData.newPassword) === true
+  return (
+    formData.newPassword &&
+    formData.confirmPassword &&
+    formData.newPassword === formData.confirmPassword &&
+    validateNewPassword(formData.newPassword) === true
+  )
 })
 
 const toggleForm = (event: string) => {
@@ -363,7 +367,7 @@ const changePassword = async () => {
       userId: props.user._id || props.user.id,
       newPassword: formData.newPassword
     })
-    
+
     const response = await changePasswordAfterOtpApi({
       body: {
         userId: props.user._id || props.user.id,
