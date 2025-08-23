@@ -159,6 +159,51 @@
             </div>
           </div>
 
+          <!-- Bookings Card -->
+          <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 p-6">
+              <div class="flex items-center justify-between">
+                <h3 class="flex items-center text-xl font-bold text-white">
+                  <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  Quản lý đặt phòng
+                </h3>
+                <NuxtLink 
+                  to="/user/bookings"
+                  class="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors duration-200"
+                  title="Xem tất cả đặt phòng"
+                >
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </NuxtLink>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <!-- Debug Info -->
+              <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p class="text-sm text-yellow-800">
+                  <strong>Debug:</strong> CustomerProfile: {{ customerProfile ? 'Loaded' : 'Not loaded' }} | 
+                  CustomerId: {{ customerProfile?.customerId || 'Not available' }}
+                </p>
+              </div>
+              
+      
+              
+              <NuxtLink 
+                to="/user/bookings"
+                class="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Xem tất cả đặt phòng
+              </NuxtLink>
+            </div>
+          </div>
+
           <!-- Change Password Card -->
           <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
             <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
@@ -291,37 +336,37 @@
             </div>
             
             <div class="space-y-4 p-6">
-              <NuxtLink class="group block" to="/user/orders">
-                <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                  <div class="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-cyan-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                  <div class="relative flex items-center">
-                    <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 shadow-lg transition-transform group-hover:scale-110">
-                      <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path 
-                          d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        />
-                      </svg>
-                    </div>
-                    <div class="flex-1">
-                      <p class="font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
-                        Đơn đặt phòng
-                      </p>
-                      <p class="text-sm text-gray-600">Xem lịch sử đặt phòng</p>
-                    </div>
-                    <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path 
-                        d="M9 5l7 7-7 7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </NuxtLink>
+                             <NuxtLink class="group block" to="/user/bookings">
+                 <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                   <div class="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-cyan-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                   <div class="relative flex items-center">
+                     <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 shadow-lg transition-transform group-hover:scale-110">
+                       <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path 
+                           d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                           stroke-linecap="round"
+                           stroke-linejoin="round"
+                           stroke-width="2"
+                         />
+                       </svg>
+                     </div>
+                     <div class="flex-1">
+                       <p class="font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
+                         Quản lý đặt phòng
+                       </p>
+                       <p class="text-sm text-gray-600">Xem và quản lý đặt phòng</p>
+                     </div>
+                     <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path 
+                         d="M9 5l7 7-7 7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         stroke-width="2"
+                       />
+                     </svg>
+                   </div>
+                 </div>
+               </NuxtLink>
 
               <NuxtLink class="group block" to="/user/memberships">
                 <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-50 to-yellow-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
@@ -469,53 +514,10 @@ const debugCustomerProfile = computed(() => {
 /* Check authentication on mount */
 onMounted(async () => {
   console.log('User page mounted, checking auth...')
-  console.log('Initial store state before hydration:', {
-    token: authStore.token,
-    user: authStore.user,
-    customerProfile: authStore.customerProfile
-  })
   
   try {
     isLoading.value = true
     error.value = null
-    
-    // Hydrate store từ localStorage trước
-    authStore.hydrateFromStorage()
-    
-    console.log('Store state after hydration:', {
-      token: authStore.token,
-      user: authStore.user,
-      customerProfile: authStore.customerProfile
-    })
-    
-    // Kiểm tra localStorage trực tiếp
-    console.log('LocalStorage check:')
-    const storedToken = localStorage.getItem('auth-token')
-    const storedUser = localStorage.getItem('auth-user')
-    const storedCustomerProfile = localStorage.getItem('auth-customerProfile')
-    console.log('LocalStorage contents:', {
-      token: storedToken ? 'Present' : 'Missing',
-      user: storedUser ? 'Present' : 'Missing',
-      customerProfile: storedCustomerProfile ? 'Present' : 'Missing'
-    })
-    
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser)
-        console.log('Parsed user from localStorage:', parsedUser)
-      } catch (e) {
-        console.error('Error parsing user from localStorage:', e)
-      }
-    }
-    
-    if (storedCustomerProfile) {
-      try {
-        const parsedCustomerProfile = JSON.parse(storedCustomerProfile)
-        console.log('Parsed customerProfile from localStorage:', parsedCustomerProfile)
-      } catch (e) {
-        console.error('Error parsing customerProfile from localStorage:', e)
-      }
-    }
     
     // Kiểm tra xem có cần fetch dữ liệu không
     let needsFetch = false
@@ -645,7 +647,7 @@ const testDirectCustomerService = async () => {
     } else {
       alert('No user ID available for direct testing.')
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error testing direct customer service:', error)
     console.error('Error details:', {
       message: error.message,
@@ -800,4 +802,24 @@ const getAccumulatedSpending = () => {
 const toggleSecuritySettings = () => {
   showSecuritySettings.value = !showSecuritySettings.value
 }
+
+/* Handle booking refresh */
+const handleBookingRefresh = () => {
+  console.log('Booking refreshed')
+  // Có thể thêm logic refresh data khác ở đây nếu cần
+}
+
+/* Debug customer profile on mount */
+onMounted(() => {
+  console.log('🔍 User page mounted')
+  console.log('🔍 User:', user.value)
+  console.log('🔍 CustomerProfile:', customerProfile.value)
+  console.log('🔍 CustomerId:', customerProfile.value?.customerId)
+  
+  // Force fetch customer profile if not available
+  if (!customerProfile.value?.customerId && user.value?.id) {
+    console.log('🔍 Forcing customer profile fetch...')
+    forceFetchCustomerProfile()
+  }
+})
 </script>

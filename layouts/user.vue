@@ -51,9 +51,9 @@
           </NuxtLink>
 
           <NuxtLink 
-            to="/user/orders"
+            to="/user/bookings"
             class="flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors relative"
-            :class="$route.path === '/user/orders' ? 'text-amber-600 border-b-2 border-amber-600' : 'text-gray-500 hover:text-gray-700 hover:border-b-2 hover:border-gray-300'"
+            :class="$route.path === '/user/bookings' ? 'text-amber-600 border-b-2 border-amber-600' : 'text-gray-500 hover:text-gray-700 hover:border-b-2 hover:border-gray-300'"
           >
             <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>

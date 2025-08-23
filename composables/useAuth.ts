@@ -2,7 +2,7 @@ import type { AuthenticationRequest, UserResponse, CustomerDto } from '@/types/a
 
 export const useAuth = () => {
   const authStore = useAuthStore()
-  const { login, signup, logout } = useAuthService()
+  const { login, signup, logout, introspect, refreshToken: refreshTokenService } = useAuthService()
   const { getCustomerProfile, createCustomer } = useCustomerService()
   const router = useRouter()
 
@@ -241,6 +241,53 @@ export const useAuth = () => {
     }
   }
 
+  const checkToken = async () => {
+    try {
+      if (!authStore.token) {
+        console.log('No token available for check')
+        return false
+      }
+
+      console.log('Checking token validity...')
+      const response = await introspect(authStore.token)
+      
+      if (response && response.valid) {
+        console.log('Token is valid')
+        return true
+      } else {
+        console.log('Token is invalid')
+        return false
+      }
+    } catch (error) {
+      console.error('Token check failed:', error)
+      return false
+    }
+  }
+
+  const refreshToken = async () => {
+    try {
+      if (!authStore.token) {
+        console.log('No token available for refresh')
+        return false
+      }
+
+      console.log('Refreshing token...')
+      const response = await refreshTokenService(authStore.token)
+      
+      if (response.code === 0 && response.result && response.result.token) {
+        console.log('Token refreshed successfully')
+        authStore.setToken(response.result.token)
+        return true
+      } else {
+        console.log('Token refresh failed')
+        return false
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+      return false
+    }
+  }
+
   return {
     loginUser,
     signupUser,
@@ -248,6 +295,8 @@ export const useAuth = () => {
     fetchUserInfo,
     fetchCustomerProfile,
     checkAuth,
+    checkToken,
+    refreshToken,
     isAuthenticated: computed(() => authStore.isAuthenticated),
     user: computed(() => authStore.user),
     customerProfile: computed(() => authStore.customerProfile)
