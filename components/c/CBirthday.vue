@@ -52,9 +52,11 @@ const props = defineProps({
 
 const { $dayjs } = useNuxtApp()
 
-const formatBirthday = defineModel<string>({
-  default: ''
-})
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+}>()
+
+const formatBirthday = ref('')
 
 const birthday = ref<Record<string, string | number>>({
   YYYY: '',
@@ -76,7 +78,7 @@ onMounted(() => {
   initializeBirthday()
 })
 
-// Watch birthday để cập nhật formatBirthday
+// Watch birthday để cập nhật formatBirthday và emit
 watch(
   birthday,
   () => {
@@ -85,11 +87,14 @@ watch(
       const formattedDate = `${YYYY}-${MM.toString().padStart(2, '0')}-${DD.toString().padStart(2, '0')}`
       if ($dayjs(formattedDate, 'YYYY-MM-DD', true).isValid()) {
         formatBirthday.value = formattedDate
+        emit('update:modelValue', formattedDate)
       } else {
         formatBirthday.value = ''
+        emit('update:modelValue', '')
       }
     } else {
       formatBirthday.value = ''
+      emit('update:modelValue', '')
     }
   },
   { deep: true }

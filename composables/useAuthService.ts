@@ -1,51 +1,66 @@
 import type { AuthenticationRequest, UserResponse } from '@/types/auth'
 
 export const useAuthService = () => {
-  const config = useRuntimeConfig()
-  const authServiceUrl = config.public.authServiceUrl
+  const runtimeConfig = useRuntimeConfig()
+  const { authServiceUrl, apiGatewayUrl } = runtimeConfig.public
 
-  const authenticate = async (credentials: AuthenticationRequest) => {
-    try {
-      const response = await $fetch<{ token: string; user: UserResponse }>(`${authServiceUrl}/auth/authenticate`, {
-        method: 'POST',
-        body: credentials
-      })
-      
-      return response
-    } catch (error) {
-      console.error('Authentication error:', error)
-      throw error
-    }
+  const login = async (credentials: AuthenticationRequest): Promise<ApiResponse<AuthenticationResponse>> => {
+    console.log('Calling login API with credentials:', credentials)
+    const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: credentials
+    })
+    console.log('Login API response:', response)
+    return response
   }
 
-  const register = async (userData: any) => {
-    try {
-      const response = await $fetch(`${authServiceUrl}/auth/register`, {
-        method: 'POST',
-        body: userData
-      })
-      
-      return response
-    } catch (error) {
-      console.error('Registration error:', error)
-      throw error
-    }
+  const signup = async (userData: UserCreationRequest): Promise<ApiResponse<UserResponse>> => {
+    return await $fetch<ApiResponse<UserResponse>>(`${authServiceUrl}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: userData
+    })
   }
 
-  const getUserInfo = async (token: string) => {
-    try {
-      const response = await $fetch<UserResponse>(`${authServiceUrl}/users/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      
-      return response
-    } catch (error) {
-      console.error('Get user info error:', error)
-      throw error
-    }
+  const introspect = async (token: string) => {
+    return await $fetch(`${apiGatewayUrl}/auth/introspect`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: {
+        token
+      }
+    })
+  }
+
+  const logout = async (token: string) => {
+    return await $fetch(`${apiGatewayUrl}/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: {
+        token
+      }
+    })
+  }
+
+  const refreshToken = async (refreshToken: string) => {
+    return await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: {
+        token: refreshToken
+      }
+    })
   }
 
   return {
