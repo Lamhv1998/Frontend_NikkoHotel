@@ -1,12 +1,6 @@
 <template>
   <section>
-    <VForm
-      ref="formRefs"
-      v-slot="{ errors }"
-      class="card"
-      :validation-schema="schema"
-      @submit="changePassword"
-    >
+    <div class="card">
       <h2 class="text-h6 xl:text-h5">Đổi mật khẩu</h2>
 
       <div class="space-y-6">
@@ -64,7 +58,7 @@
               label="Mã OTP"
               type="text"
               placeholder="Nhập mã OTP 6 số"
-              :error="errors.otp"
+              :error="otpError"
               blackhead
               maxlength="6"
               :disabled="verifyingOtp"
@@ -100,7 +94,7 @@
               label="Mật khẩu mới"
               type="password"
               placeholder="Vui lòng nhập mật khẩu mới"
-              :error="errors.newPassword"
+              :error="newPasswordError"
               blackhead
               :disabled="pending"
             />
@@ -112,7 +106,7 @@
               label="Xác nhận mật khẩu"
               type="password"
               placeholder="Vui lòng nhập lại mật khẩu mới"
-              :error="errors.confirmPassword"
+              :error="confirmPasswordError"
               blackhead
               :disabled="pending"
             />
@@ -129,17 +123,17 @@
               />
               <UIButton
                 class="flex w-full xl:inline-flex xl:w-auto"
-                type="submit"
+                type="button"
                 text="Lưu thay đổi"
-                :disabled="pending"
+                :disabled="pending || !canSubmit"
                 :loading="pending"
-                @click="changePassword()"
+                @click="changePassword"
               />
             </div>
           </template>
         </template>
       </div>
-    </VForm>
+    </div>
   </section>
 </template>
 
@@ -164,37 +158,24 @@ const formData = reactive({
   confirmPassword: '',
   otp: ''
 })
-const formRefs = ref<HTMLFormElement | null>(null)
 
-// Quy tắc biểu mẫu
-const schema = {
-  newPassword: (val: string) => {
-    if (!val) return 'Mật khẩu mới là bắt buộc'
-    if (val.length < 8) return 'Mật khẩu mới phải có ít nhất 8 ký tự'
-    if (/^[a-zA-Z]+$/.test(val)) return 'Mật khẩu mới không được chỉ có chữ cái'
-    if (/^[0-9]+$/.test(val)) return 'Mật khẩu mới không được chỉ có số'
-    if (!/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(val)) {
-      return 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-    }
-    return true
-  },
-  confirmPassword: (val: string) => {
-    if (!val) return 'Xác nhận mật khẩu là bắt buộc'
-    if (val !== formData.newPassword) return 'Xác nhận mật khẩu không khớp'
-    return true
-  },
-  otp: (val: string) => {
-    if (!val) return 'Mã OTP là bắt buộc'
-    if (val.length !== 6) return 'Mã OTP phải có đúng 6 số'
-    if (!/^[0-9]+$/.test(val)) return 'Mã OTP chỉ được chứa số'
-    return true
-  }
-}
+// Errors
+const otpError = ref('')
+const newPasswordError = ref('')
+const confirmPasswordError = ref('')
 
 // Biểu mẫu: Hiện/ẩn
 const isFormShow = ref(false)
 const otpSent = ref(false)
 const otpVerified = ref(false)
+
+// Computed để kiểm tra có thể submit không
+const canSubmit = computed(() => {
+  return formData.newPassword && 
+         formData.confirmPassword && 
+         formData.newPassword === formData.confirmPassword &&
+         validateNewPassword(formData.newPassword) === true
+})
 
 const toggleForm = (event: string) => {
   if (event === 'show') {
@@ -208,10 +189,38 @@ const cancelEdit = () => {
   formData.newPassword = ''
   formData.confirmPassword = ''
   formData.otp = ''
+  otpError.value = ''
+  newPasswordError.value = ''
+  confirmPasswordError.value = ''
   otpSent.value = false
   otpVerified.value = false
 
   toggleForm('close')
+}
+
+// Validation functions
+const validateNewPassword = (val: string) => {
+  if (!val) return 'Mật khẩu mới là bắt buộc'
+  if (val.length < 8) return 'Mật khẩu mới phải có ít nhất 8 ký tự'
+  if (/^[a-zA-Z]+$/.test(val)) return 'Mật khẩu mới không được chỉ có chữ cái'
+  if (/^[0-9]+$/.test(val)) return 'Mật khẩu mới không được chỉ có số'
+  if (!/^(?=.*[a-zA-Z])(?=.*[0-9])/.test(val)) {
+    return 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
+  }
+  return true
+}
+
+const validateConfirmPassword = (val: string) => {
+  if (!val) return 'Xác nhận mật khẩu là bắt buộc'
+  if (val !== formData.newPassword) return 'Xác nhận mật khẩu không khớp'
+  return true
+}
+
+const validateOtp = (val: string) => {
+  if (!val) return 'Mã OTP là bắt buộc'
+  if (val.length !== 6) return 'Mã OTP phải có đúng 6 số'
+  if (!/^[0-9]+$/.test(val)) return 'Mã OTP chỉ được chứa số'
+  return true
 }
 
 /* api */
@@ -259,8 +268,12 @@ const sendOtp = async () => {
 
 // Function để xác nhận OTP
 const verifyOtp = async () => {
-  if (!formData.otp) {
-    formRefs.value?.setFieldError('otp', 'Vui lòng nhập mã OTP')
+  // Clear previous errors
+  otpError.value = ''
+  
+  const otpValidation = validateOtp(formData.otp)
+  if (otpValidation !== true) {
+    otpError.value = otpValidation
     return
   }
 
@@ -284,11 +297,11 @@ const verifyOtp = async () => {
         confirmButtonColor: styleStore.confirmButtonColor
       })
     } else {
-      formRefs.value?.setFieldError('otp', 'Mã OTP không đúng')
+      otpError.value = 'Mã OTP không đúng'
     }
   } catch (error: any) {
     console.error('Error verifying OTP:', error)
-    formRefs.value?.setFieldError('otp', 'Mã OTP không đúng hoặc đã hết hạn')
+    otpError.value = 'Mã OTP không đúng hoặc đã hết hạn'
   } finally {
     verifyingOtp.value = false
   }
@@ -309,18 +322,26 @@ const changePassword = async () => {
     return
   }
 
+  // Clear previous errors
+  newPasswordError.value = ''
+  confirmPasswordError.value = ''
+
+  // Validate
+  const newPasswordValidation = validateNewPassword(formData.newPassword)
+  const confirmPasswordValidation = validateConfirmPassword(formData.confirmPassword)
+
+  if (newPasswordValidation !== true) {
+    newPasswordError.value = newPasswordValidation
+    return
+  }
+
+  if (confirmPasswordValidation !== true) {
+    confirmPasswordError.value = confirmPasswordValidation
+    return
+  }
+
   if (!props.user?._id && !props.user?.id) {
     console.error('User ID not found')
-    return
-  }
-
-  if (!formData.newPassword || !formData.confirmPassword) {
-    console.error('Password fields are empty')
-    return
-  }
-
-  if (formData.newPassword !== formData.confirmPassword) {
-    console.error('Passwords do not match')
     return
   }
 

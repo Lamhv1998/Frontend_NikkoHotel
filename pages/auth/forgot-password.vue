@@ -1,331 +1,297 @@
 <template>
-  <div class="container space-y-10 px-5 py-20 sm:max-w-[26rem] sm:px-0">
-    <!-- Tiêu đề -->
-    <CAuthTitle text="Quên mật khẩu" />
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Quên mật khẩu
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Nhập email để đặt lại mật khẩu
+      </p>
+    </div>
 
-    <!-- Tiến trình bước -->
-    <UIStepper
-      v-model="progress"
-      :steps="['Nhập email', 'Xác nhận OTP', 'Đặt mật khẩu mới']"
-      :disabled="apiPending"
-    />
-
-    <!-- Biểu mẫu -->
-    <Transition name="modal" mode="out-in">
-      <!-- Bước 0: Nhập email -->
-      <div v-if="progress === 0" class="space-y-4">
-        <div class="text-center mb-6">
-          <p class="text-sm text-gray-600">
-            Nhập email đã đăng ký để nhận mã xác nhận đặt lại mật khẩu
-          </p>
-        </div>
-        
-        <UIInput
-          v-model="formData.email"
-          name="email"
-          label="Email"
-          placeholder="hello@example.com"
-          :error="errors.email"
-          :disabled="apiPending"
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <!-- Stepper -->
+        <UIStepper
+          :steps="['Nhập email', 'Xác nhận OTP', 'Đặt mật khẩu mới']"
+          :current-step="progress"
+          class="mb-6"
         />
-      </div>
 
-      <!-- Bước 1: Xác nhận OTP -->
-      <div v-else-if="progress === 1" class="space-y-4">
-        <div class="text-center">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Xác nhận email</h3>
-          <p class="text-sm text-gray-600 mb-4">
-            Mã xác nhận đã được gửi đến <strong>{{ formData.email }}</strong>
-          </p>
-        </div>
-        
-        <UIInput
-          v-model="verificationCode"
-          name="verificationCode"
-          label="Mã xác nhận"
-          placeholder="Nhập mã 6 số"
-          :error="errors.verificationCode"
-          :disabled="apiPending"
-          maxlength="6"
-        />
-        
-        <div class="text-center">
-          <button
-            type="button"
-            @click="resendVerificationCode"
-            :disabled="resendDisabled"
-            class="text-sm text-indigo-600 hover:text-indigo-500 disabled:text-gray-400"
+        <!-- Form -->
+        <form @submit.prevent="handleSubmit" class="space-y-6">
+          <!-- Step 1: Enter Email -->
+          <div v-if="progress === 0">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <div class="mt-1">
+                <UIInput
+                  id="email"
+                  name="email"
+                  v-model="formData.email"
+                  type="email"
+                  placeholder="Nhập email của bạn"
+                  required
+                />
+              </div>
+            </div>
+
+            <UIButton
+              type="submit"
+              variant="primary"
+              size="large"
+              class="w-full mt-4"
+              :loading="loading"
+            >
+              Gửi email
+            </UIButton>
+          </div>
+
+          <!-- Step 2: Verify OTP -->
+          <div v-if="progress === 1">
+            <div>
+              <label for="otp" class="block text-sm font-medium text-gray-700">
+                Mã xác thực (OTP)
+              </label>
+              <div class="mt-1">
+                <UIInput
+                  id="otp"
+                  name="otp"
+                  v-model="verificationCode"
+                  type="text"
+                  placeholder="Nhập mã OTP từ email"
+                  maxlength="6"
+                  required
+                />
+              </div>
+              <p class="mt-2 text-sm text-gray-500">
+                Mã OTP đã được gửi đến email: <strong>{{ formData.email }}</strong>
+              </p>
+            </div>
+
+            <div class="flex space-x-3 mt-4">
+              <UIButton
+                type="button"
+                variant="ghost"
+                @click="resendOtp"
+                :disabled="resendDisabled"
+                class="flex-1"
+              >
+                {{ resendDisabled ? `Gửi lại (${resendCountdown}s)` : 'Gửi lại OTP' }}
+              </UIButton>
+
+              <UIButton
+                type="submit"
+                variant="primary"
+                class="flex-1"
+                :loading="loading"
+              >
+                Xác nhận OTP
+              </UIButton>
+            </div>
+          </div>
+
+          <!-- Step 3: Set New Password -->
+          <div v-if="progress === 2">
+            <div>
+              <label for="newPassword" class="block text-sm font-medium text-gray-700">
+                Mật khẩu mới
+              </label>
+              <div class="mt-1">
+                <UIInput
+                  id="newPassword"
+                  name="newPassword"
+                  v-model="formData.newPassword"
+                  type="password"
+                  placeholder="Nhập mật khẩu mới"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                Xác nhận mật khẩu
+              </label>
+              <div class="mt-1">
+                <UIInput
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  v-model="formData.confirmPassword"
+                  type="password"
+                  placeholder="Nhập lại mật khẩu mới"
+                  required
+                />
+              </div>
+            </div>
+
+            <UIButton
+              type="submit"
+              variant="primary"
+              size="large"
+              class="w-full mt-4"
+              :loading="loading"
+            >
+              Đặt lại mật khẩu
+            </UIButton>
+          </div>
+        </form>
+
+        <!-- Back to Login -->
+        <div class="mt-6 text-center">
+          <NuxtLink
+            to="/auth/login"
+            class="text-sm text-blue-600 hover:text-blue-500"
           >
-            {{ resendDisabled ? `Gửi lại sau ${resendCountdown}s` : 'Gửi lại mã' }}
-          </button>
+            ← Quay lại đăng nhập
+          </NuxtLink>
         </div>
-      </div>
-
-      <!-- Bước 2: Đặt mật khẩu mới -->
-      <div v-else class="space-y-4">
-        <div class="text-center mb-6">
-          <p class="text-sm text-gray-600">
-            Vui lòng nhập mật khẩu mới cho tài khoản của bạn
-          </p>
-        </div>
-
-        <UIInput
-          v-model="formData.newPassword"
-          name="newPassword"
-          label="Mật khẩu mới"
-          type="password"
-          placeholder="Nhập mật khẩu mới"
-          :error="errors.newPassword"
-          :disabled="apiPending"
-        />
-
-        <UIInput
-          v-model="formData.confirmPassword"
-          name="confirmPassword"
-          label="Xác nhận mật khẩu"
-          type="password"
-          placeholder="Nhập lại mật khẩu mới"
-          :error="errors.confirmPassword"
-          :disabled="apiPending"
-        />
-      </div>
-    </Transition>
-
-    <div class="space-y-4">
-      <!-- Nút: Gửi -->
-      <UIButton
-        type="button"
-        :text="progress === 0 ? 'Gửi mã xác nhận' : progress === 1 ? 'Xác nhận OTP' : 'Đặt lại mật khẩu'"
-        block
-        :disabled="apiPending"
-        :loading="apiPending"
-        @click="handleSubmit"
-      />
-
-      <!-- Liên kết: Đăng nhập -->
-      <div class="flex gap-2">
-        <p class="text-body-2 text-text-inverse xl:text-body">Đã nhớ mật khẩu?</p>
-        <NuxtLink class="hot-link-wrapper" to="/auth/login">
-          <UIButton text="Đăng nhập ngay" variant="text" />
-        </NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-/* Thuộc tính toàn cục */
-const styleStore = useStyleStore()
-const { $Swal, $validator } = useNuxtApp()
-
-// Import userAPI
+<script setup lang="ts">
 import userAPI from '~/api/user'
 
-/* PageMeta */
-definePageMeta({
-  middleware: 'record',
-  layout: 'auth'
-})
-
-/* Biểu mẫu quên mật khẩu */
+// Form data
 const formData = reactive({
   email: '',
   newPassword: '',
   confirmPassword: ''
 })
 
+// OTP verification
 const verificationCode = ref('')
 const progress = ref(0)
+const loading = ref(false)
+
+// Resend OTP functionality
 const resendCountdown = ref(0)
 const resendDisabled = computed(() => resendCountdown.value > 0)
 
-// Quy tắc biểu mẫu
-const schema = computed(() => [
-  {
-    email: 'required|email'
-  },
-  {
-    verificationCode: (val: string) => {
-      if (!val) return 'Mã xác nhận là bắt buộc'
-      if (val.length !== 6) return 'Mã xác nhận phải có 6 số'
-      if (!/^\d{6}$/.test(val)) return 'Mã xác nhận chỉ được chứa số'
-      return {}
-    }
-  },
-  {
-    newPassword: (val: string) => {
-      if (!val) return 'Mật khẩu mới là bắt buộc'
-      if (!$validator.isLength(val, { min: 8 })) return 'Mật khẩu phải có ít nhất 8 ký tự'
-      if ($validator.isAlpha(val)) return 'Mật khẩu không được chỉ có chữ cái'
-      if ($validator.isNumeric(val)) return 'Mật khẩu không được chỉ có số'
-      if (!$validator.isAlphanumeric(val))
-        return 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm cả chữ và số'
-      return {}
-    },
-    confirmPassword: 'required|confirmed:@newPassword'
-  }
-])
-
-// Validation errors
-const errors = computed(() => {
-  const currentSchema = schema.value[progress.value]
-  const currentData = progress.value === 0 ? formData : progress.value === 1 ? { verificationCode: verificationCode.value } : formData
-  
-  const validationErrors: Record<string, string> = {}
-  
-  Object.keys(currentSchema).forEach(field => {
-    const validator = currentSchema[field]
-    if (typeof validator === 'function') {
-      const result = validator(currentData[field])
-      if (result && typeof result === 'string') {
-        validationErrors[field] = result
-      }
-    }
-  })
-  
-  return validationErrors
-})
-
-// API pending states
-const apiPending = computed(() => sendOtpPending.value || verifyOtpPending.value || resetPasswordPending.value)
-const sendOtpPending = ref(false)
-const verifyOtpPending = ref(false)
-const resetPasswordPending = ref(false)
-
-// Xử lý submit
+// Handle form submission
 const handleSubmit = async () => {
-  if (apiPending.value) return
-  
-  if (progress.value === 0) {
-    await sendOtp()
-  } else if (progress.value === 1) {
-    await verifyOtp()
-  } else {
-    await resetPassword()
+  try {
+    loading.value = true
+    console.log('=== FORGOT PASSWORD SUBMIT ===')
+    console.log('Progress:', progress.value)
+    console.log('Form data:', formData)
+
+    if (progress.value === 0) {
+      // Step 1: Send OTP
+      await sendOtp()
+    } else if (progress.value === 1) {
+      // Step 2: Verify OTP
+      await verifyOtp()
+    } else if (progress.value === 2) {
+      // Step 3: Reset Password
+      await resetPassword()
+    }
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    if (error instanceof Error) {
+      alert(error.message)
+    }
+  } finally {
+    loading.value = false
   }
 }
 
-// Gửi OTP
+// Send OTP
 const sendOtp = async () => {
   try {
-    sendOtpPending.value = true
-    
-    const { sendOtpForPasswordChangeApi } = userAPI
-    await sendOtpForPasswordChangeApi({ body: { userEmail: formData.email } })
-    
-    // Chuyển sang bước tiếp theo
-    progress.value = 1
-    startResendCountdown()
-    
-    $Swal?.fire({
-      title: 'Thành công!',
-      text: 'Mã xác nhận đã được gửi đến email của bạn.',
-      icon: 'success',
-      confirmButtonText: 'Xác nhận',
-      confirmButtonColor: styleStore.confirmButtonColor
+    console.log('=== SEND OTP STARTED ===')
+    console.log('Email:', formData.email)
+
+    const response = await userAPI.sendOtpForPasswordChangeApi({
+      body: { userEmail: formData.email }
     })
-  } catch (error: any) {
-    console.error('Lỗi gửi OTP:', error)
-    $Swal?.fire({
-      title: 'Lỗi!',
-      text: error.data?.message || 'Không thể gửi mã xác nhận. Vui lòng thử lại.',
-      icon: 'error',
-      confirmButtonText: 'Xác nhận',
-      confirmButtonColor: styleStore.confirmButtonColor
-    })
-  } finally {
-    sendOtpPending.value = false
+    console.log('Send OTP response:', response)
+
+    if (response.message) {
+      progress.value = 1
+      startResendCountdown()
+      alert('Mã OTP đã được gửi đến email của bạn')
+    } else {
+      throw new Error(response.message || 'Gửi OTP thất bại')
+    }
+  } catch (error) {
+    console.error('Send OTP error:', error)
+    throw error
   }
 }
 
-// Xác nhận OTP
+// Verify OTP
 const verifyOtp = async () => {
   try {
-    verifyOtpPending.value = true
-    
-    const { verifyOtpApi } = userAPI
-    await verifyOtpApi({ body: { userEmail: formData.email, otp: verificationCode.value } })
-    
-    // Chuyển sang bước cuối
-    progress.value = 2
-    
-    $Swal?.fire({
-      title: 'Thành công!',
-      text: 'Email đã được xác nhận. Vui lòng đặt mật khẩu mới.',
-      icon: 'success',
-      confirmButtonText: 'Tiếp tục',
-      confirmButtonColor: styleStore.confirmButtonColor
+    console.log('=== VERIFY OTP STARTED ===')
+    console.log('Email:', formData.email)
+    console.log('OTP:', verificationCode.value)
+
+    const response = await userAPI.verifyOtpApi({
+      body: {
+        userEmail: formData.email,
+        otp: verificationCode.value
+      }
     })
-  } catch (error: any) {
-    console.error('Lỗi xác nhận OTP:', error)
-    $Swal?.fire({
-      title: 'Lỗi!',
-      text: error.data?.message || 'Mã xác nhận không đúng. Vui lòng kiểm tra lại.',
-      icon: 'error',
-      confirmButtonText: 'Xác nhận',
-      confirmButtonColor: styleStore.confirmButtonColor
-    })
-  } finally {
-    verifyOtpPending.value = false
+    console.log('Verify OTP response:', response)
+
+    if (response.message) {
+      progress.value = 2
+      alert('Xác thực OTP thành công. Vui lòng nhập mật khẩu mới.')
+    } else {
+      throw new Error(response.message || 'Xác thực OTP thất bại')
+    }
+  } catch (error) {
+    console.error('Verify OTP error:', error)
+    throw error
   }
 }
 
-// Đặt lại mật khẩu
+// Reset Password
 const resetPassword = async () => {
   try {
-    resetPasswordPending.value = true
-    
     console.log('=== RESET PASSWORD STARTED ===')
     console.log('Email:', formData.email)
     console.log('New password:', formData.newPassword)
-    
-    // Sử dụng logic tương tự như đổi mật khẩu
-    const { changePasswordAfterOtpApi } = userAPI
-    
-    // Gọi API với userId (sẽ được xử lý trong API)
-    await changePasswordAfterOtpApi({ 
-      body: { 
-        userEmail: formData.email,  // Sử dụng email để backend tìm userId
-        newPassword: formData.newPassword 
-      } 
+
+    if (formData.newPassword !== formData.confirmPassword) {
+      throw new Error('Mật khẩu xác nhận không khớp')
+    }
+
+    if (formData.newPassword.length < 8) {
+      throw new Error('Mật khẩu phải có ít nhất 8 ký tự')
+    }
+
+    const response = await userAPI.changePasswordAfterOtpApi({
+      body: {
+        userEmail: formData.email,
+        newPassword: formData.newPassword
+      }
     })
-    
-    // Thành công - chuyển về trang đăng nhập
-    $Swal?.fire({
-      title: 'Thành công!',
-      text: 'Mật khẩu đã được đặt lại. Vui lòng đăng nhập với mật khẩu mới.',
-      icon: 'success',
-      confirmButtonText: 'Đăng nhập ngay',
-      confirmButtonColor: styleStore.confirmButtonColor
-    }).then(() => {
-      navigateTo('/auth/login')
-    })
-  } catch (error: any) {
-    console.error('Lỗi đặt lại mật khẩu:', error)
-    $Swal?.fire({
-      title: 'Lỗi!',
-      text: error.data?.message || 'Không thể đặt lại mật khẩu. Vui lòng thử lại.',
-      icon: 'error',
-      confirmButtonText: 'Xác nhận',
-      confirmButtonColor: styleStore.confirmButtonColor
-    })
-  } finally {
-    resetPasswordPending.value = false
+    console.log('Reset password response:', response)
+
+    alert('Mật khẩu đã được đặt lại thành công!')
+    navigateTo('/auth/login')
+  } catch (error) {
+    console.error('Reset password error:', error)
+    throw error
   }
 }
 
-// Gửi lại mã xác nhận
-const resendVerificationCode = async () => {
-  if (resendDisabled.value) return
-  
+// Resend OTP functionality
+const resendOtp = async () => {
   try {
     await sendOtp()
   } catch (error) {
-    console.error('Lỗi gửi lại mã:', error)
+    console.error('Resend OTP error:', error)
+    // Error already handled in sendOtp
   }
 }
 
-// Bắt đầu đếm ngược gửi lại
 const startResendCountdown = () => {
   resendCountdown.value = 60
   const timer = setInterval(() => {
@@ -335,4 +301,12 @@ const startResendCountdown = () => {
     }
   }, 1000)
 }
+
+// Auto-fill email from query params if available
+onMounted(() => {
+  const route = useRoute()
+  if (route.query.email) {
+    formData.email = route.query.email as string
+  }
+})
 </script>
