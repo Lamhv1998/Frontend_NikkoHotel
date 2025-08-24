@@ -6,12 +6,12 @@
 
     <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
       <UISelect
-        v-model="birthday.YYYY"
-        placeholder="--Năm--"
+        v-model="birthday.DD"
+        placeholder="--Ngày--"
         :error="props.error"
-        :options="YYYY"
+        :options="DD"
         :disabled="props.disabled"
-      />
+      /> 
       <UISelect
         v-model="birthday.MM"
         placeholder="--Tháng--"
@@ -19,11 +19,11 @@
         :options="MM"
         :disabled="props.disabled"
       />
-      <UISelect
-        v-model="birthday.DD"
-        placeholder="--Ngày--"
+       <UISelect
+        v-model="birthday.YYYY"
+        placeholder="--Năm--"
         :error="props.error"
-        :options="DD"
+        :options="YYYY"
         :disabled="props.disabled"
       />
     </div>
@@ -39,6 +39,10 @@
 import { onMounted } from 'vue'
 
 const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  },
   error: {
     type: String,
     default: ''
@@ -56,7 +60,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const formatBirthday = ref('')
+const formatBirthday = ref(props.modelValue || '')
 
 const birthday = ref<Record<string, string | number>>({
   YYYY: '',
@@ -64,27 +68,44 @@ const birthday = ref<Record<string, string | number>>({
   DD: ''
 })
 
-// Khởi tạo birthday từ formatBirthday nếu có
+// Khởi tạo birthday từ modelValue nếu có
 const initializeBirthday = () => {
-  if (formatBirthday.value && $dayjs(formatBirthday.value).isValid()) {
-    birthday.value.YYYY = $dayjs(formatBirthday.value).year()
-    birthday.value.MM = $dayjs(formatBirthday.value).month() + 1 // Tháng cần cộng thêm 1, $dayjs tháng bắt đầu từ 0
-    birthday.value.DD = $dayjs(formatBirthday.value).date()
+  if (props.modelValue && $dayjs(props.modelValue).isValid()) {
+    const year = $dayjs(props.modelValue).year()
+    const month = $dayjs(props.modelValue).month() + 1 // Tháng cần cộng thêm 1, $dayjs tháng bắt đầu từ 0
+    const date = $dayjs(props.modelValue).date()
+    
+    birthday.value.YYYY = year
+    birthday.value.MM = month
+    birthday.value.DD = date
+    formatBirthday.value = props.modelValue
   }
 }
-
 // Khởi tạo khi component mount
 onMounted(() => {
   initializeBirthday()
 })
+
+// Watch modelValue để cập nhật khi có thay đổi từ bên ngoài
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue && newValue !== formatBirthday.value) {
+      formatBirthday.value = newValue
+      initializeBirthday()
+    }
+  }
+)
 
 // Watch birthday để cập nhật formatBirthday và emit
 watch(
   birthday,
   () => {
     const { YYYY, MM, DD } = birthday.value
+    
     if (YYYY && MM && DD) {
       const formattedDate = `${YYYY}-${MM.toString().padStart(2, '0')}-${DD.toString().padStart(2, '0')}`
+      
       if ($dayjs(formattedDate, 'YYYY-MM-DD', true).isValid()) {
         formatBirthday.value = formattedDate
         emit('update:modelValue', formattedDate)
@@ -98,16 +119,6 @@ watch(
     }
   },
   { deep: true }
-)
-
-// Watch formatBirthday để cập nhật birthday khi có thay đổi từ bên ngoài
-watch(
-  formatBirthday,
-  (newValue) => {
-    if (newValue && newValue !== formatBirthday.value) {
-      initializeBirthday()
-    }
-  }
 )
 
 // Tính toán các tùy chọn

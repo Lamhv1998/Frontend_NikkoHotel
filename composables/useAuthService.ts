@@ -5,16 +5,19 @@ export const useAuthService = () => {
   const { authServiceUrl, apiGatewayUrl } = runtimeConfig.public
 
   const login = async (credentials: AuthenticationRequest): Promise<ApiResponse<AuthenticationResponse>> => {
-    console.log('Calling login API with credentials:', credentials)
-    const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: credentials
-    })
-    console.log('Login API response:', response)
-    return response
+    try {
+      const response = await $fetch<ApiResponse<AuthenticationResponse>>(`${apiGatewayUrl}/auth/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: credentials
+      })
+      
+      return response
+    } catch (error) {
+      throw error
+    }
   }
 
   const signup = async (userData: UserCreationRequest): Promise<ApiResponse<UserResponse>> => {

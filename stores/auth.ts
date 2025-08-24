@@ -1,10 +1,9 @@
 import type { UserResponse, CustomerDto } from '@/types/auth'
+import { nextTick } from 'vue'
 
 export const useAuthStore = defineStore(
   'auth',
   () => {
-    console.log('Auth store initializing...')
-    
     const userName = ref('')
     const token = ref('')
     const email = ref('')
@@ -16,22 +15,13 @@ export const useAuthStore = defineStore(
     // Hydrate dữ liệu từ localStorage khi store được khởi tạo
     const hydrateFromStorage = () => {
       try {
-        console.log('Starting store hydration from localStorage...')
-        
         // Kiểm tra localStorage
         const storedToken = localStorage.getItem('auth-token')
         const storedUser = localStorage.getItem('auth-user')
         const storedCustomerProfile = localStorage.getItem('auth-customerProfile')
         
-        console.log('Found in localStorage:', {
-          hasToken: !!storedToken,
-          hasUser: !!storedUser,
-          hasCustomerProfile: !!storedCustomerProfile
-        })
-        
         if (storedToken) {
           token.value = storedToken
-          console.log('Token hydrated:', token.value ? 'Yes' : 'No')
         }
         
         if (storedUser) {
@@ -40,14 +30,9 @@ export const useAuthStore = defineStore(
             user.value = parsedUser
             userName.value = parsedUser.name || ''
             email.value = parsedUser.email || ''
-            id.value = parsedUser.id || parsedUser._id || ''
-            console.log('User hydrated successfully:', {
-              name: userName.value,
-              email: email.value,
-              id: id.value
-            })
+            id.value = parsedUser.id || ''
           } catch (e) {
-            console.error('Error parsing stored user:', e)
+            // Handle parsing error silently
           }
         }
         
@@ -55,34 +40,22 @@ export const useAuthStore = defineStore(
           try {
             const parsedCustomerProfile = JSON.parse(storedCustomerProfile)
             customerProfile.value = parsedCustomerProfile
-            console.log('Customer profile hydrated successfully:', {
-              customerId: parsedCustomerProfile.customerId,
-              firstName: parsedCustomerProfile.firstName,
-              lastName: parsedCustomerProfile.lastName
-            })
           } catch (e) {
-            console.error('Error parsing stored customer profile:', e)
+            // Handle parsing error silently
           }
         }
-        
-        console.log('Store hydration completed. Final state:', {
-          token: token.value ? 'Present' : 'Missing',
-          user: user.value ? 'Present' : 'Missing',
-          customerProfile: customerProfile.value ? 'Present' : 'Missing',
-          userName: userName.value,
-          email: email.value,
-          id: id.value
-        })
       } catch (error) {
-        console.error('Error hydrating store from localStorage:', error)
+        // Handle error silently
       }
     }
 
     const setUser = (userData: UserResponse) => {
       user.value = userData
-      userName.value = userData.name
-      email.value = userData.email
-      id.value = userData._id || userData.id || ''
+      
+      // Xử lý dữ liệu từ API myInfo (có thể không có name)
+      userName.value = userData.name || userData.email || 'User'
+      email.value = userData.email || ''
+      id.value = userData.id || ''
       
       // Lưu vào localStorage
       localStorage.setItem('auth-user', JSON.stringify(userData))
@@ -95,10 +68,16 @@ export const useAuthStore = defineStore(
     }
 
     const setCustomerProfile = (customer: CustomerDto) => {
+      // Lưu vào memory
       customerProfile.value = customer
+      
       // Lưu vào localStorage
       localStorage.setItem('auth-customerProfile', JSON.stringify(customer))
-      console.log('Customer profile saved to localStorage:', customer)
+      
+      // Trigger reactivity
+      nextTick(() => {
+        // Reactivity triggered
+      })
     }
 
     const clearAuth = () => {
@@ -116,32 +95,25 @@ export const useAuthStore = defineStore(
     }
 
     const checkLocalStorage = () => {
-      console.log('Checking localStorage directly...')
       const storedToken = localStorage.getItem('auth-token')
       const storedUser = localStorage.getItem('auth-user')
       const storedCustomerProfile = localStorage.getItem('auth-customerProfile')
       
-      console.log('LocalStorage contents:', {
-        token: storedToken ? 'Present' : 'Missing',
-        user: storedUser ? 'Present' : 'Missing',
-        customerProfile: storedCustomerProfile ? 'Present' : 'Missing'
-      })
-      
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser)
-          console.log('Parsed user from localStorage:', parsedUser)
+          // User data available
         } catch (e) {
-          console.error('Error parsing user from localStorage:', e)
+          // Handle parsing error silently
         }
       }
       
       if (storedCustomerProfile) {
         try {
           const parsedCustomerProfile = JSON.parse(storedCustomerProfile)
-          console.log('Parsed customerProfile from localStorage:', parsedCustomerProfile)
+          // Customer profile data available
         } catch (e) {
-          console.error('Error parsing customerProfile from localStorage:', e)
+          // Handle parsing error silently
         }
       }
     }

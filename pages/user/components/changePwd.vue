@@ -152,6 +152,7 @@ const props = defineProps({
 /* Toàn cục */
 const { $Swal } = useNuxtApp()
 const styleStore = useStyleStore()
+const { sendVerificationEmail, verifyEmailCode } = useRegister()
 
 /* Biểu mẫu */
 const formData = reactive({
@@ -291,7 +292,7 @@ const verifyOtp = async () => {
   try {
     verifyingOtp.value = true
     
-    const response = await verifyOtpApi({
+    const response = await verifyEmailCode({
       body: {
         userEmail: props.user.email,
         otp: formData.otp

@@ -163,7 +163,6 @@ const handleLogout = async () => {
       })
     }
   } catch (error) {
-    console.error('Logout error:', error)
     // Hiển thị thông báo lỗi nếu cần
     $Swal.fire({
       icon: 'error',

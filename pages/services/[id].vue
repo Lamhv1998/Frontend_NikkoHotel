@@ -318,13 +318,6 @@ const relatedServices = computed(() => {
 
 const orderService = () => {
   // Xử lý đặt dịch vụ
-  console.log('Đặt dịch vụ:', {
-    service: service.name,
-    quantity: quantity.value,
-    totalPrice: totalPrice.value,
-    note: note.value,
-    scheduledTime: scheduledTime.value
-  })
   
   // Hiển thị thông báo thành công
   alert('Đặt dịch vụ thành công!')

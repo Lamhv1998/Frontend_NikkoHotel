@@ -36,7 +36,6 @@ export const useAuthState = () => {
       await navigateTo('/')
       return { success: true, message: 'Đăng xuất thành công!' }
     } catch (error) {
-      console.error('Logout error:', error)
       return { success: false, message: 'Có lỗi xảy ra khi đăng xuất' }
     }
   }

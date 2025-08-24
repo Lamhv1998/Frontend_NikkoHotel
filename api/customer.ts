@@ -1,44 +1,39 @@
-export default {
-  // Get customer profile
-  getCustomerProfileApi: (userId: string) => {
-    return useHttp().get(`/customers/profile/${userId}`)
-  },
-  
-  // Update customer profile
-  updateCustomerApi: (options: { body: any }) => {
-    return useHttp().put('/customers/update', options.body)
-  },
-  
-  // Create customer
-  createCustomerApi: (options: { body: any }) => {
-    return useHttp().post('/customers/create', options.body)
-  },
-  
-  // Update customer avatar
-  updateCustomerAvatarApi: (options: { body: { customerId: string, imageFile: File } }) => {
-    const formData = new FormData()
-    formData.append('customerId', options.body.customerId)
-    formData.append('imageFile', options.body.imageFile)
+import type { UseFetchOptions } from 'nuxt/app'
+import type { CustomerDto, CreateCustomerCommand, UpdateCustomerCommand, ApiResponse } from '@/types/auth'
+
+const customerAPI = {
+  getCustomerProfileApi: <T = any>(options: UseFetchOptions<T>) => {
+    const { getCustomerProfile } = useCustomer()
+    const userId = (options.params as any)?.userId || (options.body as any)?.userId
     
-    return useHttp().put('/customers/update-avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    if (!userId) {
+      throw new Error('User ID is required')
+    }
+    
+    return getCustomerProfile(userId as string,token)
   },
-  
-  // Get customer by ID
-  getCustomerByIdApi: (customerId: string) => {
-    return useHttp().get(`/customers/${customerId}`)
+
+  createCustomerApi: <T = any>(options: UseFetchOptions<T>) => {
+    const { createCustomer } = useCustomer()
+    return createCustomer(options.body as CreateCustomerCommand)
   },
-  
-  // Get customer orders
-  getCustomerOrdersApi: (customerId: string) => {
-    return useHttp().get(`/customers/${customerId}/orders`)
+
+  updateCustomerApi: <T = any>(options: UseFetchOptions<T>) => {
+    const { updateCustomerProfile } = useCustomer()
+    return updateCustomerProfile(options.body as UpdateCustomerCommand)
   },
-  
-  // Get customer membership info
-  getCustomerMembershipApi: (customerId: string) => {
-    return useHttp().get(`/customers/${customerId}/membership`)
+
+  updateCustomerAvatarApi: <T = any>(options: UseFetchOptions<T>) => {
+    const { updateCustomerAvatar } = useCustomer()
+    const { customerId, imageFile } = options.body as { customerId: string; imageFile: File }
+    
+    if (!customerId || !imageFile) {
+      throw new Error('Customer ID and image file are required')
+    }
+    
+    return updateCustomerAvatar(customerId, imageFile)
   }
 }
+
+export default customerAPI
+

@@ -309,10 +309,6 @@ const getUserInitials = () => {
 }
 
 const getUserImageUrl = () => {
-  // Debug: log ra dữ liệu để kiểm tra
-  console.log('Debug - customerProfile:', authStore.customerProfile)
-  console.log('Debug - imageUrl:', authStore.customerProfile?.imageUrl)
-  
   // Kiểm tra customerProfile.imageUrl trước
   if (authStore.customerProfile?.imageUrl) {
     return authStore.customerProfile.imageUrl
@@ -321,7 +317,6 @@ const getUserImageUrl = () => {
 }
 
 const handleImageError = (event: Event) => {
-  console.log('Image failed to load:', event)
   // Có thể thêm logic fallback ở đây
 }
 

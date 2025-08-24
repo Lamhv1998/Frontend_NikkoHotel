@@ -74,7 +74,6 @@ export type UserUpdatedRequest = {
 }
 
 export type UserResponse = {
-  _id?: string
   id?: string
   name: string
   email: string
@@ -95,6 +94,7 @@ export type AddressDto = {
 
 export type CustomerDto = {
   customerId: string
+  userId: string
   firstName: string
   lastName: string
   address: string
@@ -106,20 +106,6 @@ export type CustomerDto = {
   updatedDate: string
   sex: string
   active: boolean
-}
-
-// Type cũ để tương thích (nếu cần)
-export type CustomerDtoLegacy = {
-  customerId: string
-  userId: string
-  name: string
-  email: string
-  phone: string
-  birthday: string
-  address: Address
-  avatar?: string
-  createdAt: string
-  updatedAt: string
 }
 
 export type CreateCustomerCommand = {

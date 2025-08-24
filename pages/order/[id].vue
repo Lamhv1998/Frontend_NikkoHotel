@@ -284,14 +284,7 @@ const {
 } = route
 
 /* Booking composable */
-console.log('🔧 Setting up booking composable...')
 const { fetchBookingById, currentBooking, loading, error } = useBooking()
-console.log('✅ Booking composable setup complete:', {
-  fetchBookingById: typeof fetchBookingById,
-  currentBooking: currentBooking.value,
-  loading: loading.value,
-  error: error.value
-})
 
 /* Reactive state */
 const booking = computed(() => currentBooking.value)
@@ -300,58 +293,34 @@ const confirmLoading = ref(false)
 /* Methods */
 const loadBookingData = async () => {
   try {
-    console.log('📋 Loading booking data for ID:', id)
-    
     // Test direct API call first
-    console.log('🧪 Testing direct API call...')
     const config = useRuntimeConfig()
     const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
-    console.log('🔗 Booking service URL:', bookingServiceUrl)
     
     const testUrl = `${bookingServiceUrl}/api/bookings/${id}`
-    console.log('🌐 Test URL:', testUrl)
-    
-    try {
-      const testResponse = await $fetch(testUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      console.log('✅ Direct API test successful:', testResponse)
-    } catch (testErr) {
-      console.error('❌ Direct API test failed:', testErr)
-    }
     
     // Now try the composable method
-    console.log('🔄 Calling composable method...')
     await fetchBookingById(id as string)
-    console.log('✅ Booking data loaded:', currentBooking.value)
   } catch (err) {
-    console.error('❌ Error loading booking:', err)
+    // Handle error silently
   }
 }
 
 /* Watch for currentBooking changes */
-watch(currentBooking, (newBooking) => {
-  console.log('🔄 Booking data updated:', newBooking)
+watch(currentBooking, () => {
+  // UI sẽ được cập nhật tự động
 }, { immediate: true })
 
 /* Methods */
 const confirmBookingPayment = async () => {
   try {
     confirmLoading.value = true
-    console.log('✅ Confirming booking payment for ID:', id)
     
     // Gọi API xác nhận thanh toán
     const response = await confirmBookingPaymentApi(id as string)
     
-    console.log('✅ Booking payment confirmed successfully:', response)
-    
     // Kiểm tra nếu có urlPayment từ API
     if (response.urlPayment) {
-      console.log('🌐 Redirecting to payment URL:', response.urlPayment)
-      
       // Hiển thị thông báo thành công với SweetAlert2
       await $Swal.fire({
         icon: 'success',
@@ -380,7 +349,6 @@ const confirmBookingPayment = async () => {
     }
     
   } catch (error) {
-    console.error('❌ Error confirming booking payment:', error)
     await $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -396,7 +364,6 @@ const confirmBookingPayment = async () => {
 
 /* Lifecycle */
 onMounted(() => {
-  console.log('🚀 Order detail page mounted, ID:', id)
   loadBookingData()
 })
 </script>

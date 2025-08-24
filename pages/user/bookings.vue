@@ -510,10 +510,8 @@ const loadRoomData = async (roomId: string) => {
   
   try {
     roomLoading.value[roomId] = true
-    console.log('🔍 Loading room data for roomId:', roomId)
     const roomInfo = await getRoomById(roomId)
     roomData.value[roomId] = roomInfo
-    console.log('✅ Room data loaded:', roomInfo)
   } catch (err) {
     console.error('❌ Failed to load room data for roomId:', roomId, err)
     roomData.value[roomId] = null
@@ -525,7 +523,6 @@ const loadRoomData = async (roomId: string) => {
 /* Load room data for all bookings */
 const loadRoomDataForBookings = async () => {
   const uniqueRoomIds = [...new Set(bookings.value.map(booking => booking.roomId))]
-  console.log('🔍 Loading room data for unique roomIds:', uniqueRoomIds)
   
   for (const roomId of uniqueRoomIds) {
     await loadRoomData(roomId)
@@ -646,13 +643,11 @@ const handleCancelBooking = async (bookingId: string) => {
 
 // Update booking
 const handleUpdateBooking = (booking: BookingDto) => {
-  console.log('Updating booking:', booking)
   navigateTo(`/order/${booking.bookingId}`)
 }
 
 // Handle payment
 const handlePayment = (booking: BookingDto) => {
-  console.log('Processing payment for booking:', booking)
   // Navigate to payment page with booking ID
   navigateTo(`/order/payment?bookingId=${booking.bookingId}`)
 }

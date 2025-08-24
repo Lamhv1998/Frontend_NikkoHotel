@@ -13,15 +13,12 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Fetching all bookings with page:', page, 'size:', size)
       
       const response = await getAllBookingsApi(page, size)
       bookings.value = response
       
-      console.log('✅ Fetched bookings:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error fetching bookings:', err)
       error.value = 'Không thể tải danh sách đặt phòng'
       throw err
     } finally {
@@ -34,15 +31,12 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Fetching bookings for customer:', customerId, 'page:', page, 'size:', size)
       
       const response = await getBookingsByCustomerApi(customerId, page, size)
       bookings.value = response
       
-      console.log('✅ Fetched customer bookings:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error fetching customer bookings:', err)
       error.value = 'Không thể tải danh sách đặt phòng của khách hàng'
       throw err
     } finally {
@@ -55,15 +49,12 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Fetching booking history for customer:', customerId, 'page:', page, 'size:', size)
       
       const response = await getCustomerBookingHistoryApi(customerId, page, size)
       bookings.value = response
       
-      console.log('✅ Fetched customer booking history:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error fetching customer booking history:', err)
       error.value = 'Không thể tải lịch sử đặt phòng của khách hàng'
       throw err
     } finally {
@@ -76,15 +67,12 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Fetching booking by ID:', bookingId)
       
       const response = await getBookingByIdApi(bookingId)
       currentBooking.value = response
       
-      console.log('✅ Fetched booking:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error fetching booking:', err)
       error.value = 'Không thể tải thông tin đặt phòng'
       throw err
     } finally {
@@ -97,15 +85,12 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Creating new booking:', request)
       
       const response = await createBookingApi(request)
       currentBooking.value = response
       
-      console.log('✅ Created booking:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error creating booking:', err)
       error.value = 'Không thể tạo đơn đặt phòng'
       throw err
     } finally {
@@ -118,7 +103,6 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Updating booking:', bookingId, request)
       
       const response = await updateBookingApi(bookingId, request)
       currentBooking.value = response
@@ -129,10 +113,8 @@ export const useBooking = () => {
         bookings.value[index] = response
       }
       
-      console.log('✅ Updated booking:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error updating booking:', err)
       error.value = 'Không thể cập nhật đơn đặt phòng'
       throw err
     } finally {
@@ -145,7 +127,6 @@ export const useBooking = () => {
     try {
       loading.value = true
       error.value = null
-      console.log('📋 Cancelling booking:', bookingId)
       
       const response = await cancelBookingApi(bookingId)
       currentBooking.value = response
@@ -156,10 +137,8 @@ export const useBooking = () => {
         bookings.value[index] = response
       }
       
-      console.log('✅ Cancelled booking:', response)
       return response
     } catch (err: any) {
-      console.error('❌ Error cancelling booking:', err)
       error.value = 'Không thể hủy đơn đặt phòng'
       throw err
     } finally {

@@ -56,6 +56,120 @@
                 @get-user-refresh="getUserRefresh" 
               />
             </div>
+                 <!-- Quick Actions -->
+          <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl pt-10">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6">
+              <h3 class="flex items-center text-xl font-bold text-white">
+                <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path 
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </svg>
+                Thao tác nhanh
+              </h3>
+            </div>
+            
+            <div class="space-y-4 p-6">
+                             <NuxtLink class="group block" to="/user/bookings">
+                 <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                   <div class="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-cyan-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                   <div class="relative flex items-center">
+                     <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 shadow-lg transition-transform group-hover:scale-110">
+                       <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path 
+                           d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                           stroke-linecap="round"
+                           stroke-linejoin="round"
+                           stroke-width="2"
+                         />
+                       </svg>
+                     </div>
+                     <div class="flex-1">
+                       <p class="font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
+                         Quản lý đặt phòng
+                       </p>
+                       <p class="text-sm text-gray-600">Xem và quản lý đặt phòng</p>
+                     </div>
+                     <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path 
+                         d="M9 5l7 7-7 7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         stroke-width="2"
+                       />
+                     </svg>
+                   </div>
+                 </div>
+               </NuxtLink>
+
+              <NuxtLink class="group block" to="/user/memberships">
+                <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-50 to-yellow-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                  <div class="absolute inset-0 bg-gradient-to-r from-amber-100/50 to-yellow-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                  <div class="relative flex items-center">
+                    <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 shadow-lg transition-transform group-hover:scale-110">
+                      <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path 
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        />
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-semibold text-gray-900 transition-colors group-hover:text-amber-600">
+                        Hạng thành viên
+                      </p>
+                      <p class="text-sm text-gray-600">Xem điểm tích lũy</p>
+                    </div>
+                    <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path 
+                        d="M9 5l7 7-7 7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink class="group block" to="/user/voucher">
+                <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                  <div class="absolute inset-0 bg-gradient-to-r from-purple-100/50 to-pink-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                  <div class="relative flex items-center">
+                    <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 shadow-lg transition-transform group-hover:scale-110">
+                      <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path 
+                          d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        />
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-semibold text-gray-900 transition-colors group-hover:text-purple-600">
+                        Voucher
+                      </p>
+                      <p class="text-sm text-gray-600">Quản lý voucher</p>
+                    </div>
+                    <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path 
+                        d="M9 5l7 7-7 7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </NuxtLink>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -99,7 +213,7 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="text-3xl font-bold text-blue-600">{{ getOrderCount() }}</span>
+                    <span class="text-3xl font-bold text-blue-600">{{ customerOrderCount }}</span>
                     <p class="text-xs text-gray-500">đơn hàng</p>
                   </div>
                 </div>
@@ -125,7 +239,7 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="text-2xl font-bold text-amber-600">{{ formatCurrency(getAccumulatedSpending()) }}</span>
+                    <span class="text-2xl font-bold text-amber-600">{{ formatCurrency(customerAccumulatedSpending) }}</span>
                     <p class="text-xs text-gray-500">VND</p>
                   </div>
                 </div>
@@ -151,59 +265,13 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="text-2xl font-bold text-green-600">{{ getLevelText(customerProfile?.level || '') }}</span>
+                    <span class="text-2xl font-bold text-green-600">{{ customerLevel }}</span>
                     <p class="text-xs text-gray-500">thành viên</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Bookings Card -->
-          <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 p-6">
-              <div class="flex items-center justify-between">
-                <h3 class="flex items-center text-xl font-bold text-white">
-                  <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                  Quản lý đặt phòng
-                </h3>
-                <NuxtLink 
-                  to="/user/bookings"
-                  class="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors duration-200"
-                  title="Xem tất cả đặt phòng"
-                >
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </NuxtLink>
-              </div>
-            </div>
-            
-            <div class="p-6">
-              <!-- Debug Info -->
-              <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p class="text-sm text-yellow-800">
-                  <strong>Debug:</strong> CustomerProfile: {{ customerProfile ? 'Loaded' : 'Not loaded' }} | 
-                  CustomerId: {{ customerProfile?.customerId || 'Not available' }}
-                </p>
-              </div>
-              
-      
-              
-              <NuxtLink 
-                to="/user/bookings"
-                class="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
-              >
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                Xem tất cả đặt phòng
-              </NuxtLink>
-            </div>
-          </div>
-
+          </div>         
           <!-- Change Password Card -->
           <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
             <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
@@ -318,121 +386,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Quick Actions -->
-          <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
-            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6">
-              <h3 class="flex items-center text-xl font-bold text-white">
-                <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path 
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                  />
-                </svg>
-                Thao tác nhanh
-              </h3>
-            </div>
-            
-            <div class="space-y-4 p-6">
-                             <NuxtLink class="group block" to="/user/bookings">
-                 <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                   <div class="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-cyan-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                   <div class="relative flex items-center">
-                     <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 shadow-lg transition-transform group-hover:scale-110">
-                       <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path 
-                           d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                           stroke-linecap="round"
-                           stroke-linejoin="round"
-                           stroke-width="2"
-                         />
-                       </svg>
-                     </div>
-                     <div class="flex-1">
-                       <p class="font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
-                         Quản lý đặt phòng
-                       </p>
-                       <p class="text-sm text-gray-600">Xem và quản lý đặt phòng</p>
-                     </div>
-                     <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                       <path 
-                         d="M9 5l7 7-7 7"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         stroke-width="2"
-                       />
-                     </svg>
-                   </div>
-                 </div>
-               </NuxtLink>
-
-              <NuxtLink class="group block" to="/user/memberships">
-                <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-50 to-yellow-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                  <div class="absolute inset-0 bg-gradient-to-r from-amber-100/50 to-yellow-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                  <div class="relative flex items-center">
-                    <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 shadow-lg transition-transform group-hover:scale-110">
-                      <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path 
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        />
-                      </svg>
-                    </div>
-                    <div class="flex-1">
-                      <p class="font-semibold text-gray-900 transition-colors group-hover:text-amber-600">
-                        Hạng thành viên
-                      </p>
-                      <p class="text-sm text-gray-600">Xem điểm tích lũy</p>
-                    </div>
-                    <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path 
-                        d="M9 5l7 7-7 7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </NuxtLink>
-
-              <NuxtLink class="group block" to="/user/voucher">
-                <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                  <div class="absolute inset-0 bg-gradient-to-r from-purple-100/50 to-pink-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                  <div class="relative flex items-center">
-                    <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 shadow-lg transition-transform group-hover:scale-110">
-                      <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path 
-                          d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        />
-                      </svg>
-                    </div>
-                    <div class="flex-1">
-                      <p class="font-semibold text-gray-900 transition-colors group-hover:text-purple-600">
-                        Voucher
-                      </p>
-                      <p class="text-sm text-gray-600">Quản lý voucher</p>
-                    </div>
-                    <svg class="ml-auto h-5 w-5 text-gray-400 transition-colors group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path 
-                        d="M9 5l7 7-7 7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </NuxtLink>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -493,28 +446,37 @@ const showSecuritySettings = ref(false)
 const { user, customerProfile } = storeToRefs(authStore)
 
 /* Watch for store changes to debug */
-watch([user, customerProfile], ([newUser, newCustomerProfile], [oldUser, oldCustomerProfile]) => {
-  console.log('Store values changed:', {
-    user: { old: oldUser as any, new: newUser as any },
-    customerProfile: { old: oldCustomerProfile as any, new: newCustomerProfile as any }
-  })
+watch([user, customerProfile], () => {
+  // UI sẽ được cập nhật tự động
 }, { immediate: true, deep: true })
 
-/* Debug computed properties */
-const debugUser = computed(() => {
-  console.log('Debug user computed:', authStore.user)
-  return authStore.user
+
+
+/* Computed properties for reactive data display */
+const customerLevel = computed(() => {
+  const level = customerProfile.value?.level
+  return getLevelText(level || '')
 })
 
-const debugCustomerProfile = computed(() => {
-  console.log('Debug customerProfile computed:', authStore.customerProfile)
-  return authStore.customerProfile
+const customerOrderCount = computed(() => {
+  const count = customerProfile.value ? 12 : 0
+  return count
+})
+
+const customerAccumulatedSpending = computed(() => {
+  const spending = customerProfile.value?.accumulatedSpending || 0
+  return spending
+})
+
+const customerFullName = computed(() => {
+  const firstName = customerProfile.value?.firstName || ''
+  const lastName = customerProfile.value?.lastName || ''
+  const fullName = `${firstName} ${lastName}`.trim() || 'User'
+  return fullName
 })
 
 /* Check authentication on mount */
 onMounted(async () => {
-  console.log('User page mounted, checking auth...')
-  
   try {
     isLoading.value = true
     error.value = null
@@ -523,55 +485,35 @@ onMounted(async () => {
     let needsFetch = false
     
     if (!authStore.user) {
-      console.log('No user data, need to fetch user info')
       needsFetch = true
     }
     
     if (!authStore.customerProfile && authStore.user) {
-      console.log('User exists but no customer profile, need to fetch customer profile')
       needsFetch = true
     }
     
     if (needsFetch) {
       const { checkAuth } = useAuth()
-      console.log('Calling checkAuth to fetch missing data...')
       await checkAuth()
       
       // Đợi một chút để đảm bảo store được cập nhật
       await new Promise(resolve => setTimeout(resolve, 100))
     }
     
-    // Log current state
-    console.log('Final auth state:', {
-      token: authStore.token,
-      user: authStore.user,
-      customerProfile: authStore.customerProfile
-    })
-    
-    // Log computed values
-    console.log('Computed values:', {
-      user: user.value,
-      customerProfile: customerProfile.value
-    })
-    
     // Nếu vẫn không có customer profile, thử fetch lại
     if (authStore.user && !authStore.customerProfile) {
-      console.log('Still no customer profile, trying to fetch again...')
       const { fetchCustomerProfile } = useAuth()
-      const userId = authStore.user?.id || authStore.user?._id
+      const userId = authStore.user?.id
       if (userId) {
         try {
           await fetchCustomerProfile(userId)
-          console.log('Customer profile fetched successfully on retry')
         } catch (error) {
-          console.error('Failed to fetch customer profile on retry:', error)
           // Không set error.value để không hiển thị lỗi cho user
         }
       }
     }
     
   } catch (err) {
-    console.error('Error in onMounted:', err)
     error.value = 'Có lỗi xảy ra khi tải dữ liệu người dùng'
   } finally {
     isLoading.value = false
@@ -580,87 +522,21 @@ onMounted(async () => {
 
 /* Function to refresh user data */
 const getUserRefresh = async () => {
-  console.log('Refreshing user data...')
   const { fetchUserInfo, fetchCustomerProfile } = useAuth()
   
   try {
     const userInfo = await fetchUserInfo()
     // Sử dụng cả id và _id để tương thích
-    const userId = userInfo?.id || userInfo?._id
+    const userId = userInfo?.id
     if (userId) {
-      console.log('Using user ID for customer profile in refresh:', userId)
       await fetchCustomerProfile(userId)
-    } else {
-      console.log('No user ID found in refresh')
     }
   } catch (error) {
-    console.error('Error refreshing user data:', error)
+    // Handle error silently
   }
 }
 
-/* Function to test customer service */
-const testCustomerService = async () => {
-  try {
-    console.log('Testing customer service...')
-    const { fetchCustomerProfile } = useAuth()
-    
-    // Sử dụng cả id và _id để tương thích
-    const userId = user.value?.id || user.value?._id
-    if (userId) {
-      const result = await fetchCustomerProfile(userId)
-      console.log('Customer service test result:', result)
-      alert('Customer service test successful! Check console for details.')
-    } else {
-      alert('No user ID available for testing.')
-    }
-  } catch (error) {
-    console.error('Error testing customer service:', error)
-    alert('Customer service test failed. Check console for details.')
-  }
-}
-
-/* Function to test customer service directly */
-const testDirectCustomerService = async () => {
-  try {
-    console.log('Testing direct customer service...')
-    
-    // Sử dụng cả id và _id để tương thích
-    const userId = user.value?.id || user.value?._id
-    if (userId) {
-      // Test trực tiếp với $fetch
-      const config = useRuntimeConfig()
-      const customerServiceUrl = config.public.customerServiceUrl
-      const url = `${customerServiceUrl}/customers/profile/${userId}`
-      
-      console.log('Testing URL:', url)
-      console.log('User ID:', userId)
-      
-      const response = await $fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      console.log('Direct customer service response:', response)
-      alert('Direct customer service test successful! Check console for details.')
-    } else {
-      alert('No user ID available for direct testing.')
-    }
-  } catch (error: any) {
-    console.error('Error testing direct customer service:', error)
-    console.error('Error details:', {
-      message: error.message,
-      status: error.status,
-      data: error.data
-    })
-    alert('Direct customer service test failed. Check console for details.')
-  }
-}
-
-/* Function to retry loading data */
 const retryLoad = async () => {
-  console.log('Retrying to load data...')
   error.value = null
   
   try {
@@ -675,72 +551,16 @@ const retryLoad = async () => {
       await checkAuth()
     } else if (!authStore.customerProfile) {
       const { fetchCustomerProfile } = useAuth()
-      const userId = authStore.user?.id || authStore.user?._id
+      const userId = authStore.user?.id
       if (userId) {
         await fetchCustomerProfile(userId)
       }
     }
     
   } catch (err) {
-    console.error('Error in retry:', err)
     error.value = 'Có lỗi xảy ra khi thử lại'
   } finally {
     isLoading.value = false
-  }
-}
-
-/* Function to force refresh store from localStorage */
-const forceRefreshStore = () => {
-  console.log('Forcing store refresh from localStorage...')
-  authStore.hydrateFromStorage()
-  console.log('Store refreshed from localStorage. New state:', {
-    token: authStore.token,
-    user: authStore.user,
-    customerProfile: authStore.customerProfile
-  })
-  alert('Store đã được làm mới từ localStorage.')
-}
-
-/* Function to log current store state */
-const logStoreState = () => {
-  console.log('Current Store State:', {
-    token: authStore.token,
-    user: authStore.user,
-    customerProfile: authStore.customerProfile
-  })
-}
-
-/* Function to check localStorage */
-const checkLocalStorage = () => {
-  console.log('Checking localStorage...')
-  authStore.checkLocalStorage()
-  
-  // Also check directly
-  const keys = Object.keys(localStorage)
-  console.log('Local Storage Keys:', keys)
-  
-  const authKeys = keys.filter(key => key.startsWith('auth'))
-  console.log('Auth-related keys:', authKeys)
-  
-  alert(`Local Storage Keys: ${keys.length}\nAuth Keys: ${authKeys.join(', ')}`)
-}
-
-/* Function to force fetch customer profile */
-const forceFetchCustomerProfile = async () => {
-  console.log('Forcing customer profile fetch...')
-  const { fetchCustomerProfile } = useAuth()
-  const userId = user.value?.id || user.value?._id
-  if (userId) {
-    try {
-      await fetchCustomerProfile(userId)
-      console.log('Customer profile fetched successfully after force fetch.')
-      alert('Customer profile đã được làm mới từ server.')
-    } catch (error) {
-      console.error('Failed to force fetch customer profile:', error)
-      alert('Làm mới customer profile thất bại. Xem console để biết thêm chi tiết.')
-    }
-  } else {
-    alert('Không có User ID để làm mới customer profile.')
   }
 }
 
@@ -805,21 +625,13 @@ const toggleSecuritySettings = () => {
 
 /* Handle booking refresh */
 const handleBookingRefresh = () => {
-  console.log('Booking refreshed')
   // Có thể thêm logic refresh data khác ở đây nếu cần
 }
 
-/* Debug customer profile on mount */
-onMounted(() => {
-  console.log('🔍 User page mounted')
-  console.log('🔍 User:', user.value)
-  console.log('🔍 CustomerProfile:', customerProfile.value)
-  console.log('🔍 CustomerId:', customerProfile.value?.customerId)
-  
-  // Force fetch customer profile if not available
-  if (!customerProfile.value?.customerId && user.value?.id) {
-    console.log('🔍 Forcing customer profile fetch...')
-    forceFetchCustomerProfile()
-  }
-})
+/* Debug customer profile on mount - removed duplicate onMounted */
+
+
+
+
+
 </script>

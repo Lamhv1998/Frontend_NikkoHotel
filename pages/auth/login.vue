@@ -111,7 +111,6 @@ onMounted(() => {
   remember.value = authStore.email !== ''
   
   // Kiểm tra Google OAuth callback
-  console.log('Checking for Google OAuth callback...')
   checkGoogleCallback()
 })
 
@@ -125,14 +124,9 @@ const handleLogin = async () => {
     // Sử dụng useAuth composable
     const { loginUser } = useAuth()
     
-    console.log('Attempting login with:', formData.value)
-    
     const result = await loginUser(formData.value)
-    console.log('Login result:', result)
     
     if (result.success) {
-      console.log('Login successful')
-      
       // Hiển thị thông báo thành công
       commonStore.sweetalertList.push({
         title: 'Đăng nhập thành công',
@@ -143,10 +137,9 @@ const handleLogin = async () => {
       
       // Redirect sau khi đăng nhập thành công
       setTimeout(() => {
-        navigateTo(commonStore.routerGuide || '/user')
+        navigateTo(commonStore.routerGuide || '/')
       }, 1000)
     } else {
-      console.log('Login failed:', result.message)
       // Hiển thị thông báo lỗi
       commonStore.sweetalertList.push({
         title: 'Lỗi đăng nhập',
@@ -196,7 +189,6 @@ const handleGoogleLogin = async () => {
   googlePending.value = true
   
   try {
-    console.log('Initiating Google login...')
     await googleSignIn()
   } catch (error) {
     console.error('Google login error:', error)

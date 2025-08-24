@@ -4,17 +4,14 @@ export const useRoomApi = () => {
   const config = useRuntimeConfig()
   const baseURL = config.public.roomServiceUrl || 'http://localhost:8087'
   
-  console.log('🚀 useRoomApi initialized with baseURL:', baseURL)
 
   // Lấy tất cả loại phòng (room types)
   const getAllRoomTypes = async () => {
     try {
-      console.log('📡 Fetching room types from:', `${baseURL}/api/rooms/types`)
       const response = await $fetch(`${baseURL}/api/rooms/types`)
       console.log('✅ Room types response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room types:', error)
       throw error
     }
   }
@@ -22,12 +19,10 @@ export const useRoomApi = () => {
   // Lấy thống kê phòng
   const getRoomStatistics = async () => {
     try {
-      console.log('📡 Fetching room statistics from:', `${baseURL}/api/rooms/statistics`)
       const response = await $fetch(`${baseURL}/api/rooms/statistics`)
       console.log('✅ Room statistics response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room statistics:', error)
       throw error
     }
   }
@@ -35,12 +30,9 @@ export const useRoomApi = () => {
   // Lấy tổng số phòng
   const getRoomCount = async () => {
     try {
-      console.log('📡 Fetching room count from:', `${baseURL}/api/rooms/count`)
       const response = await $fetch(`${baseURL}/api/rooms/count`)
-      console.log('✅ Room count response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room count:', error)
       throw error
     }
   }
@@ -48,12 +40,9 @@ export const useRoomApi = () => {
   // Lấy số phòng khả dụng
   const getAvailableRoomCount = async () => {
     try {
-      console.log('📡 Fetching available room count from:', `${baseURL}/api/rooms/count/available`)
       const response = await $fetch(`${baseURL}/api/rooms/count/available`)
-      console.log('✅ Available room count response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching available room count:', error)
       throw error
     }
   }
@@ -61,12 +50,9 @@ export const useRoomApi = () => {
   // Lấy số phòng đang sử dụng
   const getOccupiedRoomCount = async () => {
     try {
-      console.log('📡 Fetching occupied room count from:', `${baseURL}/api/rooms/count/occupied`)
       const response = await $fetch(`${baseURL}/api/rooms/count/occupied`)
-      console.log('✅ Occupied room count response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching occupied room count:', error)
       throw error
     }
   }
@@ -74,15 +60,10 @@ export const useRoomApi = () => {
   // Lấy số phòng đang bảo trì
   const getMaintenanceRoomCount = async () => {
     try {
-      console.log(
-        '📡 Fetching maintenance room count from:',
-        `${baseURL}/api/rooms/count/maintenance`
-      )
+     
       const response = await $fetch(`${baseURL}/api/rooms/count/maintenance`)
-      console.log('✅ Maintenance room count response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching maintenance room count:', error)
       throw error
     }
   }
@@ -90,12 +71,9 @@ export const useRoomApi = () => {
   // Lấy tỷ lệ lấp đầy phòng
   const getOccupancyRatio = async () => {
     try {
-      console.log('📡 Fetching occupancy ratio from:', `${baseURL}/api/rooms/occupancy-ratio`)
       const response = await $fetch(`${baseURL}/api/rooms/occupancy-ratio`)
-      console.log('✅ Occupancy ratio response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching occupancy ratio:', error)
       throw error
     }
   }
@@ -103,12 +81,9 @@ export const useRoomApi = () => {
   // Lấy danh sách tất cả phòng
   const getAllRooms = async (page = 0, size = 20) => {
     try {
-      console.log('📡 Fetching all rooms from:', `${baseURL}/api/rooms?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms?page=${page}&size=${size}`)
-      console.log('✅ All rooms response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching all rooms:', error)
       throw error
     }
   }
@@ -116,12 +91,9 @@ export const useRoomApi = () => {
   // Lấy thông tin phòng theo ID
   const getRoomById = async (roomId: string) => {
     try {
-      console.log('📡 Fetching room by ID from:', `${baseURL}/api/rooms/${roomId}`)
       const response = await $fetch(`${baseURL}/api/rooms/${roomId}`)
-      console.log('✅ Room by ID response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room by ID:', error)
       throw error
     }
   }
@@ -129,12 +101,9 @@ export const useRoomApi = () => {
   // Lấy thông tin phòng theo số phòng
   const getRoomByNumber = async (roomNumber: string) => {
     try {
-      console.log('📡 Fetching room by number from:', `${baseURL}/api/rooms/number/${roomNumber}`)
       const response = await $fetch(`${baseURL}/api/rooms/number/${roomNumber}`)
-      console.log('✅ Room by number response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room by number:', error)
       throw error
     }
   }

@@ -7,29 +7,16 @@ interface ResOptions {
   status: boolean
 }
 
-const handleError = (response: FetchResponse<ResOptions>) => {
-  const showError = (message: string) => {
-    // eslint-disable-next-line no-console
-    console.log('Thông báo lỗi:', response?._data?.message ?? message)
+const handleError = (error: any, message: string = 'Có lỗi xảy ra') => {
+  if (error?.response?._data?.message) {
+    return error.response._data.message
   }
 
-  if (!response._data) {
-    showError('Yêu cầu quá thời gian, máy chủ không phản hồi!')
-    return
+  if (error?.data?.message) {
+    return error.data.message
   }
 
-  const errorHandlers: Record<number, () => void> = {
-    404: () => showError('Tài nguyên máy chủ không tồn tại'),
-    500: () => showError('Lỗi nội bộ máy chủ'),
-    403: () => showError('Không có quyền truy cập tài nguyên này'),
-    401: () => showError('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại')
-  }
-
-  if (errorHandlers[response.status]) {
-    errorHandlers[response.status]()
-  } else {
-    showError('Lỗi không xác định!')
-  }
+  return message
 }
 
 const fetch = <T>(url: string, options: UseFetchOptions<T>) => {

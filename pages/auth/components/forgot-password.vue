@@ -214,8 +214,6 @@ const validatePassword = () => {
 const sendOtp = async () => {
   try {
     apiPending.value = true
-    console.log('=== SENDING OTP ===')
-    console.log('Email:', formData.email)
     
     await userAPI.sendOtpForPasswordChangeApi({
       body: { userEmail: formData.email }
@@ -272,9 +270,6 @@ const resendOtp = async () => {
 const verifyOtp = async () => {
   try {
     apiPending.value = true
-    console.log('=== VERIFYING OTP ===')
-    console.log('Email:', formData.email)
-    console.log('OTP:', verificationCode.value)
     
     await userAPI.verifyOtpApi({
       body: { 
@@ -306,9 +301,6 @@ const verifyOtp = async () => {
 const resetPassword = async () => {
   try {
     apiPending.value = true
-    console.log('=== RESETTING PASSWORD ===')
-    console.log('Email:', formData.email)
-    console.log('New password:', formData.newPassword)
     
     await userAPI.changePasswordAfterOtpApi({
       body: {

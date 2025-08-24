@@ -104,7 +104,6 @@
            v-model="formData.birthday" 
            :error="errors.birthday" 
            :disabled="apiPending"
-           @update:modelValue="(val) => { formData.birthday = val; console.log('Birthday updated:', val) }"
          />
 
                  <CAddress
@@ -181,9 +180,8 @@ const resendCountdown = ref(0)
 const resendDisabled = computed(() => resendCountdown.value > 0)
 
 // Debug: Kiểm tra form data
-watch(formData, (newVal) => {
-  console.log('Form data changed:', newVal)
-  console.log('Birthday value:', newVal.birthday, 'Type:', typeof newVal.birthday)
+watch(formData, () => {
+  // Validation sẽ được trigger tự động
 }, { deep: true })
 
 // Quy tắc biểu mẫu
@@ -212,7 +210,6 @@ const schema = computed(() => [
   {
     name: 'required|min:2',
     phone: (val: string) => {
-      console.log('Validating phone:', val, 'Length:', val?.length, 'Pattern test:', /^0\d{9}$/.test(val))
       if (!val) return 'Số điện thoại là bắt buộc'
       if (val.length !== 10) return 'Số điện thoại phải có đúng 10 số'
       if (!/^0\d{9}$/.test(val)) return 'Số điện thoại phải bắt đầu bằng số 0'
@@ -272,25 +269,21 @@ const schema = computed(() => [
     },
          'address.city': () => {
        const val = formData.address.city
-       console.log('Validating city:', val)
        if (!val || val.trim() === '') return 'Tỉnh/Thành phố là bắt buộc'
        return {}
      },
      'address.district': () => {
        const val = formData.address.district
-       console.log('Validating district:', val)
        if (!val || val.trim() === '') return 'Quận/Huyện là bắt buộc'
        return {}
      },
      detail: () => {
        const val = formData.address.detail
-       console.log('Validating detail:', val)
        if (!val || val.trim() === '') return 'Địa chỉ chi tiết là bắt buộc'
        return {}
      },
      isAgree: () => {
        const val = formCtrl.value.isAgree
-       console.log('Validating isAgree:', val)
        return !val ? 'Vui lòng đọc và đồng ý với quy định sử dụng thông tin cá nhân của website' : {}
      }
   }
@@ -301,40 +294,20 @@ const progress = ref(0)
 
 // Gửi biểu mẫu
 const submit = () => {
-  console.log('=== SUBMIT FUNCTION CALLED ===')
-  console.log('Progress:', progress.value)
-  console.log('Form data:', formData)
-  console.log('Form control:', formCtrl.value)
   
   // Kiểm tra validation trước khi submit
   if (progress.value === 2) {
-    console.log('=== VALIDATION CHECK ===')
-    console.log('Name:', formData.name, 'Valid:', formData.name && formData.name.length >= 2)
-    console.log('Phone:', formData.phone, 'Valid:', formData.phone && formData.phone.length === 10 && /^0\d{9}$/.test(formData.phone))
-    console.log('Birthday:', formData.birthday, 'Valid:', formData.birthday && /^\d{4}-\d{1,2}-\d{1,2}$/.test(formData.birthday))
-    console.log('City:', formData.address.city, 'Valid:', formData.address.city && formData.address.city.trim() !== '')
-    console.log('District:', formData.address.district, 'Valid:', formData.address.district && formData.address.district.trim() !== '')
-    console.log('Detail:', formData.address.detail, 'Valid:', formData.address.detail && formData.address.detail.trim() !== '')
-    console.log('Agreement:', formCtrl.value.isAgree, 'Valid:', formCtrl.value.isAgree === true)
-    
-    // Debug chi tiết form data
-    console.log('=== FORM DATA DEBUG ===')
-    console.log('Full formData:', formData)
-    console.log('Full formCtrl:', formCtrl.value)
-    console.log('Address object:', formData.address)
+    // Gọi các function theo thứ tự
   }
   
   if (progress.value === 0) {
-    console.log('Step 0: Calling ceRefresh...')
     ceRefresh()
     return
   }
   if (progress.value === 1) {
-    console.log('Step 1: Calling verifyEmailAndProceed...')
     verifyEmailAndProceed()
     return
   }
-  console.log('Step 2: Calling sRefresh for final registration...')
   sRefresh()
 }
 
@@ -401,7 +374,6 @@ const sendVerificationEmailAndProceed = async () => {
   try {
     vePending.value = true
     const otp = await sendVerificationEmail(formData.email)
-    console.log('OTP đã gửi:', otp) // Chỉ để debug, trong production sẽ không hiển thị
     progress.value = 1
     startResendCountdown()
   } catch (error) {
@@ -423,7 +395,6 @@ const resendVerificationCode = async () => {
   
   try {
     const otp = await sendVerificationEmail(formData.email)
-    console.log('OTP mới:', otp) // Chỉ để debug
     startResendCountdown()
     $Swal?.fire({
       title: 'Thành công!',
@@ -457,26 +428,13 @@ const startResendCountdown = () => {
 // api: Đăng ký
 const sPending = ref(false)
 const sRefresh = async () => {
-  console.log('=== SREFRESH FUNCTION STARTED ===')
-  console.log('sPending:', sPending.value)
-  console.log('Form data:', formData)
-  console.log('Form control:', formCtrl.value)
-  
   if (sPending.value) {
-    console.log('Already pending, returning...')
     return
   }
   
   sPending.value = true
-  console.log('Set sPending to true')
   
   try {
-    // Debug: Kiểm tra dữ liệu trước khi gửi
-    console.log('Form data before conversion:', formData)
-    console.log('Birthday value:', formData.birthday, 'Type:', typeof formData.birthday)
-    console.log('Address data:', formData.address)
-    console.log('Agreement:', formCtrl.value.isAgree)
-    
     // Chuyển đổi dữ liệu từ form hiện tại sang format mới
     const customerData = {
       email: formData.email,
@@ -494,20 +452,9 @@ const sRefresh = async () => {
       }
     }
     
-    console.log('Customer data after conversion:', customerData)
-    console.log('Calling registerCustomer API...')
+    const result = await registerCustomer(customerData)
     
-         const result = await registerCustomer(customerData)
-     console.log('API call successful, result:', result)
-     console.log('Result type:', typeof result)
-     console.log('Result keys:', Object.keys(result || {}))
-     console.log('Result.id:', result?.id)
-     console.log('Result.email:', result?.email)
-     console.log('Result.phone:', result?.phone)
-     console.log('Result.address:', result?.address)
-    
-         // Đăng ký thành công - hiển thị thông tin customer
-     console.log('Showing success popup...')
+    // Đăng ký thành công - hiển thị thông tin customer
      $Swal?.fire({
        title: 'Đăng ký thành công!',
        html: `
@@ -543,7 +490,6 @@ const sRefresh = async () => {
      })
   } catch (error: any) {
     console.error('Signup error:', error)
-    console.log('Showing error popup...')
     $Swal?.fire({
       title: 'Đăng ký thất bại!',
       text: error.message || 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.',
@@ -552,7 +498,6 @@ const sRefresh = async () => {
       confirmButtonColor: styleStore.confirmButtonColor
     })
   } finally {
-    console.log('Setting sPending to false')
     sPending.value = false
   }
 }

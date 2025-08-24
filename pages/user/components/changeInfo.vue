@@ -420,6 +420,9 @@
 <script lang="ts" setup>
 import type { UserResponse, UserUpdatedRequest } from '@/types/auth'
 
+// Import composable mới
+import { useCustomer } from '@/composables/useCustomer'
+
 /* Props */
 interface Props {
   user: any
@@ -477,35 +480,32 @@ const customerData = computed(() => props.customerProfile || props.user)
 const originalPhone = ref('')
 
 /* API */
-const { updateCustomerApi, updateUserApi } = useApi()
+const { updateUserApi } = useApi()
+const { updateCustomerInfo: updateCustomerInfoComposable, updateCustomerAvatar } = useCustomer()
 
 // Function để cập nhật thông tin
 const updateCustomerInfo = async () => {
   try {
     pending.value = true
     
-         // Đảm bảo dateOfBirth có format "yyyy-MM-dd" trước khi gửi
-     let formattedDateOfBirth = formData.value.dateOfBirth
-     if (formData.value.dateOfBirth) {
-       // Kiểm tra nếu đã đúng format "yyyy-MM-dd"
-       if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.value.dateOfBirth)) {
-         // Chuyển đổi sang format "yyyy-MM-dd"
-         formattedDateOfBirth = $dayjs(formData.value.dateOfBirth).format('YYYY-MM-DD')
-       }
-     }
-    
-    console.log('Sending dateOfBirth with format:', formattedDateOfBirth)
-    
-    // Gọi API update customer
-    const customerResponse = await updateCustomerApi({
-      body: {
-        customerId: customerData.value?.customerId,
-        firstName: formData.value.firstName,
-        lastName: formData.value.lastName,
-        address: formData.value.address,
-        dateOfBirth: formattedDateOfBirth,
-        sex: formData.value.sex
+    // Đảm bảo dateOfBirth có format "yyyy-MM-dd" trước khi gửi
+    let formattedDateOfBirth = formData.value.dateOfBirth
+    if (formData.value.dateOfBirth) {
+      // Kiểm tra nếu đã đúng format "yyyy-MM-dd"
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.value.dateOfBirth)) {
+        // Chuyển đổi sang format "yyyy-MM-dd"
+        formattedDateOfBirth = $dayjs(formData.value.dateOfBirth).format('YYYY-MM-DD')
       }
+    }
+    
+    // Gọi composable update customer
+    const customerResponse = await updateCustomerInfoComposable({
+      customerId: customerData.value?.customerId,
+      firstName: formData.value.firstName,
+      lastName: formData.value.lastName,
+      address: formData.value.address,
+      dateOfBirth: formattedDateOfBirth,
+      sex: formData.value.sex
     });
     
     // Kiểm tra xem số điện thoại có thay đổi hay không
@@ -516,7 +516,6 @@ const updateCustomerInfo = async () => {
     
     // Chỉ gọi API update user nếu số điện thoại đã thay đổi
     if (hasPhoneChanged) {
-      console.log('Phone number changed, calling update user API')
       const userUpdateRequest: UserUpdatedRequest = {
         userId: props.user?.userId || props.user?.id,
         phone: currentPhone,
@@ -525,12 +524,7 @@ const updateCustomerInfo = async () => {
       userResponse = await updateUserApi({
         body: userUpdateRequest
       });
-    } else {
-      console.log('Phone number unchanged, skipping user update API call')
     }
-    
-    console.log('Customer update response:', customerResponse)
-    console.log('User update response:', userResponse)
     
     // Kiểm tra thành công: customerResponse phải thành công và userResponse chỉ cần thành công nếu có gọi API
     const isCustomerUpdateSuccess = customerResponse
@@ -559,8 +553,6 @@ const updateCustomerInfo = async () => {
       emit('getUserRefresh')
     }
   } catch (error: any) {
-    console.error('Error updating customer info:', error)
-    
     // Hiển thị thông báo lỗi
     const commonStore = useCommonStore()
     const styleStore = useStyleStore()
@@ -601,25 +593,10 @@ const toggleForm = (action: 'show' | 'hide') => {
     
     // Điền dữ liệu vào form
     formData.value.firstName = customerData.value.firstName || ''
-    formData.value.lastName = customerData.value.lastName || ''
-    
-    // Đảm bảo dateOfBirth có format "yyyy-MM-dd"
-    if (customerData.value.dateOfBirth) {
-      // Nếu dateOfBirth đã có format "yyyy-MM-dd" thì giữ nguyên
-      if (/^\d{4}-\d{2}-\d{2}$/.test(customerData.value.dateOfBirth)) {
-        formData.value.dateOfBirth = customerData.value.dateOfBirth
-      } else {
-        // Nếu là format khác, chuyển đổi sang "yyyy-MM-dd"
-        formData.value.dateOfBirth = $dayjs(customerData.value.dateOfBirth).format('YYYY-MM-DD')
-      }
-    } else {
-      formData.value.dateOfBirth = ''
-    }
-    
+    formData.value.lastName = customerData.value.lastName || ''   
+    formData.value.dateOfBirth = customerData.value.dateOfBirth
     formData.value.address = customerData.value.address || { city: '', district: '', detail: '' }
-    formData.value.sex = customerData.value.sex || ''
-    
-    console.log('Form data populated:', formData.value)
+    formData.value.sex = customerData.value.sex || '' 
     
     // Đảm bảo form được validate sau khi dữ liệu được load
     nextTick(() => {
@@ -759,26 +736,14 @@ const handleImageSelect = (event: Event) => {
 
 const uploadImage = async () => {
   if (!selectedFile.value || !customerData.value?.customerId) {
-    console.error('Missing file or customer ID for upload')
     return
   }
   
   try {
     imageUploading.value = true
     
-    console.log('Uploading image for customer:', customerData.value.customerId)
-    console.log('Selected file:', selectedFile.value)
-    
-    // Sử dụng API mới
-    const { updateCustomerAvatarApi } = useApi()
-    const response = await updateCustomerAvatarApi({
-      body: {
-        customerId: customerData.value.customerId,
-        imageFile: selectedFile.value
-      }
-    })
-    
-    console.log('Upload response:', response)
+    // Sử dụng composable mới
+    const response = await updateCustomerAvatar(customerData.value.customerId, selectedFile.value)
     
     if (response) {
       // Hiển thị thông báo thành công
@@ -800,8 +765,6 @@ const uploadImage = async () => {
       emit('getUserRefresh')
     }
   } catch (error: any) {
-    console.error('Error uploading image:', error)
-    
     // Hiển thị thông báo lỗi
     const commonStore = useCommonStore()
     const styleStore = useStyleStore()

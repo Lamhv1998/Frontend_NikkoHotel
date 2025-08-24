@@ -89,13 +89,9 @@ const handleSendEmail = async () => {
     loading.value = true
     error.value = ''
 
-    console.log('=== FORGOT PASSWORD MODAL ===')
-    console.log('Email:', email.value)
-
     const response = await userAPI.sendOtpForPasswordChangeApi({
       body: { userEmail: email.value }
     })
-    console.log('Send OTP response:', response)
 
     // Close modal and show success message
     closeModal()

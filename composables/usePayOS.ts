@@ -96,14 +96,11 @@ export const usePayOS = () => {
         onSuccess: (event) => {
           paymentSuccess.value = true
           isPaymentOpen.value = false
-          console.log('Payment successful:', event)
         },
         onCancel: (event) => {
-          console.log('Payment cancelled:', event)
           isPaymentOpen.value = false
         },
         onExit: (event) => {
-          console.log('Payment exited:', event)
           isPaymentOpen.value = false
         }
       }

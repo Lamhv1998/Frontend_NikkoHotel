@@ -64,12 +64,10 @@ onMounted(() => {
 watch(
   () => route.fullPath,
   async () => {
-    console.log('Loading started')
     loadingStore.startLoading()
     await nextTick() // chờ Nuxt render lại giao diện
     // Dừng loading sau một khoảng delay nhỏ (hoặc khi API xong)
     setTimeout(() => {
-      console.log('Loading stopped')
       loadingStore.stopLoading()
     }, 1000)
   }

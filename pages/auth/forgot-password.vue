@@ -176,18 +176,14 @@ const resendDisabled = computed(() => resendCountdown.value > 0)
 const handleSubmit = async () => {
   try {
     loading.value = true
-    console.log('=== FORGOT PASSWORD SUBMIT ===')
-    console.log('Progress:', progress.value)
-    console.log('Form data:', formData)
-
     if (progress.value === 0) {
-      // Step 1: Send OTP
+      // Gửi OTP
       await sendOtp()
     } else if (progress.value === 1) {
-      // Step 2: Verify OTP
+      // Xác thực OTP
       await verifyOtp()
     } else if (progress.value === 2) {
-      // Step 3: Reset Password
+      // Đặt lại mật khẩu
       await resetPassword()
     }
   } catch (error) {
@@ -203,82 +199,144 @@ const handleSubmit = async () => {
 // Send OTP
 const sendOtp = async () => {
   try {
-    console.log('=== SEND OTP STARTED ===')
-    console.log('Email:', formData.email)
-
-    const response = await userAPI.sendOtpForPasswordChangeApi({
-      body: { userEmail: formData.email }
-    })
-    console.log('Send OTP response:', response)
-
-    if (response.message) {
+    const { sendOtp } = useAuth()
+    
+    const response = await sendOtp({ email: formData.email })
+    
+    if (response.success) {
       progress.value = 1
-      startResendCountdown()
-      alert('Mã OTP đã được gửi đến email của bạn')
+      commonStore.sweetalertList.push({
+        title: 'Gửi OTP thành công',
+        text: 'Mã OTP đã được gửi đến email của bạn',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     } else {
-      throw new Error(response.message || 'Gửi OTP thất bại')
+      commonStore.sweetalertList.push({
+        title: 'Gửi OTP thất bại',
+        text: response.message,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     }
-  } catch (error) {
-    console.error('Send OTP error:', error)
-    throw error
+  } catch (error: any) {
+    let message = 'Có lỗi xảy ra khi gửi OTP'
+    
+    if (error?.data?.message) {
+      message = error.data.message
+    } else if (error?.message) {
+      message = error.message
+    }
+    
+    commonStore.sweetalertList.push({
+      title: 'Lỗi',
+      text: message,
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
   }
 }
 
 // Verify OTP
 const verifyOtp = async () => {
   try {
-    console.log('=== VERIFY OTP STARTED ===')
-    console.log('Email:', formData.email)
-    console.log('OTP:', verificationCode.value)
-
-    const response = await userAPI.verifyOtpApi({
-      body: {
-        userEmail: formData.email,
-        otp: verificationCode.value
-      }
+    const { verifyOtp } = useAuth()
+    
+    const response = await verifyOtp({
+      email: formData.email,
+      otp: verificationCode.value
     })
-    console.log('Verify OTP response:', response)
-
-    if (response.message) {
+    
+    if (response.success) {
       progress.value = 2
-      alert('Xác thực OTP thành công. Vui lòng nhập mật khẩu mới.')
+      commonStore.sweetalertList.push({
+        title: 'Xác thực OTP thành công',
+        text: 'Bạn có thể đặt lại mật khẩu',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     } else {
-      throw new Error(response.message || 'Xác thực OTP thất bại')
+      commonStore.sweetalertList.push({
+        title: 'Xác thực OTP thất bại',
+        text: response.message,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
     }
-  } catch (error) {
-    console.error('Verify OTP error:', error)
-    throw error
+  } catch (error: any) {
+    let message = 'Có lỗi xảy ra khi xác thực OTP'
+    
+    if (error?.data?.message) {
+      message = error.data.message
+    } else if (error?.message) {
+      message = error.message
+    }
+    
+    commonStore.sweetalertList.push({
+      title: 'Lỗi',
+      text: message,
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
   }
 }
 
 // Reset Password
 const resetPassword = async () => {
   try {
-    console.log('=== RESET PASSWORD STARTED ===')
-    console.log('Email:', formData.email)
-    console.log('New password:', formData.newPassword)
-
-    if (formData.newPassword !== formData.confirmPassword) {
-      throw new Error('Mật khẩu xác nhận không khớp')
-    }
-
-    if (formData.newPassword.length < 8) {
-      throw new Error('Mật khẩu phải có ít nhất 8 ký tự')
-    }
-
-    const response = await userAPI.changePasswordAfterOtpApi({
-      body: {
-        userEmail: formData.email,
-        newPassword: formData.newPassword
-      }
+    const { changePassword } = useAuth()
+    
+    const response = await changePassword({
+      email: formData.email,
+      oldPassword: '', // Không cần mật khẩu cũ khi reset
+      newPassword: formData.newPassword
     })
-    console.log('Reset password response:', response)
-
-    alert('Mật khẩu đã được đặt lại thành công!')
-    navigateTo('/auth/login')
-  } catch (error) {
-    console.error('Reset password error:', error)
-    throw error
+    
+    if (response.success) {
+      commonStore.sweetalertList.push({
+        title: 'Đặt lại mật khẩu thành công',
+        text: 'Mật khẩu mới đã được cập nhật',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+      
+      // Reset form và quay về bước đầu
+      progress.value = 0
+      formData.email = ''
+      formData.newPassword = ''
+      verificationCode.value = ''
+    } else {
+      commonStore.sweetalertList.push({
+        title: 'Đặt lại mật khẩu thất bại',
+        text: response.message,
+        icon: 'error',
+        confirmButtonText: 'Xác nhận',
+        confirmButtonColor: styleStore.confirmButtonColor
+      })
+    }
+  } catch (error: any) {
+    let message = 'Có lỗi xảy ra khi đặt lại mật khẩu'
+    
+    if (error?.data?.message) {
+      message = error.data.message
+    } else if (error?.message) {
+      message = error.message
+    }
+    
+    commonStore.sweetalertList.push({
+      title: 'Lỗi',
+      text: message,
+      icon: 'error',
+      confirmButtonText: 'Xác nhận',
+      confirmButtonColor: styleStore.confirmButtonColor
+    })
   }
 }
 

@@ -10,10 +10,8 @@ export default defineNuxtPlugin(async () => {
       try {
         const isValid = await checkToken()
         if (!isValid) {
-          console.log('Token expired, attempting refresh...')
           const refreshSuccess = await refreshToken()
           if (!refreshSuccess) {
-            console.log('Token refresh failed, redirecting to login...')
             const commonStore = useCommonStore()
             commonStore.sweetalertList.push({
               title: 'Phiên đăng nhập đã hết hạn',
@@ -25,7 +23,6 @@ export default defineNuxtPlugin(async () => {
           }
         }
       } catch (error) {
-        console.error('Token refresh failed:', error)
         // Nếu refresh thất bại, redirect về login
         const commonStore = useCommonStore()
         commonStore.sweetalertList.push({
@@ -42,10 +39,8 @@ export default defineNuxtPlugin(async () => {
     try {
       const isValid = await checkToken()
       if (!isValid) {
-        console.log('Initial token check failed, attempting refresh...')
         const refreshSuccess = await refreshToken()
         if (!refreshSuccess) {
-          console.log('Initial token refresh failed, redirecting to login...')
           const commonStore = useCommonStore()
           commonStore.sweetalertList.push({
             title: 'Phiên đăng nhập đã hết hạn',
@@ -57,7 +52,7 @@ export default defineNuxtPlugin(async () => {
         }
       }
     } catch (error) {
-      console.error('Initial token check failed:', error)
+      // Handle error silently
     }
   }
 })
