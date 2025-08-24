@@ -9,7 +9,7 @@ export const useRoomApi = () => {
   const getAllRoomTypes = async () => {
     try {
       const response = await $fetch(`${baseURL}/api/rooms/types`)
-      console.log('✅ Room types response:', response)
+      //.log('✅ Room types response:', response)
       return response
     } catch (error) {
       throw error
@@ -20,7 +20,7 @@ export const useRoomApi = () => {
   const getRoomStatistics = async () => {
     try {
       const response = await $fetch(`${baseURL}/api/rooms/statistics`)
-      console.log('✅ Room statistics response:', response)
+      //.log('✅ Room statistics response:', response)
       return response
     } catch (error) {
       throw error
@@ -118,12 +118,12 @@ export const useRoomApi = () => {
         }
       })
       
-      console.log('📡 Searching rooms from:', `${baseURL}/api/rooms/search?${queryString}`)
+      //.log('📡 Searching rooms from:', `${baseURL}/api/rooms/search?${queryString}`)
       const response = await $fetch(`${baseURL}/api/rooms/search?${queryString}`)
-      console.log('✅ Search rooms response:', response)
+      //.log('✅ Search rooms response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error searching rooms:', error)
+      //.error('❌ Error searching rooms:', error)
       throw error
     }
   }
@@ -131,17 +131,17 @@ export const useRoomApi = () => {
   // Lọc phòng theo trạng thái
   const filterRoomsByStatus = async (status: string, page = 0, size = 20) => {
     try {
-      console.log(
-        '📡 Filtering rooms by status from:',
-        `${baseURL}/api/rooms/filter/status/${status}?page=${page}&size=${size}`
-      )
+      // //.log(
+      //   '📡 Filtering rooms by status from:',
+      //   `${baseURL}/api/rooms/filter/status/${status}?page=${page}&size=${size}`
+      // )
       const response = await $fetch(
         `${baseURL}/api/rooms/filter/status/${status}?page=${page}&size=${size}`
       )
-      console.log('✅ Filter rooms by status response:', response)
+      //.log('✅ Filter rooms by status response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by status:', error)
+      //.error('❌ Error filtering rooms by status:', error)
       throw error
     }
   }
@@ -149,12 +149,12 @@ export const useRoomApi = () => {
   // Lọc phòng theo loại phòng
   const filterRoomsByType = async (roomType: string, page = 0, size = 20) => {
     try {
-      console.log('📡 Filtering rooms by type from:', `${baseURL}/api/rooms/filter/type/${roomType}?page=${page}&size=${size}`)
+      //.log('📡 Filtering rooms by type from:', `${baseURL}/api/rooms/filter/type/${roomType}?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/filter/type/${roomType}?page=${page}&size=${size}`)
-      console.log('✅ Filter rooms by type response:', response)
+      //.log('✅ Filter rooms by type response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by type:', error)
+      //.error('❌ Error filtering rooms by type:', error)
       throw error
     }
   }
@@ -163,32 +163,32 @@ export const useRoomApi = () => {
   const getRoomsByType = async (roomTypeId: string, page = 0, size = 100) => {
     try {
       // Sử dụng endpoint filter/type với roomType parameter (endpoint chính xác từ backend)
-      console.log('📡 Filtering rooms by type ID from:', `${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
+      //.log('📡 Filtering rooms by type ID from:', `${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
-      console.log('✅ Filter rooms by type response:', response)
+      //.log('✅ Filter rooms by type response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by type, trying fallback approach:', error)
+      //.error('❌ Error filtering rooms by type, trying fallback approach:', error)
       
       // Fallback: Lấy tất cả phòng và lọc theo type
       try {
-        console.log('🔄 Fallback: Getting all rooms and filtering by type...')
+        //.log('🔄 Fallback: Getting all rooms and filtering by type...')
         const allRooms = await getAllRooms(0, 1000) // Lấy nhiều phòng hơn để lọc
         
         if (allRooms && Array.isArray(allRooms)) {
           const filteredRooms = allRooms.filter((room: any) => room.roomTypeId === roomTypeId || room.roomType?.id === roomTypeId)
-          console.log('✅ Filtered rooms by type:', filteredRooms)
+          //.log('✅ Filtered rooms by type:', filteredRooms)
           return filteredRooms
         } else if (allRooms && typeof allRooms === 'object' && 'content' in allRooms && Array.isArray((allRooms as any).content)) {
           const filteredRooms = (allRooms as any).content.filter((room: any) => room.roomTypeId === roomTypeId || room.roomType?.id === roomTypeId)
-          console.log('✅ Filtered rooms by type (from content):', filteredRooms)
+          //.log('✅ Filtered rooms by type (from content):', filteredRooms)
           return filteredRooms
         }
         
-        console.warn('⚠️ No rooms found or unexpected response format')
+        //.warn('⚠️ No rooms found or unexpected response format')
         return []
       } catch (fallbackError) {
-        console.error('❌ Fallback also failed:', fallbackError)
+        //.error('❌ Fallback also failed:', fallbackError)
         throw fallbackError
       }
     }
@@ -198,12 +198,12 @@ export const useRoomApi = () => {
   const getRoomsByTypeFilter = async (roomTypeId: string, page = 0, size = 100) => {
     try {
       // Sử dụng endpoint filter/type với roomType parameter
-      console.log('📡 Filtering rooms by type ID from:', `${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
+      //.log('📡 Filtering rooms by type ID from:', `${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/filter/type/${roomTypeId}?page=${page}&size=${size}`)
-      console.log('✅ Filter rooms by type response:', response)
+      //.log('✅ Filter rooms by type response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by type:', error)
+      //.error('❌ Error filtering rooms by type:', error)
       throw error
     }
   }
@@ -211,12 +211,12 @@ export const useRoomApi = () => {
   // Lấy phòng theo tầng
   const filterRoomsByFloor = async (floor: number, page = 0, size = 20) => {
     try {
-      console.log('📡 Filtering rooms by floor from:', `${baseURL}/api/rooms/filter/floor/${floor}?page=${page}&size=${size}`)
+      //.log('📡 Filtering rooms by floor from:', `${baseURL}/api/rooms/filter/floor/${floor}?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/filter/floor/${floor}?page=${page}&size=${size}`)
-      console.log('✅ Filter rooms by floor response:', response)
+      //.log('✅ Filter rooms by floor response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by floor:', error)
+      //.error('❌ Error filtering rooms by floor:', error)
       throw error
     }
   }
@@ -224,12 +224,12 @@ export const useRoomApi = () => {
   // Lọc phòng theo khoảng giá
   const filterRoomsByPriceRange = async (minPrice: number, maxPrice: number, page = 0, size = 20) => {
     try {
-      console.log('📡 Filtering rooms by price range from:', `${baseURL}/api/rooms/filter/price-range?minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}&size=${size}`)
+      //.log('📡 Filtering rooms by price range from:', `${baseURL}/api/rooms/filter/price-range?minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/filter/price-range?minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}&size=${size}`)
-      console.log('✅ Filter rooms by price range response:', response)
+      //.log('✅ Filter rooms by price range response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error filtering rooms by price range:', error)
+      //.error('❌ Error filtering rooms by price range:', error)
       throw error
     }
   }
@@ -244,12 +244,12 @@ export const useRoomApi = () => {
         }
       })
       
-      console.log('📡 Fetching available rooms from:', `${baseURL}/api/rooms/available?${queryString}`)
+      //.log('📡 Fetching available rooms from:', `${baseURL}/api/rooms/available?${queryString}`)
       const response = await $fetch(`${baseURL}/api/rooms/available?${queryString}`)
-      console.log('✅ Available rooms response:', response)
+      //.log('✅ Available rooms response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching available rooms:', error)
+      //.error('❌ Error fetching available rooms:', error)
       throw error
     }
   }
@@ -257,12 +257,12 @@ export const useRoomApi = () => {
   // Kiểm tra khả dụng của phòng
   const checkRoomAvailability = async (roomId: string) => {
     try {
-      console.log('📡 Checking room availability from:', `${baseURL}/api/rooms/${roomId}/availability`)
+      //.log('📡 Checking room availability from:', `${baseURL}/api/rooms/${roomId}/availability`)
       const response = await $fetch(`${baseURL}/api/rooms/${roomId}/availability`)
-      console.log('✅ Room availability response:', response)
+      //.log('✅ Room availability response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error checking room availability:', error)
+      //.error('❌ Error checking room availability:', error)
       throw error
     }
   }
@@ -270,12 +270,12 @@ export const useRoomApi = () => {
   // Lấy danh sách phòng đang bảo trì
   const getMaintenanceRooms = async (page = 0, size = 20) => {
     try {
-      console.log('📡 Fetching maintenance rooms from:', `${baseURL}/api/rooms/maintenance?page=${page}&size=${size}`)
+      //.log('📡 Fetching maintenance rooms from:', `${baseURL}/api/rooms/maintenance?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/maintenance?page=${page}&size=${size}`)
-      console.log('✅ Maintenance rooms response:', response)
+      //.log('✅ Maintenance rooms response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching maintenance rooms:', error)
+      //.error('❌ Error fetching maintenance rooms:', error)
       throw error
     }
   }
@@ -283,12 +283,12 @@ export const useRoomApi = () => {
   // Lấy danh sách phòng cần dọn dẹp
   const getCleaningRooms = async (page = 0, size = 20) => {
     try {
-      console.log('📡 Fetching cleaning rooms from:', `${baseURL}/api/rooms/cleaning?page=${page}&size=${size}`)
+      //.log('📡 Fetching cleaning rooms from:', `${baseURL}/api/rooms/cleaning?page=${page}&size=${size}`)
       const response = await $fetch(`${baseURL}/api/rooms/cleaning?page=${page}&size=${size}`)
-      console.log('✅ Cleaning rooms response:', response)
+      //.log('✅ Cleaning rooms response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching cleaning rooms:', error)
+      //.error('❌ Error fetching cleaning rooms:', error)
       throw error
     }
   }
@@ -296,12 +296,12 @@ export const useRoomApi = () => {
   // Lấy danh sách tất cả tầng
   const getAllFloors = async () => {
     try {
-      console.log('📡 Fetching all floors from:', `${baseURL}/api/rooms/floors`)
+      //.log('📡 Fetching all floors from:', `${baseURL}/api/rooms/floors`)
       const response = await $fetch(`${baseURL}/api/rooms/floors`)
-      console.log('✅ All floors response:', response)
+      //.log('✅ All floors response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching all floors:', error)
+      //.error('❌ Error fetching all floors:', error)
       throw error
     }
   }
@@ -309,12 +309,12 @@ export const useRoomApi = () => {
   // Lấy danh sách phòng theo tầng
   const getRoomsByFloor = async (floor: number) => {
     try {
-      console.log('📡 Fetching rooms by floor from:', `${baseURL}/api/rooms/floor/${floor}`)
+      //.log('📡 Fetching rooms by floor from:', `${baseURL}/api/rooms/floor/${floor}`)
       const response = await $fetch(`${baseURL}/api/rooms/floor/${floor}`)
-      console.log('✅ Rooms by floor response:', response)
+      //.log('✅ Rooms by floor response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching rooms by floor:', error)
+      //.error('❌ Error fetching rooms by floor:', error)
       throw error
     }
   }
@@ -322,12 +322,12 @@ export const useRoomApi = () => {
   // Lấy khoảng giá phòng
   const getRoomPriceRange = async () => {
     try {
-      console.log('📡 Fetching room price range from:', `${baseURL}/api/rooms/price-range`)
+      //.log('📡 Fetching room price range from:', `${baseURL}/api/rooms/price-range`)
       const response = await $fetch(`${baseURL}/api/rooms/price-range`)
-      console.log('✅ Room price range response:', response)
+      //.log('✅ Room price range response:', response)
       return response
     } catch (error) {
-      console.error('❌ Error fetching room price range:', error)
+      //.error('❌ Error fetching room price range:', error)
       throw error
     }
   }

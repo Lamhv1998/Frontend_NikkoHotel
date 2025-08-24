@@ -207,7 +207,7 @@ interface AIResponse {
 onMounted(() => {
   sessionId.value = generateSessionId()
   initializeChat()
-  console.log('🚀 AI Chat initialized with session ID:', sessionId.value)
+  //.log('🚀 AI Chat initialized with session ID:', sessionId.value)
 })
 
 // Generate unique session ID
@@ -220,7 +220,7 @@ const initializeChat = () => {
   messages.value = [
     {
       id: 1,
-      text: 'Xin chào! Tôi là AI Assistant của Nikko Hotel. Tôi có thể giúp bạn:',
+      text: 'Xin chào! Tôi là AI Assistant của Nika Hotel. Tôi có thể giúp bạn:',
       isUser: false,
       timestamp: new Date(),
       type: 'welcome'
@@ -244,9 +244,9 @@ const initializeChat = () => {
 
 // Methods
 const toggleChat = () => {
-  console.log('Toggle chat clicked, current state:', isOpen.value)
+  //.log('Toggle chat clicked, current state:', isOpen.value)
   isOpen.value = !isOpen.value
-  console.log('New state:', isOpen.value)
+  //.log('New state:', isOpen.value)
   if (isOpen.value) {
     unreadCount.value = 0
   }
@@ -261,7 +261,7 @@ const sendMessage = async () => {
   if (!newMessage.value.trim() || isLoading.value) return
   
   const userText = newMessage.value.trim()
-  console.log('🚀 Sending message to AI:', userText)
+  //.log('🚀 Sending message to AI:', userText)
   
   // Add user message to chat
   const userMessage = {
@@ -288,11 +288,11 @@ const sendMessage = async () => {
       }
     })
     
-    console.log('🤖 AI Response received:', response)
+    //.log('🤖 AI Response received:', response)
     
     // Update session ID from backend response if provided
     if (response.sessionId && response.sessionId !== sessionId.value) {
-      console.log('🔄 Session ID updated from backend:', response.sessionId)
+      //.log('🔄 Session ID updated from backend:', response.sessionId)
       sessionId.value = response.sessionId
     }
     
@@ -311,7 +311,7 @@ const sendMessage = async () => {
     scrollToBottom()
     
   } catch (error) {
-    console.error('❌ Error calling AI API:', error)
+    //.error('❌ Error calling AI API:', error)
     
     // Extract error details
     let errorText = 'Xin lỗi, tôi gặp sự cố khi xử lý yêu cầu của bạn. Vui lòng thử lại sau.'
@@ -360,7 +360,7 @@ const clearHistory = async () => {
     
     // Update session ID from backend response if provided
     if (response.sessionId && response.sessionId !== sessionId.value) {
-      console.log('🔄 Session ID updated after clear:', response.sessionId)
+      //.log('🔄 Session ID updated after clear:', response.sessionId)
       sessionId.value = response.sessionId
     } else {
       // Generate new session ID if backend doesn't provide one
@@ -370,9 +370,9 @@ const clearHistory = async () => {
     // Clear messages and reinitialize
     initializeChat()
     
-    console.log('🧹 Chat history cleared')
+    //.log('🧹 Chat history cleared')
   } catch (error) {
-    console.error('❌ Error clearing chat history:', error)
+    //.error('❌ Error clearing chat history:', error)
     // Fallback: generate new session ID on error
     sessionId.value = generateSessionId()
     initializeChat()
@@ -410,11 +410,11 @@ const limitMessageLength = () => {
 
 // Debug function to show current session info
 const showSessionInfo = () => {
-  console.log('📋 Current Session Info:')
-  console.log('Session ID:', sessionId.value)
-  console.log('Messages Count:', messages.value.length)
-  console.log('Is Loading:', isLoading.value)
-  console.log('Is Open:', isOpen.value)
+  //.log('📋 Current Session Info:')
+  //.log('Session ID:', sessionId.value)
+  //.log('Messages Count:', messages.value.length)
+  //.log('Is Loading:', isLoading.value)
+  //.log('Is Open:', isOpen.value)
 }
 </script>
 

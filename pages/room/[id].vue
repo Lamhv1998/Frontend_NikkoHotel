@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import Hero from './components/hero.vue'
-import Booking from './components/booking.vue'
+
 
 // const route = useRoute()
 

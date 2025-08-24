@@ -26,7 +26,7 @@ export const useGoogleAuth = () => {
   const googleSignIn = async () => {
     try {
       // Chuyển hướng đến Google OAuth endpoint
-      const googleOAuthUrl = 'http://localhost:8092/login/oauth2/authorization/google'
+      const googleOAuthUrl = 'http://localhost:8092/login/oauth2/code/google'
       
       window.location.href = googleOAuthUrl
     } catch (error) {

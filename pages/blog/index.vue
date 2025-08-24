@@ -231,6 +231,7 @@
         </div>
       </div>
     </section>
+    <CNewsFeed />
   </div>
 </template>
 

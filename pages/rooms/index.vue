@@ -6,7 +6,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <div class="mb-4 lg:mb-0">
             <h1 class="text-h2 text-system-gray-80 xl:text-h1 mb-2">
-              🏨 Khám Phá Các Loại Phòng
+              Khám Phá Các Loại Phòng
             </h1>
             <p class="text-body text-system-gray-60">
               Chọn loại phòng phù hợp với nhu cầu của bạn
@@ -225,15 +225,15 @@ const { getAllRoomTypes } = useRoomApi()
 // Computed properties
 const filteredRoomTypes = computed(() => {
   if (!roomTypes.value || roomTypes.value.length === 0) {
-    console.log('🔍 filteredRoomTypes: No room types to filter')
+    //.log('🔍 filteredRoomTypes: No room types to filter')
     return []
   }
 
-  console.log('🔍 Filtering room types:', roomTypes.value.length, 'items')
+  //.log('🔍 Filtering room types:', roomTypes.value.length, 'items')
   
   return roomTypes.value.filter((roomType) => {
     if (!roomType || typeof roomType.name !== 'string' || typeof roomType.description !== 'string') {
-      console.warn('⚠️ Invalid room type data:', roomType)
+      //.warn('⚠️ Invalid room type data:', roomType)
       return false
     }
 
@@ -241,7 +241,7 @@ const filteredRoomTypes = computed(() => {
     const nameMatch = roomType.name.toLowerCase().includes(query)
     const descriptionMatch = roomType.description.toLowerCase().includes(query)
     
-    console.log(`🔍 Room type "${roomType.name}": nameMatch=${nameMatch}, descriptionMatch=${descriptionMatch}`)
+    //.log(`🔍 Room type "${roomType.name}": nameMatch=${nameMatch}, descriptionMatch=${descriptionMatch}`)
     
     return nameMatch || descriptionMatch
   })
@@ -266,30 +266,30 @@ const sortedRoomTypes = computed(() => {
     }
   })
 
-  console.log('📊 Sorted room types by:', sortBy.value, 'Result:', sorted.map(rt => rt.name))
+  //.log('📊 Sorted room types by:', sortBy.value, 'Result:', sorted.map(rt => rt.name))
   return sorted
 })
 
 // Methods
 const fetchRoomTypes = async () => {
   try {
-    console.log('🚀 Starting to fetch room types...')
+    //.log('🚀 Starting to fetch room types...')
     loading.value = true
     error.value = null
     
     const response = await getAllRoomTypes()
-    console.log('✅ Raw API response:', response)
+    //.log('✅ Raw API response:', response)
     
     if (response && Array.isArray(response)) {
       const transformed = transformRoomTypes(response)
-      console.log('🔄 Transformed room types:', transformed)
+      //.log('🔄 Transformed room types:', transformed)
       roomTypes.value = transformed
     } else {
-      console.warn('⚠️ API response is not an array, using fallback data')
+      //.warn('⚠️ API response is not an array, using fallback data')
       roomTypes.value = getFallbackRoomTypes()
     }
   } catch (err) {
-    console.error('❌ Error fetching room types:', err)
+    //.error('❌ Error fetching room types:', err)
     error.value = 'Không thể tải dữ liệu từ server. Vui lòng thử lại sau.'
     roomTypes.value = getFallbackRoomTypes()
   } finally {
@@ -298,16 +298,16 @@ const fetchRoomTypes = async () => {
 }
 
 const transformRoomTypes = (apiData: any[]): RoomTypeDisplay[] => {
-  console.log('🔄 Transforming API data to RoomTypeDisplay format...')
+  //.log('🔄 Transforming API data to RoomTypeDisplay format...')
   
   return apiData.map((item, index) => {
-    console.log(`🔄 Transforming item ${index}:`, item)
+    //.log(`🔄 Transforming item ${index}:`, item)
     
     // Ensure required fields exist with fallbacks
     const name = item.typeName || item.name || `Loại phòng ${index + 1}`
     const description = item.description || `Mô tả cho ${name}`
     
-    console.log(`✅ Transformed: name="${name}", description="${description}"`)
+    //.log(`✅ Transformed: name="${name}", description="${description}"`)
     
     return {
       id: item.typeId || item.id || `fallback-${index}`, // Sử dụng typeId từ backend trước
@@ -402,7 +402,7 @@ const getTagsByType = (typeName: string): string[] => {
 }
 
 const getFallbackRoomTypes = (): RoomTypeDisplay[] => {
-  console.log('🔄 Using fallback room types data')
+  //.log('🔄 Using fallback room types data')
   return [
     {
       id: 'fallback-1',
@@ -472,7 +472,7 @@ const updateSuggestions = () => {
 }
 
 const navigateToRoomTypeDetails = (roomType: RoomTypeDisplay) => {
-  console.log('🚀 Navigating to room type details:', roomType.name)
+  //.log('🚀 Navigating to room type details:', roomType.name)
   
   // Tạo URL với query parameter để truyền thông tin room type
   const queryParams = new URLSearchParams({
@@ -482,7 +482,7 @@ const navigateToRoomTypeDetails = (roomType: RoomTypeDisplay) => {
     area: roomType.area.toString()
   })
   
-  console.log('📋 Query parameters:', queryParams.toString())
+  //.log('📋 Query parameters:', queryParams.toString())
   
   // Chuyển đến trang hiển thị các phòng thuộc loại này
   navigateTo(`/rooms/type-details?${queryParams.toString()}`)
@@ -508,7 +508,7 @@ const handleImageError = (event: Event) => {
 
 // Lifecycle
 onMounted(() => {
-  console.log('🚀 Room Types page mounted, fetching data...')
+  //.log('🚀 Room Types page mounted, fetching data...')
   fetchRoomTypes()
 })
 </script>

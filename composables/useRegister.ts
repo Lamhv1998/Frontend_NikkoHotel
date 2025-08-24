@@ -60,13 +60,13 @@ export const useRegister = () => {
 
   const registerCustomer = async (data: CreateCustomerCommand): Promise<CustomerResponse> => {
     try {
-      console.log('=== REGISTERCUSTOMER STARTED ===')
-      console.log('Input data:', data)
-      console.log('Config authServiceUrl:', config.public.authServiceUrl)
+      //.log('=== REGISTERCUSTOMER STARTED ===')
+      //.log('Input data:', data)
+      //.log('Config authServiceUrl:', config.public.authServiceUrl)
 
       const validationErrors = validateCustomerData(data)
       if (validationErrors.length > 0) {
-        console.log('Validation errors:', validationErrors)
+        //.log('Validation errors:', validationErrors)
         throw new Error(validationErrors.join(', '))
       }
 
@@ -74,10 +74,10 @@ export const useRegister = () => {
         ...data,
         dateOfBirth: formatDateOfBirth(data.dateOfBirth)
       }
-      console.log('Formatted data:', formattedData)
+      //.log('Formatted data:', formattedData)
 
       const apiUrl = `${config.public.customerServiceUrl}/customers`
-      console.log('Calling API:', apiUrl)
+      //.log('Calling API:', apiUrl)
 
       const { data: response, error } = await useFetch<ApiResponse<CustomerResponse>>(
         apiUrl,
@@ -87,38 +87,38 @@ export const useRegister = () => {
         }
       )
 
-      console.log('API response:', response.value)
-      console.log('API error:', error.value)
-      console.log('Response type:', typeof response.value)
-      console.log('Response keys:', Object.keys(response.value || {}))
-      console.log('Response.data:', response.value?.data)
-      console.log('Response.data type:', typeof response.value?.data)
-      console.log('Response.data keys:', Object.keys(response.value?.data || {}))
+      //.log('API response:', response.value)
+      //.log('API error:', error.value)
+      //.log('Response type:', typeof response.value)
+      //.log('Response keys:', Object.keys(response.value || {}))
+      //.log('Response.data:', response.value?.data)
+      //.log('Response.data type:', typeof response.value?.data)
+      //.log('Response.data keys:', Object.keys(response.value?.data || {}))
 
       if (error.value) {
-        console.error('Network error:', error.value)
+        //.error('Network error:', error.value)
         throw new Error('Lỗi kết nối mạng')
       }
 
       if (!response.value) {
-        console.error('No response from server')
+        //.error('No response from server')
         throw new Error('Không nhận được phản hồi từ server')
       }
 
       if (!response.value.success) {
-        console.error('API returned success: false')
+        //.error('API returned success: false')
         throw new Error('Đăng ký thất bại')
       }
 
       if (!response.value.data) {
-        console.error('API response missing data field')
+        //.error('API response missing data field')
         throw new Error('Phản hồi từ server thiếu dữ liệu')
       }
 
-      console.log('Registration successful, returning data:', response.value.data)
+      //.log('Registration successful, returning data:', response.value.data)
       return response.value.data
     } catch (error) {
-      console.error('Registration error:', error)
+      //.error('Registration error:', error)
       if (error instanceof Error) {
         throw error
       }
@@ -129,7 +129,7 @@ export const useRegister = () => {
   const sendVerificationEmail = async (email: string): Promise<EmailVerificationResponse> => {
     try {
       const apiUrl = `${config.public.notificationServiceUrl}/notifications/send-otp?userEmail=${email}`
-      console.log('Calling API:', apiUrl)
+      //.log('Calling API:', apiUrl)
 
       const { data: response, error } = await useFetch<EmailVerificationResponse>(
         apiUrl,
@@ -138,35 +138,35 @@ export const useRegister = () => {
         }
       )
 
-      console.log('API response:', response.value)
-      console.log('API error:', error.value)
+      //.log('API response:', response.value)
+      //.log('API error:', error.value)
 
       if (error.value) {
-        console.error('Network error:', error.value)
+        //.error('Network error:', error.value)
         throw new Error('Lỗi kết nối mạng')
       }
 
       if (!response.value) {
-        console.error('No response from server')
+        //.error('No response from server')
         throw new Error('Không nhận được phản hồi từ server')
       }
 
       // Backend trả về message và otp, không có field success
       if (!response.value.message) {
-        console.error('No message in response')
+        //.error('No message in response')
         throw new Error('Không nhận được thông báo từ server')
       }
 
       // Kiểm tra nếu có message lỗi
       if (response.value.message.includes('Lỗi') || response.value.message.includes('error')) {
-        console.error('Backend returned error message:', response.value.message)
+        //.error('Backend returned error message:', response.value.message)
         throw new Error(`Gửi email xác thực thất bại: ${response.value.message}`)
       }
 
-      console.log('Email verification sent successfully')
+      //.log('Email verification sent successfully')
       return response.value
     } catch (error) {
-      console.error('Send verification email error:', error)
+      //.error('Send verification email error:', error)
       if (error instanceof Error) {
         throw error
       }
@@ -176,10 +176,10 @@ export const useRegister = () => {
 
   const verifyEmailCode = async (email: string, otp: string): Promise<EmailVerificationResponse> => {
     try {
-     
-
-      const apiUrl = `${config.public.notificationServiceUrl}/notifications/verify-otp?userEmail=${email}&otp=${otp}`
-      console.log('Calling API:', apiUrl)
+      const emailValue = typeof email === 'string' ? email : email?.email || email?.value?.email
+      const otpValue = otp || 'undefined'
+      const apiUrl = `${config.public.notificationServiceUrl}/notifications/verify-otp?userEmail=${emailValue}&otp=${otpValue}`
+      //.log('Calling API:', apiUrl)
 
       const { data: response, error } = await useFetch<EmailVerificationResponse>(
         apiUrl,
@@ -188,35 +188,35 @@ export const useRegister = () => {
         }
       )
 
-      console.log('API response:', response.value)
-      console.log('API error:', error.value)
+      //.log('API response:', response.value)
+      //.log('API error:', error.value)
 
       if (error.value) {
-        console.error('Network error:', error.value)
+        //.error('Network error:', error.value)
         throw new Error('Lỗi kết nối mạng')
       }
 
       if (!response.value) {
-        console.error('No response from server')
+        //.error('No response from server')
         throw new Error('Không nhận được phản hồi từ server')
       }
 
       // Backend trả về message, không có field success
       if (!response.value.message) {
-        console.error('No message in response')
+        //.error('No message in response')
         throw new Error('Không nhận được thông báo từ server')
       }
 
       // Kiểm tra nếu có message lỗi
       if (response.value.message.includes('không hợp lệ') || response.value.message.includes('hết hạn')) {
-        console.error('Backend returned error message:', response.value.message)
+        //.error('Backend returned error message:', response.value.message)
         throw new Error(`Xác thực OTP thất bại: ${response.value.message}`)
       }
 
-      console.log('Email verification successful')
+      //.log('Email verification successful')
       return response.value
     } catch (error) {
-      console.error('Verify email code error:', error)
+      //.error('Verify email code error:', error)
       if (error instanceof Error) {
         throw error
       }

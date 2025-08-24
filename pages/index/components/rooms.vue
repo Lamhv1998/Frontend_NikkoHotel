@@ -114,15 +114,12 @@
 
             <!-- CTA Button -->
             <div class="flex flex-col gap-4 sm:flex-row">
-              <NuxtLink :to="`/room/${rooms[currentRoom]._id}`" class="flex-1">
+              <NuxtLink :to="`/rooms`" class="flex-1">
                 <button class="w-full rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-4 text-body-lg font-semibold text-text-inverse transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-primary">
                   Xem chi tiết
                 </button>
               </NuxtLink>
               <NuxtLink :to="`/reserve/${rooms[currentRoom]._id}`" class="flex-1">
-                <button class="w-full rounded-xl border-2 border-primary-500 bg-transparent px-8 py-4 text-body-lg font-semibold text-primary-600 transition-all hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-                  Đặt ngay
-                </button>
               </NuxtLink>
             </div>
           </div>
@@ -166,11 +163,13 @@ const rooms = ref([
     _id: '1',
     name: 'Phòng Deluxe',
     description: 'Phòng Deluxe với đầy đủ tiện nghi hiện đại, không gian rộng rãi và view tuyệt đẹp. Phù hợp cho cả công tác và nghỉ dưỡng.',
-    price: 2000000,
+    price: '7.000.000 - 30.000.000',
     imageUrlList: [
-      'https://picsum.photos/800/600?random=1',
-      'https://picsum.photos/800/600?random=2',
-      'https://picsum.photos/800/600?random=3'
+    'imgur/SAbetYU.jpg',
+    'imgur/eMl6NuV.png',
+    'imgur/zqBWS1u.png',
+    'imgur/24uhdiO.png',
+    'imgur/NSnPlgZ.png'
     ]
   },
   {

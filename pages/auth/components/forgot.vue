@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import userAPI from '~/api/user'
+import { useRegister } from '~/composables/useRegister'
 
 // Props
 interface Props {
@@ -89,9 +89,8 @@ const handleSendEmail = async () => {
     loading.value = true
     error.value = ''
 
-    const response = await userAPI.sendOtpForPasswordChangeApi({
-      body: { userEmail: email.value }
-    })
+    const { sendVerificationEmail } = useRegister()
+    const response = await sendVerificationEmail(email.value)
 
     // Close modal and show success message
     closeModal()
@@ -101,7 +100,7 @@ const handleSendEmail = async () => {
     navigateTo(`/auth/forgot-password?email=${encodeURIComponent(email.value)}`)
 
   } catch (err) {
-    console.error('Send email error:', err)
+    //.error('Send email error:', err)
     if (err instanceof Error) {
       error.value = err.message
     } else {
