@@ -183,7 +183,6 @@
               <!-- Nút thanh toán (cho booking mới) -->
               <button
                 v-else
-                @click="proceedToPayment"
                 :disabled="loading"
                 class="flex-1 bg-system-primary-100 text-white py-3 px-6 rounded-lg font-medium hover:bg-system-primary-120 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -246,11 +245,19 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app'
 import { confirmBookingPaymentApi } from '~/api/order'
+import { usePayment } from '~/composables/usePayment'
 
 // Route & Router
 const route = useRoute()
 const router = useRouter()
 const { $Swal } = useNuxtApp()
+
+// Payment composable
+const { 
+  loading: paymentLoading, 
+  error: paymentError,
+  createRoomBookingPayment 
+} = usePayment()
 
 // Reactive state
 const loading = ref(false)
@@ -331,6 +338,7 @@ const formatDate = (dateString: string): string => {
     day: 'numeric'
   })
 }
+<<<<<<< HEAD
 
 const createPaymentLink = async () => {
   try {
@@ -420,6 +428,16 @@ const confirmBooking = async () => {
     if (response.urlPayment) {
       //.log('🌐 Redirecting to payment URL:', response.urlPayment)
       
+=======
+const confirmBooking = async () => {
+  try {
+    confirmLoading.value = true
+    
+    // Gọi API xác nhận thanh toán
+    const response = await confirmBookingPaymentApi(bookingData.value.bookingId)
+    // Kiểm tra nếu có urlPayment từ API
+    if (response.urlPayment) {
+>>>>>>> 4a166e7591d44cdc837483899131ba0e82221bfd
       // Hiển thị thông báo thành công với SweetAlert2
       await $Swal.fire({
         icon: 'success',
@@ -448,7 +466,10 @@ const confirmBooking = async () => {
     }
     
   } catch (error) {
+<<<<<<< HEAD
     //.error('❌ Error confirming booking payment:', error)
+=======
+>>>>>>> 4a166e7591d44cdc837483899131ba0e82221bfd
     await $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -464,9 +485,12 @@ const confirmBooking = async () => {
 
 // Lifecycle
 onMounted(async () => {
+<<<<<<< HEAD
   //.log('🚀 Payment page mounted')
   //.log('📋 Route query:', route.query)
   
+=======
+>>>>>>> 4a166e7591d44cdc837483899131ba0e82221bfd
   // Lấy thông tin booking đã tạo từ query parameters
   if (route.query.bookingId) bookingData.value.bookingId = route.query.bookingId as string
   if (route.query.bookingStatus) bookingData.value.bookingStatus = route.query.bookingStatus as string
@@ -490,6 +514,7 @@ onMounted(async () => {
   if (route.query.phone) bookingData.value.bookingForm.phone = route.query.phone as string
   if (route.query.email) bookingData.value.bookingForm.email = route.query.email as string
   if (route.query.notes) bookingData.value.bookingForm.notes = route.query.notes as string
+<<<<<<< HEAD
   
   //.log('✅ Booking data loaded:', bookingData.value)
   
@@ -506,6 +531,8 @@ onMounted(async () => {
     })
     router.push('/rooms')
   }
+=======
+>>>>>>> 4a166e7591d44cdc837483899131ba0e82221bfd
 })
 </script>
 

@@ -446,13 +446,15 @@
 
 <script lang="ts" setup>
 import type { BookingDto } from '~/types/order'
-
+import { confirmBookingPaymentApi } from '~/api/order'
+const { $Swal } = useNuxtApp()
 /* PageMeta */
 definePageMeta({
   layout: 'user',
   middleware: 'auth'
 })
 
+const confirmLoading = ref(false)
 /* Auth store */
 const authStore = useAuthStore()
 const { customerProfile } = storeToRefs(authStore)
@@ -646,10 +648,52 @@ const handleUpdateBooking = (booking: BookingDto) => {
   navigateTo(`/order/${booking.bookingId}`)
 }
 
-// Handle payment
-const handlePayment = (booking: BookingDto) => {
-  // Navigate to payment page with booking ID
-  navigateTo(`/order/payment?bookingId=${booking.bookingId}`)
+const handlePayment = async (booking: BookingDto) => {
+  try {
+    confirmLoading.value = true
+    // Gọi API xác nhận thanh toán
+    const response = await confirmBookingPaymentApi(booking.bookingId)
+    // Kiểm tra nếu có urlPayment từ API
+    if (response.urlPayment) {
+      // Hiển thị thông báo thành công với SweetAlert2
+      await $Swal.fire({
+        icon: 'success',
+        title: 'Thành công!',
+        text: 'Đang chuyển hướng đến trang thanh toán...',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        background: '#f8fafc',
+        color: '#1e293b'
+      })
+      
+      // Chuyển hướng đến URL thanh toán
+      window.location.href = response.urlPayment
+    } else {
+      // Nếu không có urlPayment, chuyển đến trang chi tiết booking
+      await $Swal.fire({
+        icon: 'success',
+        title: 'Xác nhận thành công!',
+        text: 'Trạng thái đặt phòng đã được cập nhật.',
+        confirmButtonText: 'Xem chi tiết',
+        background: '#f8fafc',
+        color: '#1e293b'
+      })
+      await navigateTo(`/order/${booking.bookingId}`)
+    }
+    
+  } catch (error) {
+    await $Swal.fire({
+      icon: 'error',
+      title: 'Lỗi!',
+      text: 'Có lỗi xảy ra khi xác nhận đặt phòng. Vui lòng thử lại.',
+      confirmButtonText: 'Đóng',
+      background: '#fef2f2',
+      color: '#dc2626'
+    })
+  } finally {
+    confirmLoading.value = false
+  }
 }
 
 // Check if booking can be cancelled
