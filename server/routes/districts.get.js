@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     const response = await $fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
     return response.districts || []
   } catch (error) {
-    console.error('Error fetching districts:', error)
+    //.error('Error fetching districts:', error)
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch districts'

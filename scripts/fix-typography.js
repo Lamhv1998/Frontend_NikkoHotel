@@ -21,7 +21,7 @@ function replaceClassesInFile(filePath) {
       if (regex.test(content)) {
         content = content.replace(regex, newClass);
         hasChanges = true;
-        console.log(`  ✓ Replaced ${oldClass} → ${newClass}`);
+        //.log(`  ✓ Replaced ${oldClass} → ${newClass}`);
       }
     }
     
@@ -32,7 +32,7 @@ function replaceClassesInFile(filePath) {
     
     return false;
   } catch (error) {
-    console.error(`Error processing ${filePath}:`, error.message);
+    //.error(`Error processing ${filePath}:`, error.message);
     return false;
   }
 }
@@ -49,7 +49,7 @@ function processVueFiles(dir) {
     if (stat.isDirectory()) {
       processedCount += processVueFiles(filePath);
     } else if (file.endsWith('.vue')) {
-      console.log(`Processing: ${filePath}`);
+      //.log(`Processing: ${filePath}`);
       if (replaceClassesInFile(filePath)) {
         processedCount++;
       }
@@ -60,7 +60,7 @@ function processVueFiles(dir) {
 }
 
 // Thực thi script
-console.log('🔧 Fixing typography classes...\n');
+//.log('🔧 Fixing typography classes...\n');
 
 const directories = [
   'components',
@@ -72,13 +72,13 @@ let totalProcessed = 0;
 
 for (const dir of directories) {
   if (fs.existsSync(dir)) {
-    console.log(`📁 Processing ${dir}/`);
+    //.log(`📁 Processing ${dir}/`);
     totalProcessed += processVueFiles(dir);
   }
 }
 
-console.log(`\n✅ Completed! Processed ${totalProcessed} files.`);
-console.log('\n📋 Class mapping applied:');
+//.log(`\n✅ Completed! Processed ${totalProcessed} files.`);
+//.log('\n📋 Class mapping applied:');
 for (const [oldClass, newClass] of Object.entries(classMapping)) {
-  console.log(`  ${oldClass} → ${newClass}`);
+  //.log(`  ${oldClass} → ${newClass}`);
 }

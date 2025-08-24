@@ -13,7 +13,7 @@
               <span class="text-lg text-primary-800">Quay lại danh sách loại phòng</span>
             </button>
             <h1 class="text-h2 text-system-gray-80 xl:text-h1 mb-2">
-              🏨 {{ roomTypeInfo.typeName || 'Loại Phòng' }}
+              {{ roomTypeInfo.typeName || 'Loại Phòng' }}
             </h1>
             <p class="text-body text-system-gray-60">
               Xem các phòng cụ thể thuộc loại này
@@ -149,7 +149,7 @@
 
         <!-- Empty State -->
         <div v-else class="text-center py-20">
-          <div class="text-6xl mb-4">🏨</div>
+          <!-- <div class="text-6xl mb-4">🏨</div> -->
           <h3 class="text-h4 font-bold text-system-gray-80 mb-4">Chưa có phòng nào</h3>
           <p class="text-body text-system-gray-60 mb-6">
             Hiện tại chưa có phòng nào thuộc loại <strong>{{ roomTypeInfo.typeName }}</strong>
@@ -200,11 +200,11 @@ const goBack = () => {
 // Lấy thông tin chi tiết của loại phòng
 const fetchRoomTypeDetails = async () => {
   try {
-    console.log('🚀 Fetching room type details for ID:', roomTypeInfo.value.typeId)
+    //.log('🚀 Fetching room type details for ID:', roomTypeInfo.value.typeId)
     
     // Lấy tất cả loại phòng để tìm loại phòng hiện tại
     const allRoomTypes = await getAllRoomTypes()
-    console.log('✅ All room types:', allRoomTypes)
+    //.log('✅ All room types:', allRoomTypes)
     
     if (allRoomTypes && Array.isArray(allRoomTypes)) {
       // Tìm loại phòng theo ID
@@ -213,10 +213,10 @@ const fetchRoomTypeDetails = async () => {
       )
       
       if (currentRoomType) {
-        console.log('✅ Found room type:', currentRoomType)
+        //.log('✅ Found room type:', currentRoomType)
         roomTypeData.value = currentRoomType
       } else {
-        console.warn('⚠️ Room type not found, using query params')
+        //.warn('⚠️ Room type not found, using query params')
         roomTypeData.value = {
           typeId: roomTypeInfo.value.typeId,
           typeName: roomTypeInfo.value.typeName,
@@ -227,7 +227,7 @@ const fetchRoomTypeDetails = async () => {
       }
     }
   } catch (err) {
-    console.error('❌ Error fetching room type details:', err)
+    //.error('❌ Error fetching room type details:', err)
     // Sử dụng thông tin từ query params làm fallback
     roomTypeData.value = {
       typeId: roomTypeInfo.value.typeId,
@@ -256,8 +256,8 @@ const enrichRoomWithTypeInfo = (room: any) => {
 
 const fetchRoomsOfType = async () => {
   try {
-    console.log('🚀 Fetching rooms of type:', roomTypeInfo.value.typeName)
-    console.log('📋 Room type info:', roomTypeInfo.value)
+    //.log('🚀 Fetching rooms of type:', roomTypeInfo.value.typeName)
+    //.log('📋 Room type info:', roomTypeInfo.value)
     loading.value = true
     error.value = null
     
@@ -269,25 +269,25 @@ const fetchRoomsOfType = async () => {
     
     // Cách 1: Thử với filter endpoint trước (endpoint chính xác)
     try {
-      console.log('🔄 Trying filter endpoint with type ID:', roomTypeInfo.value.typeId)
+      //.log('🔄 Trying filter endpoint with type ID:', roomTypeInfo.value.typeId)
       response = await getRoomsByTypeFilter(roomTypeInfo.value.typeId)
-      console.log('✅ Filter endpoint response:', response)
+      //.log('✅ Filter endpoint response:', response)
     } catch (filterError) {
-      console.log('⚠️ Filter endpoint failed, trying main function:', filterError)
+      //.log('⚠️ Filter endpoint failed, trying main function:', filterError)
       
       // Cách 2: Thử với function chính (có fallback)
       try {
         response = await getRoomsByType(roomTypeInfo.value.typeId)
-        console.log('✅ Main function response:', response)
+        //.log('✅ Main function response:', response)
       } catch (mainError) {
-        console.log('⚠️ Main function also failed, using fallback approach:', mainError)
+        //.log('⚠️ Main function also failed, using fallback approach:', mainError)
         
         // Fallback: Tạo mock data
         response = generateMockRooms()
       }
     }
     
-    console.log('✅ Final API response for rooms of type:', response)
+    //.log('✅ Final API response for rooms of type:', response)
     
     if (response && Array.isArray(response)) {
       // Điền thông tin loại phòng vào từng phòng
@@ -296,14 +296,14 @@ const fetchRoomsOfType = async () => {
       // Nếu API trả về dạng Pageable response
       rooms.value = response.content.map(enrichRoomWithTypeInfo)
     } else {
-      console.warn('⚠️ Unexpected API response format:', response)
+      //.warn('⚠️ Unexpected API response format:', response)
       rooms.value = []
     }
     
-    console.log('✅ Processed rooms with type info:', rooms.value)
+    //.log('✅ Processed rooms with type info:', rooms.value)
     
   } catch (err) {
-    console.error('❌ Error fetching rooms:', err)
+    //.error('❌ Error fetching rooms:', err)
     error.value = 'Không thể tải danh sách phòng. Vui lòng thử lại sau.'
     rooms.value = []
   } finally {
@@ -358,7 +358,7 @@ const handleImageError = (event: Event) => {
 }
 
 const bookRoom = (room: any) => {
-  console.log('🚀 Booking room:', room)
+  //.log('🚀 Booking room:', room)
   
   // Tạo query parameters với thông tin phòng và loại phòng
   const queryParams = new URLSearchParams({
@@ -373,21 +373,21 @@ const bookRoom = (room: any) => {
     status: room.status || 'AVAILABLE'
   })
   
-  console.log('📋 Query parameters for booking:', queryParams.toString())
+  //.log('📋 Query parameters for booking:', queryParams.toString())
   
   // Chuyển đến trang đặt phòng với thông tin phòng
   navigateTo(`/order?${queryParams.toString()}`)
 }
 
 const viewRoomDetails = (room: any) => {
-  console.log('🚀 Viewing room details:', room.roomNumber)
+  //.log('🚀 Viewing room details:', room.roomNumber)
   // TODO: Navigate to room details page
   alert(`Xem chi tiết phòng ${room.roomNumber}`)
 }
 
 // Thêm function để tạo mock data khi API thất bại
 const generateMockRooms = () => {
-  console.log('🔄 Generating mock rooms for type:', roomTypeInfo.value.typeName)
+  //.log('🔄 Generating mock rooms for type:', roomTypeInfo.value.typeName)
   
   const mockRooms = []
   const roomCount = Math.floor(Math.random() * 5) + 3 // 3-7 phòng
@@ -413,14 +413,14 @@ const generateMockRooms = () => {
     })
   }
   
-  console.log('✅ Generated mock rooms:', mockRooms)
+  //.log('✅ Generated mock rooms:', mockRooms)
   return mockRooms
 }
 
 // Lifecycle
 onMounted(() => {
-  console.log('🚀 Room Type Details page mounted')
-  console.log('📋 Room type info:', roomTypeInfo.value)
+  //.log('🚀 Room Type Details page mounted')
+  //.log('📋 Room type info:', roomTypeInfo.value)
   fetchRoomsOfType()
 })
 </script>

@@ -27,10 +27,10 @@
             />
 
             <!-- Tên -->
-            <h3 class="mt-2 text-title xl:mt-4 xl:text-h5">{{ travel.name }}</h3>
+            <h3 class="mt-2 text-title xl:mt-4 text-white xl:text-h5">{{ travel.name }}</h3>
 
             <!-- Mô tả -->
-            <p class="mt-2 text-body-2 xl:text-body">{{ travel.description }}</p>
+            <p class="mt-2 text-body-2 xl:text-body text-white">{{ travel.description }}</p>
           </li>
         </ul>
       </div>
@@ -49,19 +49,19 @@ const travels = [
     icon: 'ic:baseline-directions-car',
     name: 'Tự lái xe',
     description:
-      'Nếu bạn chọn tự lái xe, có thể đi theo Quốc lộ 1, ra khỏi giao lộ Hồ Chí Minh, đi về hướng trung tâm thành phố và làm theo biển chỉ dẫn để đến "Khách sạn  Nikko". Khách sạn có bãi đậu xe thuận tiện cho bạn.'
+      'Nếu bạn chọn tự lái xe, có thể đi theo Quốc lộ 1, ra khỏi giao lộ Hồ Chí Minh, đi về hướng trung tâm thành phố và làm theo biển chỉ dẫn để đến "Khách sạn Nika". Khách sạn có bãi đậu xe thuận tiện cho bạn.'
   },
   {
     icon: 'ic:baseline-train',
     name: 'Tàu cao tốc / Tàu hỏa',
     description:
-      'Nếu bạn đi tàu cao tốc hoặc tàu hỏa, hãy xuống tại ga Zuoying, bên ngoài có trạm taxi, đi taxi khoảng 20 phút là đến nơi. Hoặc bạn cũng có thể chuyển sang tàu điện ngầm tuyến đỏ, xuống tại ga Công viên Trung tâm, đi bộ khoảng 10 phút là tới.'
+      'Nếu bạn đi tàu cao tốc hoặc tàu hỏa đi taxi khoảng 20 phút là đến nơi, xuống tại ga Công viên Trung tâm, đi bộ khoảng 10 phút là tới.'
   },
   {
     icon: 'IconLuxuryCar',
     name: 'Dịch vụ xe đưa đón',
     description:
-      'Nikko Hotel cung cấp dịch vụ xe đưa đón riêng, phí sẽ thay đổi tùy theo điểm đến. Vui lòng gọi số (07)123-4567 để được tư vấn chi tiết.'
+      'Nika Hotel cung cấp dịch vụ xe đưa đón riêng, phí sẽ thay đổi tùy theo điểm đến. Vui lòng gọi số (07)123-4567 để được tư vấn chi tiết.'
   }
 ]
 

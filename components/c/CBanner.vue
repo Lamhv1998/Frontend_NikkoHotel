@@ -22,7 +22,7 @@
             :src="banner" 
             width="100vw"
             loading="eager"
-            alt="Nikko Hotel Banner"
+            alt="Nika Hotel Banner"
           />
 
           <!-- Overlay -->
@@ -48,10 +48,10 @@
                 >
                   <div class="space-y-4">
                     <h1 class="text-h2 font-display font-bold text-text-inverse lg:text-h1 xl:text-display-2">
-                      Nikko Hotel
+                      Nika Hotel
                     </h1>
                     <p class="text-body-lg font-medium text-primary-200 lg:text-h5">
-                      Nikkoment Luxury Hotel
+                      Nika Luxury Hotel
                     </p>
                   </div>
 
@@ -69,7 +69,7 @@
                   <div class="space-y-6 text-text-inverse">
                     <div class="space-y-2">
                       <h2 class="text-h1 font-display font-bold lg:text-display-1">
-                        Nikko
+                        Nika
                       </h2>
                       <h3 class="text-h3 font-display font-semibold lg:text-h2">
                         Lựa chọn lưu trú sang trọng
@@ -90,7 +90,7 @@
                 </div>
                 
                 <h2 v-else class="text-h2 font-display font-bold text-text-inverse lg:text-h1 xl:text-display-2">
-                  Phòng nghỉ
+                  Phòng
                 </h2>
               </div>
             </div>

@@ -35,7 +35,7 @@
           >
             <!-- Tiêu đề -->
             <div class="flex items-center justify-between">
-              <h3 class="text-h5">{{ food.title }}</h3>
+              <h3 class="text-h5 text-white">{{ food.title }}</h3>
               <div class="text-body-2 text-system-gray-40 xl:text-body">
                 {{ food.diningTime }}
               </div>
@@ -78,24 +78,24 @@ const view = computed(() => {
 const menu = ref([
   {
     title: 'Buffet sáng',
-    image: 'https://picsum.photos/600/400?random=1',
+    image: '/img/buffet.png',
     diningTime: '07:00 - 10:00',
     description:
-      'Buffet sáng tại khách sạn  Nikko Luxury là một trải nghiệm tuyệt vời với nhiều món ăn đa dạng và phong phú.'
+      'Buffet sáng tại khách sạn  Nika Luxury là một trải nghiệm tuyệt vời với nhiều món ăn đa dạng và phong phú.'
   },
   {
     title: 'Tiệc trà chiều',
-    image: 'https://picsum.photos/600/400?random=2',
+    image: '/img/trachieu.png',
     diningTime: '15:00 - 17:00',
     description:
-      'Tiệc trà chiều tại khách sạn  Nikko Luxury là một trải nghiệm thư giãn và sang trọng.'
+      'Tiệc trà chiều tại khách sạn  Nika Luxury là một trải nghiệm thư giãn và sang trọng.'
   },
   {
     title: 'Tiệc tối',
-    image: 'https://picsum.photos/600/400?random=3',
+    image: '/img/tiettoi.png',
     diningTime: '18:00 - 21:00',
     description:
-      'Tiệc tối tại khách sạn  Nikko Luxury là một trải nghiệm ẩm thực tuyệt vời với nhiều món ăn ngon.'
+      'Tiệc tối tại khách sạn  Nika Luxury là một trải nghiệm ẩm thực tuyệt vời với nhiều món ăn ngon.'
   }
 ])
 </script>

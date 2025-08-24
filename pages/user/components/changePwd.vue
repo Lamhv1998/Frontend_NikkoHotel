@@ -140,6 +140,7 @@
 <script lang="ts" setup>
 import type { UserResponse } from '@/types/auth'
 import type { PropType } from 'vue'
+import { useRegister } from '~/composables/useRegister'
 
 /* props */
 const props = defineProps({
@@ -236,7 +237,7 @@ const validateOtp = (val: string) => {
 }
 
 /* api */
-const { sendOtpForPasswordChangeApi, verifyOtpApi, changePasswordAfterOtpApi } = useApi()
+const { changePasswordAfterOtpApi } = useApi()
 
 // State cho API call
 const pending = ref(false)
@@ -248,11 +249,7 @@ const sendOtp = async () => {
   try {
     sendingOtp.value = true
     
-    const response = await sendOtpForPasswordChangeApi({
-      body: {
-        userEmail: props.user.email
-      }
-    })
+    const response = await sendVerificationEmail(props.user.email)
 
     if (response) {
       otpSent.value = true
@@ -265,14 +262,14 @@ const sendOtp = async () => {
       })
     }
   } catch (error: any) {
-    console.error('Error sending OTP:', error)
+    //.error('Error sending OTP:', error)
     $Swal?.fire({
       title: 'Gửi OTP thất bại',
       text: error?.data?.message || 'Có lỗi xảy ra khi gửi OTP',
       icon: 'error',
       confirmButtonText: 'Xác nhận',
       confirmButtonColor: styleStore.confirmButtonColor
-    })
+      })
   } finally {
     sendingOtp.value = false
   }
@@ -292,12 +289,7 @@ const verifyOtp = async () => {
   try {
     verifyingOtp.value = true
     
-    const response = await verifyEmailCode({
-      body: {
-        userEmail: props.user.email,
-        otp: formData.otp
-      }
-    })
+    const response = await verifyEmailCode(props.user.email, formData.otp)
 
     if (response && response.message.includes('thành công')) {
       otpVerified.value = true
@@ -312,7 +304,7 @@ const verifyOtp = async () => {
       otpError.value = 'Mã OTP không đúng'
     }
   } catch (error: any) {
-    console.error('Error verifying OTP:', error)
+    //.error('Error verifying OTP:', error)
     otpError.value = 'Mã OTP không đúng hoặc đã hết hạn'
   } finally {
     verifyingOtp.value = false
@@ -321,7 +313,7 @@ const verifyOtp = async () => {
 
 // Function để đổi mật khẩu
 const changePassword = async () => {
-  console.log('changePassword called', { otpVerified: otpVerified.value, formData })
+  //.log('changePassword called', { otpVerified: otpVerified.value, formData })
   
   if (!otpVerified.value) {
     $Swal?.fire({
@@ -353,16 +345,16 @@ const changePassword = async () => {
   }
 
   if (!props.user?._id && !props.user?.id) {
-    console.error('User ID not found')
+    //.error('User ID not found')
     return
   }
 
   try {
     pending.value = true
-    console.log('Calling changePasswordAfterOtpApi with:', {
-      userId: props.user._id || props.user.id,
-      newPassword: formData.newPassword
-    })
+    // //.log('Calling changePasswordAfterOtpApi with:', {
+    //   userId: props.user._id || props.user.id,
+    //   newPassword: formData.newPassword
+    // })
     
     const response = await changePasswordAfterOtpApi({
       body: {
@@ -371,7 +363,7 @@ const changePassword = async () => {
       }
     })
 
-    console.log('API response:', response)
+    //.log('API response:', response)
 
     if (response) {
       $Swal?.fire({
@@ -386,7 +378,7 @@ const changePassword = async () => {
       })
     }
   } catch (error: any) {
-    console.error('Error changing password:', error)
+    //.error('Error changing password:', error)
     
     $Swal?.fire({
       title: 'Đổi mật khẩu thất bại',

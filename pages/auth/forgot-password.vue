@@ -187,7 +187,7 @@ const handleSubmit = async () => {
       await resetPassword()
     }
   } catch (error) {
-    console.error('Forgot password error:', error)
+    //.error('Forgot password error:', error)
     if (error instanceof Error) {
       alert(error.message)
     }
@@ -345,7 +345,7 @@ const resendOtp = async () => {
   try {
     await sendOtp()
   } catch (error) {
-    console.error('Resend OTP error:', error)
+    //.error('Resend OTP error:', error)
     // Error already handled in sendOtp
   }
 }

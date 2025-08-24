@@ -217,31 +217,31 @@ const schema = computed(() => [
     },
     birthday: () => {
       const val = formData.birthday
-      console.log('Validating birthday from formData:', val, 'Type:', typeof val)
+      //.log('Validating birthday from formData:', val, 'Type:', typeof val)
       if (!val) return 'Ngày sinh là bắt buộc'
       
       // CBirthday component trả về format YYYY-MM-DD hoặc YYYY-M-D
       // Kiểm tra format ngày tháng - cho phép cả YYYY-MM-DD và YYYY-M-D
       const dateRegex = /^\d{4}-\d{1,2}-\d{1,2}$/
       if (!dateRegex.test(val)) {
-        console.log('Date format validation failed for:', val)
+        //.log('Date format validation failed for:', val)
         return 'Ngày sinh phải có format YYYY-MM-DD'
       }
       
       // Kiểm tra ngày hợp lệ bằng cách parse
       const [year, month, day] = val.split('-').map(Number)
       if (year < 1900 || year > new Date().getFullYear()) {
-        console.log('Invalid year:', year)
+        //.log('Invalid year:', year)
         return 'Năm sinh không hợp lệ'
       }
       
       if (month < 1 || month > 12) {
-        console.log('Invalid month:', month)
+        //.log('Invalid month:', month)
         return 'Tháng sinh không hợp lệ'
       }
       
       if (day < 1 || day > 31) {
-        console.log('Invalid day:', day)
+        //.log('Invalid day:', day)
         return 'Ngày sinh không hợp lệ'
       }
       
@@ -251,7 +251,7 @@ const schema = computed(() => [
       const birthDate = new Date(year, month - 1, day) // month - 1 vì Date constructor tháng bắt đầu từ 0
       
       if (birthDate > today) {
-        console.log('Future date detected:', val)
+        //.log('Future date detected:', val)
         return 'Ngày sinh không thể là tương lai'
       }
       
@@ -260,11 +260,11 @@ const schema = computed(() => [
       minDate.setFullYear(today.getFullYear() - 100)
       minDate.setHours(0, 0, 0, 0)
       if (birthDate < minDate) {
-        console.log('Date too far in past:', val)
+        //.log('Date too far in past:', val)
         return 'Ngày sinh không hợp lệ (quá xa trong quá khứ)'
       }
       
-      console.log('Birthday validation passed for:', val)
+      //.log('Birthday validation passed for:', val)
       return {}
     },
          'address.city': () => {
@@ -344,7 +344,7 @@ const verifyEmailAndProceed = async () => {
       })
     }
   } catch (error) {
-    console.error('Lỗi xác nhận email:', error)
+    //.error('Lỗi xác nhận email:', error)
     $Swal?.fire({
       title: 'Lỗi!',
       text: 'Không thể xác nhận email. Vui lòng thử lại.',
@@ -377,7 +377,7 @@ const sendVerificationEmailAndProceed = async () => {
     progress.value = 1
     startResendCountdown()
   } catch (error) {
-    console.error('Lỗi gửi email xác nhận:', error)
+    //.error('Lỗi gửi email xác nhận:', error)
     $Swal?.fire({
       title: 'Lỗi!',
       text: 'Không thể gửi mã xác nhận. Vui lòng thử lại.',
@@ -404,7 +404,7 @@ const resendVerificationCode = async () => {
       confirmButtonColor: styleStore.confirmButtonColor
     })
   } catch (error) {
-    console.error('Lỗi gửi lại mã:', error)
+    //.error('Lỗi gửi lại mã:', error)
     $Swal?.fire({
       title: 'Lỗi!',
       text: 'Không thể gửi lại mã xác nhận. Vui lòng thử lại.',
@@ -489,7 +489,7 @@ const sRefresh = async () => {
         }
      })
   } catch (error: any) {
-    console.error('Signup error:', error)
+    //.error('Signup error:', error)
     $Swal?.fire({
       title: 'Đăng ký thất bại!',
       text: error.message || 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.',

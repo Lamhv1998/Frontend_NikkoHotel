@@ -13,7 +13,7 @@
               Quay lại danh sách phòng
             </button>
             <h1 class="text-h2 text-system-gray-80 xl:text-h1 mb-2">
-              🏨 Đặt Phòng
+              Đặt Phòng
             </h1>
             <p class="text-body text-system-gray-60">
               Hoàn tất thông tin để đặt phòng của bạn
@@ -350,7 +350,7 @@ const totalPrice = computed(() => {
 // Watch để tự động điền thông tin khi người dùng đăng nhập
 watch(() => authStore.isAuthenticated, (isAuthenticated) => {
   if (isAuthenticated) {
-    console.log('👤 User authentication status changed to authenticated, populating form')
+    //.log('👤 User authentication status changed to authenticated, populating form')
     populateUserInfo()
   }
 }, { immediate: false })
@@ -413,7 +413,7 @@ const validateDates = () => {
 // Hàm tự động điền thông tin người dùng đã đăng nhập
 const populateUserInfo = () => {
   if (authStore.isAuthenticated) {
-    console.log('👤 User is authenticated, populating form with user info')
+    //.log('👤 User is authenticated, populating form with user info')
     
     // Lấy thông tin từ user
     if (authStore.user) {
@@ -435,7 +435,7 @@ const populateUserInfo = () => {
     
     // Lấy thông tin từ customer profile (nếu có)
     if (authStore.customerProfile) {
-      console.log('📋 Customer profile found:', authStore.customerProfile)
+      //.log('📋 Customer profile found:', authStore.customerProfile)
       
       // Điền tên khách hàng từ customer profile (ưu tiên hơn user)
       if (authStore.customerProfile.firstName && authStore.customerProfile.lastName) {
@@ -448,13 +448,13 @@ const populateUserInfo = () => {
       }
     }
     
-    console.log('✅ Form populated with user info:', {
-      customerName: bookingForm.value.customerName,
-      phone: bookingForm.value.phone,
-      email: bookingForm.value.email
-    })
+    // //.log('✅ Form populated with user info:', {
+    //   customerName: bookingForm.value.customerName,
+    //   phone: bookingForm.value.phone,
+    //   email: bookingForm.value.email
+    // })
   } else {
-    console.log('👤 User is not authenticated, form will remain empty')
+    //.log('👤 User is not authenticated, form will remain empty')
   }
 }
 
@@ -463,17 +463,17 @@ const clearUserInfo = () => {
   bookingForm.value.customerName = ''
   bookingForm.value.phone = ''
   bookingForm.value.email = ''
-  console.log('🧹 User info cleared from form')
+  //.log('🧹 User info cleared from form')
 }
 
 const submitBooking = async () => {
   try {
     loading.value = true
-    console.log('🚀 Submitting booking form:', {
-      roomInfo: roomInfo.value,
-      bookingForm: bookingForm.value,
-      totalPrice: totalPrice.value
-    })
+    // //.log('🚀 Submitting booking form:', {
+    //   roomInfo: roomInfo.value,
+    //   bookingForm: bookingForm.value,
+    //   totalPrice: totalPrice.value
+    // })
     
     // Validation
     if (!bookingForm.value.checkInDate || !bookingForm.value.checkOutDate) {
@@ -542,12 +542,12 @@ const submitBooking = async () => {
       customerPhone: bookingForm.value.phone
     }
 
-    console.log('📋 Creating booking with request:', createBookingRequest)
+    //.log('📋 Creating booking with request:', createBookingRequest)
 
     // Gọi API tạo booking
     const createdBooking = await createBookingApi(createBookingRequest)
     
-    console.log('✅ Booking created successfully:', createdBooking)
+    //.log('✅ Booking created successfully:', createdBooking)
     
     // Chuyển đến trang payment với thông tin booking đã tạo
     const query = {
@@ -580,7 +580,7 @@ const submitBooking = async () => {
     navigateTo({ path: '/order/payment', query })
     
   } catch (error) {
-    console.error('❌ Error creating booking:', error)
+    //.error('❌ Error creating booking:', error)
     await $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -596,8 +596,8 @@ const submitBooking = async () => {
 
 // Lifecycle
 onMounted(() => {
-  console.log('🚀 Order page mounted')
-  console.log('📋 Route query:', route.query)
+  //.log('🚀 Order page mounted')
+  //.log('📋 Route query:', route.query)
   
   // Lấy thông tin phòng từ query parameters
   if (route.query.roomId) roomInfo.value.roomId = route.query.roomId as string
@@ -610,7 +610,7 @@ onMounted(() => {
   if (route.query.basePrice) roomInfo.value.basePrice = parseInt(route.query.basePrice as string) || 1000000
   if (route.query.status) roomInfo.value.status = route.query.status as string
   
-  console.log('✅ Room info loaded:', roomInfo.value)
+  //.log('✅ Room info loaded:', roomInfo.value)
   
   // Set ngày mặc định (ngày mai và ngày kia)
   const tomorrow = new Date()

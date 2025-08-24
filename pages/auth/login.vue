@@ -151,7 +151,7 @@ const handleLogin = async () => {
     }
     
   } catch (error: any) {
-    console.error('Login error:', error)
+    //.error('Login error:', error)
     
     let errorMessage = 'Đăng nhập thất bại'
     
@@ -191,7 +191,7 @@ const handleGoogleLogin = async () => {
   try {
     await googleSignIn()
   } catch (error) {
-    console.error('Google login error:', error)
+    //.error('Google login error:', error)
     
     // Hiển thị thông báo lỗi
     commonStore.sweetalertList.push({

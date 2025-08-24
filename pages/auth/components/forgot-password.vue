@@ -126,6 +126,7 @@
 
 <script setup lang="ts">
 import userAPI from '~/api/user'
+import { useRegister } from '~/composables/useRegister'
 
 // Refs
 const progress = ref(0)
@@ -215,9 +216,8 @@ const sendOtp = async () => {
   try {
     apiPending.value = true
     
-    await userAPI.sendOtpForPasswordChangeApi({
-      body: { userEmail: formData.email }
-    })
+    const { sendVerificationEmail } = useRegister()
+    await sendVerificationEmail(formData.email)
     
     // Chuyển sang bước xác nhận OTP
     progress.value = 1
@@ -229,7 +229,7 @@ const sendOtp = async () => {
       text: 'Mã xác nhận đã được gửi đến email của bạn'
     })
   } catch (error) {
-    console.error('Send OTP error:', error)
+    //.error('Send OTP error:', error)
     $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -245,9 +245,8 @@ const resendOtp = async () => {
   
   try {
     apiPending.value = true
-    await userAPI.sendOtpForPasswordChangeApi({
-      body: { userEmail: formData.email }
-    })
+    const { sendVerificationEmail } = useRegister()
+    await sendVerificationEmail(formData.email)
     startResendCountdown()
     
     $Swal.fire({
@@ -256,7 +255,7 @@ const resendOtp = async () => {
       text: 'Mã xác nhận mới đã được gửi'
     })
   } catch (error) {
-    console.error('Resend OTP error:', error)
+    //.error('Resend OTP error:', error)
     $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -271,12 +270,8 @@ const verifyOtp = async () => {
   try {
     apiPending.value = true
     
-    await userAPI.verifyOtpApi({
-      body: { 
-        userEmail: formData.email,
-        otp: verificationCode.value
-      }
-    })
+    const { verifyEmailCode } = useRegister()
+    await verifyEmailCode(formData.email, verificationCode.value)
     
     // Chuyển sang bước cuối
     progress.value = 2
@@ -287,7 +282,7 @@ const verifyOtp = async () => {
       text: 'OTP đã được xác thực. Vui lòng đặt mật khẩu mới'
     })
   } catch (error) {
-    console.error('Verify OTP error:', error)
+    //.error('Verify OTP error:', error)
     $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -320,7 +315,7 @@ const resetPassword = async () => {
     })
     
   } catch (error) {
-    console.error('Reset password error:', error)
+    //.error('Reset password error:', error)
     $Swal.fire({
       icon: 'error',
       title: 'Lỗi đặt lại mật khẩu!',
@@ -347,7 +342,7 @@ const handleSubmit = async () => {
       await resetPassword()
     }
   } catch (error) {
-    console.error('Handle submit error:', error)
+    //.error('Handle submit error:', error)
   }
 }
 </script>

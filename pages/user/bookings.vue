@@ -513,7 +513,7 @@ const loadRoomData = async (roomId: string) => {
     const roomInfo = await getRoomById(roomId)
     roomData.value[roomId] = roomInfo
   } catch (err) {
-    console.error('❌ Failed to load room data for roomId:', roomId, err)
+    //.error('❌ Failed to load room data for roomId:', roomId, err)
     roomData.value[roomId] = null
   } finally {
     roomLoading.value[roomId] = false
@@ -542,7 +542,7 @@ const loadBookings = async () => {
     // Load room data for all bookings
     await loadRoomDataForBookings()
   } catch (err) {
-    console.error('Failed to load bookings:', err)
+    //.error('Failed to load bookings:', err)
   }
 }
 
@@ -554,7 +554,7 @@ const loadBookingHistory = async () => {
       await fetchCustomerBookingHistory(customerProfile.value.customerId, 0, 100)
     }
   } catch (err) {
-    console.error('Failed to load booking history:', err)
+    //.error('Failed to load booking history:', err)
   }
 }
 
@@ -636,7 +636,7 @@ const handleCancelBooking = async (bookingId: string) => {
       await cancelBooking(bookingId)
       await loadBookings()
     } catch (err) {
-      console.error('Failed to cancel booking:', err)
+      //.error('Failed to cancel booking:', err)
     }
   }
 }

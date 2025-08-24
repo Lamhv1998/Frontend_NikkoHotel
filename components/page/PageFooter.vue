@@ -6,28 +6,29 @@
         <!-- Brand Section -->
         <div class="space-y-8">
           <NuxtLink to="/" class="inline-block">
-            <PageLogo white />
+            <!-- <PageLogo white /> -->
+             <img src="/public/img/LogoNika.png" alt="Nika Hotel" class="w-45 h-45">
           </NuxtLink>
           
           <p class="text-body text-neutral-300 leading-relaxed">
-            Nikko Hotel - Nơi nghỉ dưỡng sang trọng bậc nhất tại Việt Nam. Chúng tôi cam kết mang đến trải nghiệm lưu trú đẳng cấp 5 sao.
+            Nika Hotel - Nơi nghỉ dưỡng sang trọng bậc nhất tại Việt Nam. Chúng tôi cam kết mang đến trải nghiệm lưu trú đẳng cấp 5 sao.
           </p>
           
           <!-- Social Links -->
           <div class="flex gap-4">
-            <NuxtLink 
+            <!-- <NuxtLink 
               class="social-link" 
               target="_blank" 
-              to="https://line.me/ti/p/l7E02lIDG4"
+              to="https://line.me/ti/p/l7E"
               aria-label="Line"
             >
               <Icon name="bi:line" class="text-icon-lg" />
-            </NuxtLink>
+            </NuxtLink> -->
             
             <NuxtLink 
               class="social-link" 
               target="_blank" 
-              to="https://instagram.com/cutecat8110"
+              to="https://instagram.com"
               aria-label="Instagram"
             >
               <Icon name="bi:instagram" class="text-icon-lg" />
@@ -65,7 +66,7 @@
                 to="/rooms" 
                 class="text-body text-neutral-300 transition-colors hover:text-primary-400"
               >
-                Phòng nghỉ
+                Phòng
               </NuxtLink>
             </li>
             <li>
@@ -86,19 +87,19 @@
             </li>
             <li>
               <NuxtLink 
-                to="/about" 
+                to="/" 
                 class="text-body text-neutral-300 transition-colors hover:text-primary-400"
               >
                 Về chúng tôi
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink 
+              <!-- <NuxtLink 
                 to="/contact" 
                 class="text-body text-neutral-300 transition-colors hover:text-primary-400"
               >
                 Liên hệ
-              </NuxtLink>
+              </NuxtLink> -->
             </li>
           </ul>
         </div>
@@ -111,7 +112,7 @@
           
           <ul class="space-y-4">
             <li>
-              <span class="text-body text-neutral-300">
+              <span to="/rooms" class="text-body text-neutral-300">
                 Đặt phòng trực tuyến
               </span>
             </li>
@@ -161,7 +162,7 @@
               </div>
               <div>
                 <p class="text-body-sm font-medium text-neutral-300">Email</p>
-                <p class="text-body text-text-inverse">info@nikkohotel.com</p>
+                <p class="text-body text-text-inverse">info@Nika.com</p>
               </div>
             </div>
             
@@ -184,30 +185,30 @@
           <!-- Copyright -->
           <div class="text-center lg:text-left">
             <p class="text-body-sm text-neutral-400">
-              © {{ new Date().getFullYear() }} Nikko Hotel. Tất cả quyền được bảo lưu.
+              © {{ new Date().getFullYear() }} Nika Hotel. Tất cả quyền được bảo lưu.
             </p>
           </div>
           
           <!-- Legal Links -->
           <div class="flex flex-wrap items-center justify-center gap-6 lg:justify-end">
             <NuxtLink 
-              to="/privacy" 
+              to="/" 
               class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
             >
               Chính sách bảo mật
             </NuxtLink>
             <NuxtLink 
-              to="/terms" 
+              to="/" 
               class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
             >
               Điều khoản sử dụng
             </NuxtLink>
-            <NuxtLink 
+            <!-- <NuxtLink 
               to="/sitemap" 
               class="text-body-sm text-neutral-400 transition-colors hover:text-primary-400"
             >
               Sitemap
-            </NuxtLink>
+            </NuxtLink> -->
           </div>
         </div>
       </div>

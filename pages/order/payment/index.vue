@@ -363,7 +363,7 @@ const createPaymentLink = async () => {
       bookingId: bookingData.value.bookingId // Thêm booking ID vào dữ liệu thanh toán
     }
 
-    console.log('🚀 Creating payment link with data:', paymentData)
+    //.log('🚀 Creating payment link with data:', paymentData)
     
     const config = useRuntimeConfig()
     const apiGatewayUrl = config.public.apiGatewayUrl || 'http://localhost:8092'
@@ -376,13 +376,13 @@ const createPaymentLink = async () => {
       body: paymentData
     })
     
-    console.log('✅ Payment link created:', res)
+    //.log('✅ Payment link created:', res)
     
     // Chuyển hướng đến URL thanh toán của PayOS
     window.location.href = res.checkoutUrl
     
   } catch (err) {
-    console.error('❌ Error creating payment link:', err)
+    //.error('❌ Error creating payment link:', err)
     loading.value = false
     alert('Không thể tạo link thanh toán. Vui lòng thử lại.')
   }
@@ -409,16 +409,16 @@ const proceedToPayment = async () => {
 const confirmBooking = async () => {
   try {
     confirmLoading.value = true
-    console.log('✅ Confirming booking payment for ID:', bookingData.value.bookingId)
+    //.log('✅ Confirming booking payment for ID:', bookingData.value.bookingId)
     
     // Gọi API xác nhận thanh toán
     const response = await confirmBookingPaymentApi(bookingData.value.bookingId)
     
-    console.log('✅ Booking payment confirmed successfully:', response)
+    //.log('✅ Booking payment confirmed successfully:', response)
     
     // Kiểm tra nếu có urlPayment từ API
     if (response.urlPayment) {
-      console.log('🌐 Redirecting to payment URL:', response.urlPayment)
+      //.log('🌐 Redirecting to payment URL:', response.urlPayment)
       
       // Hiển thị thông báo thành công với SweetAlert2
       await $Swal.fire({
@@ -448,7 +448,7 @@ const confirmBooking = async () => {
     }
     
   } catch (error) {
-    console.error('❌ Error confirming booking payment:', error)
+    //.error('❌ Error confirming booking payment:', error)
     await $Swal.fire({
       icon: 'error',
       title: 'Lỗi!',
@@ -464,8 +464,8 @@ const confirmBooking = async () => {
 
 // Lifecycle
 onMounted(async () => {
-  console.log('🚀 Payment page mounted')
-  console.log('📋 Route query:', route.query)
+  //.log('🚀 Payment page mounted')
+  //.log('📋 Route query:', route.query)
   
   // Lấy thông tin booking đã tạo từ query parameters
   if (route.query.bookingId) bookingData.value.bookingId = route.query.bookingId as string
@@ -491,11 +491,11 @@ onMounted(async () => {
   if (route.query.email) bookingData.value.bookingForm.email = route.query.email as string
   if (route.query.notes) bookingData.value.bookingForm.notes = route.query.notes as string
   
-  console.log('✅ Booking data loaded:', bookingData.value)
+  //.log('✅ Booking data loaded:', bookingData.value)
   
   // Kiểm tra nếu không có dữ liệu cần thiết
   if (!bookingData.value.roomInfo.roomNumber || !bookingData.value.bookingForm.customerName) {
-    console.warn('⚠️ Missing required booking data, redirecting to rooms page')
+    //.warn('⚠️ Missing required booking data, redirecting to rooms page')
     await $Swal.fire({
       icon: 'warning',
       title: 'Thiếu thông tin',

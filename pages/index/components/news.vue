@@ -17,8 +17,8 @@
       <!-- Tiêu đề lớn -->
       <div class="w-[8.75rem] space-y-6 xl:space-y-10">
         <h2 class="space-y-1 text-nowrap text-h3 text-system-primary-100 xl:text-h1">
-          <div>Mới nhất</div>
           <div>Tin tức</div>
+          <div>Mới nhất</div>
         </h2>
         <div class="h-[0.125rem] rounded-full bg-gradient-to-r from-system-primary-100 to-white" />
       </div>
@@ -29,7 +29,7 @@
           v-for="(newItem, index) in news"
           :key="index"
           class="group flex flex-col gap-6 xl:flex-row"
-          @click="openNew(index)"
+   
         >
           <!-- Ảnh -->
           <NuxtImg
@@ -99,19 +99,19 @@
 // Dữ liệu mẫu
 const news = [
   {
-    title: 'Khai trương nhà hàng mới',
-    description: 'Nhà hàng Nhật Bản mới tại tầng 2 đã chính thức mở cửa phục vụ quý khách.',
-    image: 'https://picsum.photos/400/300?random=1'
+    title: 'Buffet sáng với nhiều ưu đãi',
+    description: 'Nhà hàng Việt Nam mới tại tầng 2 đã chính thức mở cửa phục vụ quý khách.',
+    image: '/img/buffet.png'
   },
   {
-    title: 'Ưu đãi mùa hè',
-    description: 'Giảm giá 20% cho tất cả các phòng trong tháng 6.',
-    image: 'https://picsum.photos/400/300?random=2'
+    title: 'Ưu đãi mừng sự kiện 2-9 ',
+    description: 'Giảm giá 29% cho tất cả các phòng trong tháng 9.',
+    image: '/img/2-9.png'
   },
   {
-    title: 'Sự kiện âm nhạc cuối tuần',
-    description: 'Thưởng thức đêm nhạc Acoustic vào mỗi tối thứ 7 tại sảnh chính.',
-    image: 'https://picsum.photos/400/300?random=3'
+    title: 'Trải nghiệm ẩm thực đặc sắc', 
+    description: 'Thưởng thức các món ăn đậm sắc Việt Nam.',
+    image: '/img/doan.png'
   }
 ]
 

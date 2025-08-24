@@ -37,20 +37,26 @@ export default defineNuxtConfig({
   build: {
     transpile: ['@googlemaps/js-api-loader']
   },
-
   app: {
     head: {
-      title: 'Nikko Hotel', // Tiêu đề website
+      title: 'Nika Hotel', // Tiêu đề website
       htmlAttrs: {
         lang: 'vi' // Thiết lập ngôn ngữ
       },
-      link: [{ rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }], // Biểu tượng website
+      link: [{ rel: 'icon', type: 'image/png', href: '/img/LogoNika.png' }], // Biểu tượng website
       script: [
         {
           src: 'https://cdn.payos.vn/payos-checkout/v1/stable/payos-initialize.js',
           async: true,
           defer: true
-        } // Thêm script PayOS
+        }, // Thêm script PayOS
+        {
+          innerHTML: `
+            console.warn = () => {};
+            console.info = () => {};
+            console.log = () => {};
+          `
+        }
       ],
       meta: [
         { charset: 'utf-8' }, // Mã hóa ký tự
@@ -58,19 +64,19 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            'Đây là website đặt phòng khách sạn sang trọng Nikko Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
+            'Đây là website đặt phòng khách sạn sang trọng Nika Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
         }, // Mô tả website
         {
           name: 'keywords',
-          content: 'Nikko Hotel, đặt phòng khách sạn, khách sạn sang trọng, loại phòng'
+          content: 'Nika Hotel, đặt phòng khách sạn, khách sạn sang trọng, loại phòng'
         }, // Từ khóa
         { name: 'author', content: 'Lâm' }, // Tác giả
         { name: 'robots', content: 'index, follow' }, // Chỉ mục tìm kiếm
-        { property: 'og:title', content: 'Nikko Hotel' }, // Tiêu đề Open Graph
+        { property: 'og:title', content: 'Nika Hotel' }, // Tiêu đề Open Graph
         {
           property: 'og:description',
           content:
-            'Đây là website đặt phòng khách sạn sang trọng Nikko Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
+            'Đây là website đặt phòng khách sạn sang trọng Nika Hotel, cung cấp nhiều lựa chọn phòng độc đáo.'
         }, // Mô tả Open Graph
         { property: 'og:image', content: 'URL ảnh đại diện website của bạn' }, // Ảnh Open Graph
         { property: 'og:url', content: '' }, // Đường dẫn Open Graph
@@ -96,8 +102,6 @@ export default defineNuxtConfig({
       notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:8190'
     }
   },
-
-
 
   veeValidate: {
     autoImports: true,

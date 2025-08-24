@@ -10,11 +10,12 @@
     <div class="container flex items-center justify-between py-4">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center">
-        <PageLogo
+        <!-- <PageLogo
           class="transition-colors hover:text-primary-500"
           :size="svgSize"
           :white="false"
-        />
+        /> -->
+        <img src="/public/img/LogoNika.png" alt="Nika Hotel" class="w-25 h-20">
       </NuxtLink>
 
       <!-- Mobile Menu Button -->
@@ -34,7 +35,7 @@
           to="/rooms"
           class="text-body font-medium transition-colors hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md px-3 py-2"
         >
-          Phòng nghỉ
+          Phòng
         </NuxtLink>
 
         <NuxtLink 
@@ -191,7 +192,7 @@
             to="/rooms" 
             @click="toggleModal('close')"
           >
-            Phòng nghỉ
+            Phòng
           </NuxtLink>
           
           <NuxtLink 
