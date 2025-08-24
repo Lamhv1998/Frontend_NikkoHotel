@@ -17,6 +17,16 @@ export const useCustomer = () => {
   // Cập nhật thông tin khách hàng
   const updateCustomerInfo = async (customerData: UpdateCustomerCommand): Promise<ApiResponse<CustomerDto>> => {
     try {
+      if(customerData.customerId == null){
+        const response = await $fetch<ApiResponse<CustomerDto>>(`${customerServiceUrl}/customers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: customerData
+        })
+        return response
+      }
       const response = await $fetch<ApiResponse<CustomerDto>>(`${customerServiceUrl}/customers/profile`, {
         method: 'PUT',
         headers: {

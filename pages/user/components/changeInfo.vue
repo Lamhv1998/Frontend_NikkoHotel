@@ -497,9 +497,9 @@ const updateCustomerInfo = async () => {
         formattedDateOfBirth = $dayjs(formData.value.dateOfBirth).format('YYYY-MM-DD')
       }
     }
-    
-    // Gọi composable update customer
-    const customerResponse = await updateCustomerInfoComposable({
+    let customerResponse = null;
+    if(customerData.value?.customerId){
+     customerResponse = await updateCustomerInfoComposable({
       customerId: customerData.value?.customerId,
       firstName: formData.value.firstName,
       lastName: formData.value.lastName,
@@ -507,7 +507,23 @@ const updateCustomerInfo = async () => {
       dateOfBirth: formattedDateOfBirth,
       sex: formData.value.sex
     });
-    
+    }else {
+      customerResponse = await $fetch("http://localhost:8099/customers", {
+     method: "POST",
+    body: {
+      firstName: formData.value.firstName,
+      lastName: formData.value.lastName,
+      address: formData.value.address,
+      dateOfBirth: formattedDateOfBirth,
+      sex: formData.value.sex,
+      userId: props.user?.userId || props.user?.id,
+      email: props.user?.email,
+      password: "admin123",
+      phone: props.user?.phone
+    }
+    });
+
+    }
     // Kiểm tra xem số điện thoại có thay đổi hay không
     const currentPhone = props.user?.phone || ''
     const hasPhoneChanged = currentPhone !== originalPhone.value
@@ -518,7 +534,7 @@ const updateCustomerInfo = async () => {
     if (hasPhoneChanged) {
       const userUpdateRequest: UserUpdatedRequest = {
         userId: props.user?.userId || props.user?.id,
-        phone: currentPhone,
+        phone: currentPhone
       }
       
       userResponse = await updateUserApi({
