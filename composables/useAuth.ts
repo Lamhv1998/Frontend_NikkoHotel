@@ -236,7 +236,7 @@ export const useAuth = () => {
 
       const response = await introspect(authStore.token)
       
-      if (response && (response as any).valid) {
+      if (response && (response as any).result.valid) {
         return true
       } else {
         return false

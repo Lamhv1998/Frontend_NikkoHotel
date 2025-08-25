@@ -72,13 +72,20 @@ export const updateBookingApi = async (bookingId: string, request: Partial<Creat
   try {
     const config = useRuntimeConfig()
     const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
-    
+
+    let sanitizedRequest = {
+      checkInDate: request.checkInDate,
+      checkOutDate: request.checkOutDate,
+      numberOfGuests: request.numberOfGuests,
+      specialRequests: request.getSpecialRequests
+    }
+
     const response = await $fetch<BookingDto>(`${bookingServiceUrl}/api/bookings/${bookingId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: request
+      body: sanitizedRequest
     })
     return response
   } catch (error) {
