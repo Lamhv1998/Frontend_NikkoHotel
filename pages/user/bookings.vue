@@ -515,7 +515,6 @@ const loadRoomData = async (roomId: string) => {
     const roomInfo = await getRoomById(roomId)
     roomData.value[roomId] = roomInfo
   } catch (err) {
-    //.error('❌ Failed to load room data for roomId:', roomId, err)
     roomData.value[roomId] = null
   } finally {
     roomLoading.value[roomId] = false

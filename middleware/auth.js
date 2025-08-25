@@ -42,10 +42,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
       // Kiểm tra token với useAuth composable
       const { checkToken, refreshToken } = useAuth()
       const isValid = await checkToken()
-      
-      if (!isValid) {
+      if (isValid === false) {
         const refreshSuccess = await refreshToken()
-        
         if (!refreshSuccess) {
           throw new Error('Token không hợp lệ và không thể refresh')
         }
