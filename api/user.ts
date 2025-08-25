@@ -73,40 +73,56 @@ const userAPI = {
 
   // API đổi mật khẩu sau khi xác nhận OTP
   changePasswordAfterOtpApi: <T = any>(options: UseFetchOptions<T>) => {
-    const runtimeConfig = useRuntimeConfig()
-    const { apiBase } = runtimeConfig.public
-    
-    const requestBody = options.body && typeof options.body === 'object' && !Array.isArray(options.body) 
-      ? options.body as Record<string, any>
-      : {}
-    
+    const requestBody = options.body && typeof options.body === 'object' && !Array.isArray(options.body)
+        ? (options.body as Record<string, any>)
+        : {}
     // Sử dụng logic giống hệt như trong changePwd.vue
     // Nếu có userId thì dùng userId, nếu không thì dùng userEmail
-    if (requestBody.userId) {
+    if (requestBody.email) {
       // Trường hợp đổi mật khẩu (user đã đăng nhập)
-      return $fetch<{ message: string }>(`http://localhost:8092/users/${requestBody.userId}/password?newPassword=${requestBody.newPassword}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
+      return $fetch<{ message: boolean }>(
+        `http://localhost:8092/users/change/password/${requestBody.email}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: { password: requestBody.newPassword }
         }
-      })
-    } else {
-      // Trường hợp quên mật khẩu (user chưa đăng nhập)
-      // Sử dụng endpoint có sẵn: PUT /users/{userId}/password
-      // Nhưng cần tìm userId từ email trước
-      // Tạm thời sử dụng endpoint đơn giản nhất có thể
-      return $fetch<{ message: string }>(`http://localhost:8092/users/forgot-password`, {
+      )
+    }
+    }
+  ,
+  sendMailResetPassword: <T = any>(options: UseFetchOptions<T>) => {
+    const requestBody = options.body && typeof options.body === 'object' && !Array.isArray(options.body) ? (options.body as Record<string, any>) : {}
+
+    return $fetch<{ message: string }>(
+      `http://localhost:8092/users/forgot/password/${requestBody.email}`,
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: {
-          userEmail: requestBody.userEmail,
-          newPassword: requestBody.newPassword
         }
-      })
-    }
+      }
+    )
+  },
+  validTokenFromEmail: <T = any>(options: UseFetchOptions<T>) => {
+    const requestBody =
+      options.body && typeof options.body === 'object' && !Array.isArray(options.body)
+        ? (options.body as Record<string, any>)
+        : {}
+
+    return $fetch<{ message: boolean }>(
+      `http://localhost:8092/users/forgot/password/valid/${requestBody.token}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
   }
+    
 }
 
 export default userAPI
