@@ -1,22 +1,51 @@
-# Chọn image Node.js làm nền tảng
-FROM node:20
+# ========================================
+# FRONTEND NIKKO HOTEL - DOCKERFILE
+# ========================================
 
-# Thiết lập thư mục làm việc, WORKDIR là lệnh Dockerfile dùng để chỉ định thư mục lưu trữ mã nguồn ứng dụng bên trong container.
+# ---- Build Stage ----
+FROM node:20-alpine AS build
+
 WORKDIR /app
 
-# Sao chép toàn bộ mã nguồn vào container
+# Copy lockfile trước để tối ưu cache
+COPY package*.json ./
+
+# Cài đặt dependencies
+RUN npm ci --only=production
+
+# Copy source code
 COPY . .
 
-# Cài đặt các phụ thuộc theo đúng phiên bản
-RUN npm install
-
-# Build phiên bản production
+# Build Nuxt app
 RUN npm run build
 
-# Mở cổng ứng dụng
-EXPOSE 3000
+# ---- Production Stage ----
+FROM node:20-alpine AS production
 
-# Khởi động ứng dụng của bạn
-# Lệnh CMD dùng để chỉ định lệnh sẽ chạy khi container khởi động. Mỗi Dockerfile chỉ nên có một lệnh CMD.
-# Tóm lại, RUN được thực thi khi build image, còn CMD được thực thi khi container khởi động.
-CMD ["npm","start"]
+# Cài đặt dumb-init để xử lý tín hiệu
+RUN apk add --no-cache dumb-init
+
+# Tạo user không phải root
+RUN addgroup -g 1001 -S nodejs && adduser -S nuxt -u 1001
+
+WORKDIR /app
+
+# Copy output đã build từ build stage
+COPY --from=build --chown=nuxt:nodejs /app/.output ./.output
+COPY --from=build --chown=nuxt:nodejs /app/package.json ./package.json
+
+# Chuyển sang user nuxt
+USER nuxt
+
+# Mở port 3001
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
+
+# Sử dụng dumb-init để xử lý tín hiệu
+ENTRYPOINT ["dumb-init", "--"]
+
+# Khởi động ứng dụng với port 3001
+CMD ["node", ".output/server/index.mjs"]

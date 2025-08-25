@@ -19,7 +19,7 @@ const OrderAPI = {
 export const createBookingApi = async (request: CreateBookingRequest): Promise<BookingDto> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto>(`${bookingServiceUrl}/api/bookings`, {
       method: 'POST',
@@ -37,7 +37,7 @@ export const createBookingApi = async (request: CreateBookingRequest): Promise<B
 export const getAllBookingsApi = async (page: number = 0, size: number = 20): Promise<BookingDto[]> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto[]>(`${bookingServiceUrl}/api/bookings?page=${page}&size=${size}`, {
       method: 'GET',
@@ -54,7 +54,7 @@ export const getAllBookingsApi = async (page: number = 0, size: number = 20): Pr
 export const getBookingByIdApi = async (bookingId: string): Promise<BookingDto> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto>(`${bookingServiceUrl}/api/bookings/${bookingId}`, {
       method: 'GET',
@@ -71,13 +71,13 @@ export const getBookingByIdApi = async (bookingId: string): Promise<BookingDto> 
 export const updateBookingApi = async (bookingId: string, request: Partial<CreateBookingRequest>): Promise<BookingDto> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
 
     let sanitizedRequest = {
       checkInDate: request.checkInDate,
       checkOutDate: request.checkOutDate,
       numberOfGuests: request.numberOfGuests,
-      specialRequests: request.getSpecialRequests
+      specialRequests: request.specialRequests
     }
 
     const response = await $fetch<BookingDto>(`${bookingServiceUrl}/api/bookings/${bookingId}`, {
@@ -96,7 +96,7 @@ export const updateBookingApi = async (bookingId: string, request: Partial<Creat
 export const cancelBookingApi = async (bookingId: string): Promise<BookingDto> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto>(`${bookingServiceUrl}/api/bookings/${bookingId}/cancel`, {
       method: 'POST',
@@ -113,7 +113,7 @@ export const cancelBookingApi = async (bookingId: string): Promise<BookingDto> =
 export const getBookingsByCustomerApi = async (customerId: string, page: number = 0, size: number = 20): Promise<BookingDto[]> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto[]>(`${bookingServiceUrl}/api/bookings/customer/${customerId}`, {
       method: 'GET',
@@ -134,7 +134,7 @@ export const getBookingsByCustomerApi = async (customerId: string, page: number 
 export const getCustomerBookingHistoryApi = async (customerId: string, page: number = 0, size: number = 20): Promise<BookingDto[]> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<BookingDto[]>(`${bookingServiceUrl}/api/bookings/customer/${customerId}/history`, {
       method: 'GET',
@@ -155,7 +155,7 @@ export const getCustomerBookingHistoryApi = async (customerId: string, page: num
 export const confirmBookingPaymentApi = async (bookingId: string): Promise<ConfirmPaymentResponse> => {
   try {
     const config = useRuntimeConfig()
-    const bookingServiceUrl = config.public.bookingServiceUrl || 'http://localhost:8083'
+    const bookingServiceUrl = config.public.bookingServiceUrl || 'https://api.nika.id.vn'
     
     const response = await $fetch<ConfirmPaymentResponse>(`${bookingServiceUrl}/api/bookings/${bookingId}/payment/confirm`, {
       method: 'PUT',

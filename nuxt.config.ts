@@ -92,14 +92,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.nika.id.vn/api',
       mapApiKey: process.env.MAP_API_KEY,
-      apiGatewayUrl: process.env.API_GATEWAY_URL || 'http://localhost:8092',
-      authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:8092',
-      userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:8092',
-      customerServiceUrl: process.env.CUSTOMER_SERVICE_URL || 'http://localhost:8099',
-      roomServiceUrl: process.env.ROOM_SERVICE_URL || 'http://localhost:8087',
-      notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:8190'
+      apiGatewayUrl: process.env.API_GATEWAY_URL || 'https://api.nika.id.vn',
+      authServiceUrl: process.env.AUTH_SERVICE_URL || 'https://api.nika.id.vn',
+      userServiceUrl: process.env.USER_SERVICE_URL || 'https://api.nika.id.vn',
+      customerServiceUrl: process.env.CUSTOMER_SERVICE_URL || 'https://api.nika.id.vn',
+      roomServiceUrl: process.env.ROOM_SERVICE_URL || 'https://api.nika.id.vn',
+      notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'https://api.nika.id.vn'
     }
   },
 

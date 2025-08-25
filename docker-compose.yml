@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  frontend-nikko-hotel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: frontend-nikko-hotel
+    ports:
+      - "3001:3001"
+    environment:
+      # Port configuration
+      - PORT=3001
+      - NODE_ENV=production
+      
+      # API Configuration
+      - NUXT_PUBLIC_API_BASE=https://api.nika.id.vn/api
+      - API_GATEWAY_URL=https://api.nika.id.vn
+      - AUTH_SERVICE_URL=https://api.nika.id.vn
+      - USER_SERVICE_URL=https://api.nika.id.vn
+      - CUSTOMER_SERVICE_URL=https://api.nika.id.vn
+      - ROOM_SERVICE_URL=https://api.nika.id.vn
+      - BOOKING_SERVICE_URL=https://api.nika.id.vn
+      - NOTIFICATION_SERVICE_URL=https://api.nika.id.vn
+      
+      # External Services
+      - MAP_API_KEY=${MAP_API_KEY}
+      - PAYOS_CLIENT_ID=${PAYOS_CLIENT_ID}
+      - PAYOS_API_KEY=${PAYOS_API_KEY}
+      - PAYOS_CHECKSUM_KEY=${PAYOS_CHECKSUM_KEY}
+      
+      # Nuxt specific
+      - NUXT_TELEMETRY_DISABLED=1
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - hotel-network
+
+networks:
+  hotel-network:
+    driver: bridge
